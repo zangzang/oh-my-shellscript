@@ -1,0 +1,7 @@
+{
+  "id": "gui.sts",
+  "name": "Spring Tool Suite",
+  "description": "Eclipse-based IDE for Spring development",
+  "category": "gui",
+  "requires": ["dev.java:17"]
+}

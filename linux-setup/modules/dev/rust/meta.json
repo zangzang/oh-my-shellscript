@@ -1,0 +1,7 @@
+{
+  "id": "dev.rust",
+  "name": "Rust",
+  "description": "Rust programming language via rustup",
+  "category": "dev",
+  "requires": ["system.build-tools"]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Optional Extensions",
+  "description": "선택적 확장 (유틸리티, 테마 등)",
+  "extensions": [
+    "dracula-theme.theme-dracula",
+    "one-dark-pro.one-dark-pro",
+    "nord.nord-visual-studio-code",
+    "ms-vscode.hexeditor",
+    "redhat.vscode-commons",
+    "tchayen.markdown-links",
+    "foam.foam-vscode"
+  ]
+}

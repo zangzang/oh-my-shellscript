@@ -1,0 +1,15 @@
+{
+  "name": "Tauri Desktop Development",
+  "description": "Complete Tauri desktop app development environment with Rust, Node.js, and system dependencies",
+  "modules": [
+    { "id": "system.update" },
+    { "id": "system.build-tools" },
+    { "id": "system.dev-libs" },
+    { "id": "system.cli-tools" },
+    { "id": "dev.nvm" },
+    { "id": "dev.node", "params": { "version": "lts" } },
+    { "id": "dev.rust" },
+    { "id": "dev.tauri" },
+    { "id": "gui.vscode", "params": { "selected": false } }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "id": "tools.fastfetch",
+  "name": "Fastfetch",
+  "description": "System information cli tool",
+  "category": "tools",
+  "requires": ["system.essentials"]
+}

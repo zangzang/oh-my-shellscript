@@ -1,0 +1,9 @@
+{
+  "name": "Node.js Language",
+  "description": "Node.js with NVM",
+  "modules": [
+    { "id": "dev.nvm" },
+    { "id": "dev.node", "params": { "version": "lts" } },
+    { "id": "gui.vscode" }
+  ]
+}

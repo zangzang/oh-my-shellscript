@@ -1,0 +1,13 @@
+{
+  "name": "Fullstack Languages",
+  "description": "Java + Node.js for fullstack development",
+  "modules": [
+    { "id": "dev.sdkman" },
+    { "id": "dev.java", "params": { "version": "21" } },
+    { "id": "dev.nvm" },
+    { "id": "dev.node", "params": { "version": "lts" } },
+    { "id": "gui.vscode" },
+    { "id": "gui.dbeaver", "params": { "selected": false } },
+    { "id": "gui.sts", "params": { "selected": false } }
+  ]
+}

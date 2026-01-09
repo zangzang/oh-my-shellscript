@@ -1,0 +1,7 @@
+{
+  "id": "dev.sdkman",
+  "name": "SDKMAN (Maven + Gradle)",
+  "description": "Software Development Kit Manager with Maven and Gradle",
+  "category": "dev",
+  "requires": ["system.build-tools"]
+}

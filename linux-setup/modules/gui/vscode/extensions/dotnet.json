@@ -1,0 +1,17 @@
+{
+  "name": ".NET Developer Extensions",
+  "description": "C#/.NET 개발 관련 확장",
+  "extensions": [
+    "ms-dotnettools.csharp",
+    "ms-dotnettools.csdevkit",
+    "ms-dotnettools.vscode-dotnet-runtime",
+    "ms-dotnettools.vscode-dotnet-pack",
+    "formulahendry.dotnet",
+    "ms-vscode.vscode-mssql",
+    "ms-mssql.sql-database-projects-vscode",
+    "kreativ-software.csharp-colors",
+    "Fudge.csharp-extension-pack",
+    "ms-azure-tools.vscode-azurefunctions",
+    "ms-azuretools.vscode-azureappservice"
+  ]
+}

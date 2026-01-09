@@ -1,0 +1,28 @@
+{
+  "name": "Full Dev Setup",
+  "description": "Complete development environment with all languages and tools",
+  "modules": [
+    { "id": "system.build-tools" },
+    { "id": "system.dev-libs" },
+    { "id": "system.cli-tools" },
+    { "id": "tools.fastfetch" },
+    { "id": "system.zsh" },
+    { "id": "system.nerd-fonts" },
+    { "id": "system.oh-my-posh" },
+    { "id": "system.shell-config" },
+    { "id": "system.ssh-server" },
+    { "id": "dev.docker" },
+    { "id": "dev.sdkman" },
+    { "id": "dev.java" },
+    { "id": "dev.nvm" },
+    { "id": "dev.node" },
+    { "id": "dev.python" },
+    { "id": "dev.rust" },
+    { "id": "dev.dotnet" },
+    { "id": "gui.fcitx5" },
+    { "id": "gui.chrome" },
+    { "id": "gui.vscode" },
+    { "id": "gui.dbeaver", "params": { "selected": false } },
+    { "id": "gui.sts", "params": { "selected": false } }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "id": "system.cli-tools",
+  "name": "CLI Utilities",
+  "description": "Useful CLI tools (btop, fzf, ripgrep, etc.)",
+  "category": "system",
+  "requires": ["system.build-tools"]
+}

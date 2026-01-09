@@ -1,0 +1,7 @@
+{
+  "id": "system.build-tools",
+  "name": "Build Tools",
+  "description": "Basic build tools (gcc, git, curl, etc.)",
+  "category": "system",
+  "requires": ["system.update"]
+}

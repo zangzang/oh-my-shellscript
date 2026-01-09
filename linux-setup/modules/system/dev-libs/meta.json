@@ -1,0 +1,7 @@
+{
+  "id": "system.dev-libs",
+  "name": "Dev Libraries",
+  "description": "Libraries for compiling languages (ssl, zlib, etc.)",
+  "category": "system",
+  "requires": ["system.build-tools"]
+}

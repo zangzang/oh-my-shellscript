@@ -1,0 +1,13 @@
+{
+  "name": "Rust Developer Extensions",
+  "description": "Rust 개발 관련 확장",
+  "extensions": [
+    "rust-lang.rust-analyzer",
+    "tamasfe.even-better-toml",
+    "serayuzgur.crates",
+    "vadimcn.vscode-lldb",
+    "rust-lang.rust",
+    "ms-azuretools.vscode-docker",
+    "eamodio.gitlens"
+  ]
+}

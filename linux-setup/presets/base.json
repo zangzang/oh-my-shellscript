@@ -1,0 +1,15 @@
+{
+  "name": "Base Setup",
+  "description": "Essential system tools, shell environment, and SSH",
+  "modules": [
+    { "id": "system.build-tools" },
+    { "id": "system.dev-libs" },
+    { "id": "system.cli-tools" },
+    { "id": "tools.fastfetch" },
+    { "id": "system.zsh" },
+    { "id": "system.nerd-fonts" },
+    { "id": "system.oh-my-posh" },
+    { "id": "system.shell-config" },
+    { "id": "system.ssh-server" }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "id": "dev.node",
+  "name": "Node.js",
+  "description": "Node.js via NVM",
+  "category": "dev",
+  "requires": ["dev.nvm"],
+  "variants": ["lts", "current", "20", "18"]
+}

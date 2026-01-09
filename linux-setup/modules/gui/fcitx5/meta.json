@@ -1,0 +1,7 @@
+{
+  "id": "gui.fcitx5",
+  "name": "Fcitx5 Hangul",
+  "description": "Korean Input Method for Wayland",
+  "category": "gui",
+  "requires": []
+}

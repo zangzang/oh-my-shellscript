@@ -1,0 +1,12 @@
+{
+  "name": "Node.js Developer Extensions",
+  "description": "Node.js/JavaScript 개발 관련 확장",
+  "extensions": [
+    "ms-nodejs.vscode-node-azure-pack",
+    "ms-nodejs.nodejs-nightly",
+    "firefox-devtools.vscode-firefox-debug",
+    "msjsdiag.debugger-for-chrome",
+    "orta.vscode-jest",
+    "swellaby.vscode-mocha-test-adapter"
+  ]
+}

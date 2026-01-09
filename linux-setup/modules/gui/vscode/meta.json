@@ -1,0 +1,6 @@
+{
+  "id": "gui.vscode",
+  "name": "Visual Studio Code",
+  "description": "Code Editor",
+  "category": "gui"
+}

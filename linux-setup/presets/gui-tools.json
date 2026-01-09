@@ -1,0 +1,10 @@
+{
+  "name": "GUI Tools",
+  "description": "VS Code, Chrome, DBeaver, and input method",
+  "modules": [
+    { "id": "gui.vscode" },
+    { "id": "gui.chrome" },
+    { "id": "gui.dbeaver" },
+    { "id": "gui.fcitx5" }
+  ]
+}

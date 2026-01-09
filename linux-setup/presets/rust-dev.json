@@ -1,0 +1,8 @@
+{
+  "name": "Rust Language",
+  "description": "Rust toolchain with rustup",
+  "modules": [
+    { "id": "dev.rust" },
+    { "id": "gui.vscode" }
+  ]
+}

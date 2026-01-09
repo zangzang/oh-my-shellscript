@@ -1,0 +1,7 @@
+{
+  "id": "gui.dbeaver",
+  "name": "DBeaver",
+  "description": "Universal Database Tool",
+  "category": "gui",
+  "requires": ["dev.java:17"]
+}

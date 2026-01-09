@@ -1,0 +1,10 @@
+{
+  "name": ".NET Language",
+  "description": ".NET SDK",
+  "modules": [
+    { "id": "dev.dotnet", "params": { "version": "9" } },
+    { "id": "dev.dotnet", "params": { "version": "8", "selected": false } },
+    { "id": "dev.dotnet", "params": { "version": "10", "selected": false } },
+    { "id": "gui.vscode", "params": { "selected": false } }
+  ]
+}

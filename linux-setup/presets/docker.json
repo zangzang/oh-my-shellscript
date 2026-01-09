@@ -1,0 +1,7 @@
+{
+  "name": "Docker",
+  "description": "Docker Engine and Docker Compose",
+  "modules": [
+    { "id": "dev.docker" }
+  ]
+}

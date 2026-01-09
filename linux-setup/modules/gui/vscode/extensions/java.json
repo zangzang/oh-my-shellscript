@@ -1,0 +1,20 @@
+{
+  "name": "Java Developer Extensions",
+  "description": "Java 개발 관련 확장",
+  "extensions": [
+    "redhat.java",
+    "vscjava.vscode-maven",
+    "vscjava.vscode-spring-boot",
+    "vscjava.vscode-gradle",
+    "vscjava.vscode-java-test",
+    "vscjava.vscode-java-debug",
+    "sonarlint.sonarlint",
+    "vscjava.vscode-java-pack",
+    "vmware.vscode-boot-dev-pack",
+    "vmware.vscode-spring-boot-dashboard",
+    "jebbs.plantuml",
+    "eamodio.gitlens",
+    "vscjava.vscode-lombok",
+    "ms-azuretools.vscode-docker"
+  ]
+}

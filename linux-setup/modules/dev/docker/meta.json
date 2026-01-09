@@ -1,0 +1,7 @@
+{
+  "id": "dev.docker",
+  "name": "Docker",
+  "description": "Docker Community Edition",
+  "category": "dev",
+  "requires": ["system.update"]
+}

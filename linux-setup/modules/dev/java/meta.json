@@ -1,0 +1,8 @@
+{
+  "id": "dev.java",
+  "name": "Java (JDK)",
+  "description": "Java Development Kit via SDKMAN",
+  "category": "dev",
+  "requires": ["dev.sdkman"],
+  "variants": ["8", "17", "21", "25"]
+}

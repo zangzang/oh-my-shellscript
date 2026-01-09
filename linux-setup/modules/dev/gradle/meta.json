@@ -1,0 +1,7 @@
+{
+  "id": "dev.gradle",
+  "name": "Gradle",
+  "description": "Gradle build tool via SDKMAN",
+  "category": "dev",
+  "requires": ["dev.sdkman", "dev.java"]
+}

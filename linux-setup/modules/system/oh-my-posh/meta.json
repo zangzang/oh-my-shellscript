@@ -1,0 +1,7 @@
+{
+  "id": "system.oh-my-posh",
+  "name": "Oh My Posh",
+  "description": "Cross-platform prompt theme engine",
+  "category": "system",
+  "requires": ["system.update"]
+}

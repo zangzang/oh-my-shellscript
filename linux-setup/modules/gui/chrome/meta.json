@@ -1,0 +1,7 @@
+{
+  "id": "gui.chrome",
+  "name": "Google Chrome",
+  "description": "Web Browser",
+  "category": "gui",
+  "requires": []
+}

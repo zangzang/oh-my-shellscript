@@ -1,0 +1,16 @@
+{
+  "name": "Base Extensions",
+  "description": "모든 개발자에게 필수인 기본 확장",
+  "extensions": [
+    "ms-vscode.cpptools",
+    "ms-python.python",
+    "redhat.vscode-yaml",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "ms-vscode.git-graph",
+    "gruntfuggly.todo-tree",
+    "ms-vscode-remote.remote-containers",
+    "ms-azuretools.vscode-docker"
+  ]
+}

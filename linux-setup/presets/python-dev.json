@@ -1,0 +1,8 @@
+{
+  "name": "Python Language",
+  "description": "Python runtime and pip",
+  "modules": [
+    { "id": "dev.python" },
+    { "id": "gui.vscode" }
+  ]
+}

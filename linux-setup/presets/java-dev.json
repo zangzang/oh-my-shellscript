@@ -1,0 +1,15 @@
+{
+  "name": "Java Language",
+  "description": "Java 17/21 with SDKMAN",
+  "modules": [
+    { "id": "dev.sdkman" },
+    { "id": "dev.maven" },
+    { "id": "dev.gradle"},
+    { "id": "dev.java", "params": { "version": "25" } },
+    { "id": "dev.java", "params": { "version": "21","selected": false } },
+    { "id": "dev.java", "params": { "version": "17","selected": false } },
+    { "id": "dev.java", "params": { "version": "8","selected": false } },
+    { "id": "gui.sts", "params": { "selected": false } },
+    { "id": "gui.vscode", "params": { "selected": false } }
+  ]
+}

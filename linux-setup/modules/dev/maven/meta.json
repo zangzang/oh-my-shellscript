@@ -1,0 +1,7 @@
+{
+  "id": "dev.maven",
+  "name": "Apache Maven",
+  "description": "Maven build tool via SDKMAN",
+  "category": "dev",
+  "requires": ["dev.sdkman", "dev.java"]
+}

@@ -1,0 +1,7 @@
+{
+  "id": "system.update",
+  "name": "System Update",
+  "description": "APT Update and Upgrade",
+  "category": "system",
+  "requires": []
+}

@@ -1,0 +1,7 @@
+{
+  "id": "dev.nvm",
+  "name": "NVM",
+  "description": "Node Version Manager",
+  "category": "dev",
+  "requires": ["system.build-tools"]
+}

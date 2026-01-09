@@ -1,0 +1,7 @@
+{
+  "id": "system.ssh-server",
+  "name": "SSH Server",
+  "description": "OpenSSH Server with security configuration and Ed25519 key generation",
+  "category": "system",
+  "requires": ["system.update"]
+}
