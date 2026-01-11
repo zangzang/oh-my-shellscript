@@ -6,12 +6,10 @@
     "ms-dotnettools.csdevkit",
     "ms-dotnettools.vscode-dotnet-runtime",
     "ms-dotnettools.vscode-dotnet-pack",
-    "formulahendry.dotnet",
-    "ms-vscode.vscode-mssql",
+    "ms-mssql.mssql",
     "ms-mssql.sql-database-projects-vscode",
     "kreativ-software.csharp-colors",
-    "Fudge.csharp-extension-pack",
-    "ms-azure-tools.vscode-azurefunctions",
+    "ms-azuretools.vscode-azurefunctions",
     "ms-azuretools.vscode-azureappservice"
   ]
 }

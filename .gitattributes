@@ -1,0 +1,16 @@
+# Keep Linux automation files consistent across Windows/Linux.
+# - Force LF in linux-focused folders to avoid bash/shebang issues.
+
+# Default: treat as text where Git can detect.
+* text=auto
+
+# Linux setup automation
+linux-setup/** text eol=lf
+
+# Shared bash scripts/config
+bash/** text eol=lf
+
+# Common text formats (safe defaults)
+*.sh text eol=lf
+*.json text eol=lf
+*.md text eol=lf

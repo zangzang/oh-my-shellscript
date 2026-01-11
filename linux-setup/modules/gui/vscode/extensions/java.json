@@ -4,17 +4,15 @@
   "extensions": [
     "redhat.java",
     "vscjava.vscode-maven",
-    "vscjava.vscode-spring-boot",
+    "vmware.vscode-spring-boot",
     "vscjava.vscode-gradle",
     "vscjava.vscode-java-test",
     "vscjava.vscode-java-debug",
     "sonarlint.sonarlint",
     "vscjava.vscode-java-pack",
     "vmware.vscode-boot-dev-pack",
-    "vmware.vscode-spring-boot-dashboard",
+    "vscjava.vscode-spring-boot-dashboard",
     "jebbs.plantuml",
-    "eamodio.gitlens",
-    "vscjava.vscode-lombok",
-    "ms-azuretools.vscode-docker"
+    "vscjava.vscode-lombok"
   ]
 }

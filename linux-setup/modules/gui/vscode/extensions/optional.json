@@ -3,10 +3,11 @@
   "description": "선택적 확장 (유틸리티, 테마 등)",
   "extensions": [
     "dracula-theme.theme-dracula",
-    "one-dark-pro.one-dark-pro",
-    "nord.nord-visual-studio-code",
+    "zhuangtongfa.material-theme",
+    "arcticicestudio.nord-visual-studio-code",
+    "vscode-icons-team.vscode-icons",
+    "ms-vsliveshare.vsliveshare",
     "ms-vscode.hexeditor",
-    "redhat.vscode-commons",
     "tchayen.markdown-links",
     "foam.foam-vscode"
   ]
