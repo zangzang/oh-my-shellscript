@@ -7,8 +7,16 @@ fi
 
 echo "Docker 설치 중..."
 if curl -fsSL https://get.docker.com | sh; then
+    # Docker 서비스 시작 및 자동 시작 활성화
+    sudo systemctl start docker
+    sudo systemctl enable docker
+    
+    # 현재 사용자를 docker 그룹에 추가
     sudo usermod -aG docker "$USER"
-    echo "Docker 설치 완료. 그룹 적용을 위해 재로그인이 필요할 수 있습니다."
+    
+    echo "Docker 설치 완료."
+    echo "✅ Docker 서비스 시작됨"
+    echo "⚠️  docker 명령을 sudo 없이 사용하려면 재로그인이 필요합니다."
 else
     echo "Docker 설치 실패"
     exit 1
