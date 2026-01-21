@@ -1,8 +1,8 @@
 {
   "id": "dev.node",
   "name": "Node.js",
-  "description": "Node.js via NVM",
-  "category": "dev",
-  "requires": ["dev.nvm"],
+  "description": "Node.js (System Pkg or NVM)",
+  "category": "dev/runtimes",
+  "requires": [],
   "variants": ["lts", "current", "20", "18"]
 }

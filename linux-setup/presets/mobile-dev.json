@@ -1,0 +1,13 @@
+{
+  "name": "Mobile Development (Android/Flutter)",
+  "description": "Android SDK, Emulator, Flutter, Java, VSCode",
+  "modules": [
+    { "id": "system.build-tools" },
+    { "id": "system.dev-libs" },
+    { "id": "system.shell-config" },
+    { "id": "dev.java", "params": { "version": "17" } },
+    { "id": "dev.android" },
+    { "id": "dev.flutter" },
+    { "id": "gui.vscode" }
+  ]
+}

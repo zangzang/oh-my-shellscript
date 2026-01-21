@@ -1,0 +1,10 @@
+{
+  "name": "Backend Infra Stack",
+  "description": "DB (Postgres, Redis) + Message Broker (RabbitMQ)",
+  "modules": [
+    { "id": "dev.docker" },
+    { "id": "dev.docker-stack", "params": { "version": "postgres" } },
+    { "id": "dev.docker-stack", "params": { "version": "redis" } },
+    { "id": "dev.docker-stack", "params": { "version": "rabbitmq" } }
+  ]
+}

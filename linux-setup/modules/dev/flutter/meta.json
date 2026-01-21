@@ -1,0 +1,7 @@
+{
+  "id": "dev.flutter",
+  "name": "Flutter SDK",
+  "description": "Flutter SDK (Stable Channel)",
+  "category": "dev/mobile",
+  "requires": ["dev.android", "system.dev-libs", "system.build-tools"]
+}

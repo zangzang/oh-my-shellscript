@@ -1,0 +1,12 @@
+{
+  "id": "dev.docker-stack",
+  "name": "Docker Dev Stack",
+  "description": "Pre-configured Docker images for DB, Monitoring, CI/CD, and Utilities",
+  "category": "dev/infrastructure",
+  "requires": ["dev.docker"],
+  "variants": [
+    "all", "postgres", "mysql", "redis", "mongodb", 
+    "rabbitmq", "kafka", "prometheus-grafana", 
+    "jenkins", "gitea", "portainer", "keycloak", "localstack"
+  ]
+}

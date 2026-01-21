@@ -1,0 +1,7 @@
+{
+  "id": "dev.android",
+  "name": "Android SDK",
+  "description": "Android SDK, Cmdline-tools, Emulator & System Image",
+  "category": "dev/mobile",
+  "requires": ["dev.java", "system.dev-libs"]
+}

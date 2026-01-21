@@ -22,6 +22,13 @@ export PATH=$HOME/.local/bin:/usr/local/bin:$PATH
 # Development Tools Environment Variables
 # =============================================================================
 
+# Android
+export ANDROID_HOME="$HOME/Android/Sdk"
+export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator
+
+# Flutter
+export PATH=$PATH:$HOME/flutter/bin
+
 # .NET
 export DOTNET_ROOT=$HOME/.dotnet
 export PATH=$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools
@@ -44,6 +51,16 @@ export PYENV_ROOT="$HOME/.pyenv"
 if command -v pyenv &> /dev/null; then
     eval "$(pyenv init -)"
 fi
+
+# =============================================================================
+# Input Method (Fcitx5)
+# =============================================================================
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx
+export SDL_IM_MODULE=fcitx
+export GLFW_IM_MODULE=ibus
+export MOZ_ENABLE_WAYLAND=1
 
 # 자바 편의 설정 (-v 명령어 지원)
 java() {
@@ -154,6 +171,13 @@ if [ -f "$HOME/.bashrc" ]; then
 # --- Linux Setup Assistant Paths ---
 export PATH=$HOME/.local/bin:/usr/local/bin:$PATH
 
+# Android
+export ANDROID_HOME="$HOME/Android/Sdk"
+export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator
+
+# Flutter
+export PATH=$PATH:$HOME/flutter/bin
+
 # SDKMAN/NVM/Pyenv
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
@@ -162,6 +186,14 @@ export NVM_DIR="$HOME/.nvm"
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 if command -v pyenv &> /dev/null; then eval "$(pyenv init -)"; fi
+
+# Input Method (Fcitx5)
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx
+export SDL_IM_MODULE=fcitx
+export GLFW_IM_MODULE=ibus
+export MOZ_ENABLE_WAYLAND=1
 
 # 자바 편의 설정
 java() {

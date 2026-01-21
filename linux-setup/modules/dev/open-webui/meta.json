@@ -1,0 +1,7 @@
+{
+  "id": "dev.open-webui",
+  "name": "Open WebUI",
+  "description": "ChatGPT-like Web Interface for Ollama (Docker)",
+  "category": "dev/local-llm",
+  "requires": ["dev.docker", "dev.ollama"]
+}

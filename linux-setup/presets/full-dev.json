@@ -12,17 +12,21 @@
     { "id": "system.shell-config" },
     { "id": "system.ssh-server" },
     { "id": "dev.docker" },
+    { "id": "dev.docker-stack", "params": { "version": "all", "selected": false } },
     { "id": "dev.sdkman" },
     { "id": "dev.java" },
     { "id": "dev.nvm" },
     { "id": "dev.node" },
     { "id": "dev.python" },
     { "id": "dev.rust" },
-    { "id": "dev.dotnet" },
+    { "id": "dev.dotnet", "params": { "version": "9" } },
+    { "id": "dev.dotnet", "params": { "version": "10" } },
     { "id": "gui.fcitx5" },
     { "id": "gui.chrome" },
     { "id": "gui.vscode" },
     { "id": "gui.dbeaver", "params": { "selected": false } },
-    { "id": "gui.sts", "params": { "selected": false } }
+    { "id": "gui.sts", "params": { "selected": false } },
+    { "id": "dev.android", "params": { "selected": false } },
+    { "id": "dev.flutter", "params": { "selected": false } }
   ]
 }

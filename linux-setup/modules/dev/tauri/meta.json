@@ -1,7 +1,7 @@
 {
   "id": "dev.tauri",
-  "name": "Tauri Dependencies",
-  "category": "dev",
-  "description": "Install Tauri framework dependencies (GTK, WebKit, etc.)",
-  "requires": ["dev.rust", "dev.node"]
+  "name": "Tauri",
+  "description": "Tauri (System Pkg or Rustup)",
+  "category": "dev/cross-platform",
+  "requires": ["system.build-tools"]
 }

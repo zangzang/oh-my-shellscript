@@ -1,0 +1,7 @@
+{
+  "id": "dev.ollama",
+  "name": "Ollama",
+  "description": "Local LLM runner (No Python required)",
+  "category": "dev/local-llm",
+  "requires": ["system.cli-tools"]
+}

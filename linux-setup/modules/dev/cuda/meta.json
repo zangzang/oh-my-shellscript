@@ -1,0 +1,7 @@
+{
+  "id": "dev.nvidia-setup",
+  "name": "NVIDIA GPU Setup",
+  "description": "NVIDIA Drivers & Container Toolkit for Docker",
+  "category": "dev/local-llm",
+  "requires": ["dev.docker"]
+}

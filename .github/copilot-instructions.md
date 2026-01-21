@@ -3,15 +3,15 @@
 이 프로젝트는 **Windows 및 Linux 환경**의 반복적인 개발 환경 설정 작업을 자동화하기 위한 **모듈식 설정 관리 시스템**입니다.
 
 ### 📌 프로젝트 구성
-- **Linux 자동화**: `linux-setup/` - Bash 기반 TUI 설치 자동화
+- **Linux 자동화**: `linux-setup/` - Bash + fzf 기반 TUI 설치 자동화
 - **Windows 자동화**: `pwsh/` - PowerShell 기반 환경 설정  
 - **Bash 유틸리티**: `bash/` - 공유 Bash 스크립트 및 설정 파일
 
 ## 🎯 프로젝트 개요
 
 - **목적**: OS 재설치/신규 환경 구축 시 필요한 소프트웨어와 설정을 자동으로 수행
-- **접근 방식**: 모듈화된 설치 스크립트 + TUI 기반 선택 인터페이스 (Linux) + PowerShell 스크립트 (Windows)
-- **주요 기술**: Bash, PowerShell, JSON, `jq`, `gum` (TUI 라이브러리)
+- **접근 방식**: 모듈화된 설치 스크립트 + fzf 기반 TUI 선택 인터페이스 (Linux) + PowerShell 스크립트 (Windows)
+- **주요 기술**: Bash, PowerShell, JSON, `jq`, `fzf` (TUI 라이브러리)
 
 ## 📁 프로젝트 구조
 
@@ -26,10 +26,15 @@ my-shell-script/
 │   ├── ssh_up_se.sh
 │   └── dotnet-install.sh
 ├── linux-setup/                 # Linux 자동화 시스템 ⭐
-│   ├── easy-setup.sh           # 메인 진입점 (TUI 오케스트레이터)
+│   ├── easy-setup.sh           # 메인 진입점 (fzf 기반 TUI)
 │   ├── README.md               # Linux 설정 가이드
+│   ├── config/                 # 설정 파일 (하드코딩 제거)
+│   │   ├── categories.json    # 카테고리 트리 정의
+│   │   └── ui.json            # UI 문자열/아이콘 정의
 │   ├── lib/                    # 공통 함수 라이브러리
 │   │   ├── core.sh            # 로깅, 권한 관리 등
+│   │   ├── fzf-ui.sh          # fzf 기반 UI 함수
+│   │   ├── preview.sh         # fzf 프리뷰 스크립트
 │   │   └── validate.sh        # JSON 검증
 │   ├── modules/                # 설치 모듈 저장소
 │   │   ├── dev/               # 개발 도구 (Docker, Java, Node, Python 등)

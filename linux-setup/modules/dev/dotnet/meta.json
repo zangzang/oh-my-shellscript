@@ -2,7 +2,7 @@
   "id": "dev.dotnet",
   "name": ".NET SDK",
   "description": ".NET SDK (Microsoft)",
-  "category": "dev",
+  "category": "dev/languages",
   "requires": ["system.build-tools"],
   "variants": ["8", "9", "10"]
 }

@@ -1,0 +1,47 @@
+{
+  "app": {
+    "title": "🐧 Linux Setup Assistant",
+    "version": "3.0"
+  },
+  "messages": {
+    "welcome": "설치할 모듈을 선택하세요",
+    "selected": "선택됨",
+    "none_selected": "선택된 항목 없음",
+    "dependencies": "의존성",
+    "installing": "설치 중",
+    "complete": "설치 완료",
+    "failed": "설치 실패",
+    "dry_run": "시뮬레이션",
+    "confirm_install": "설치를 시작하시겠습니까?",
+    "press_to_continue": "계속하려면 Enter를 누르세요"
+  },
+  "keys": {
+    "select": "Tab",
+    "confirm": "Enter", 
+    "install": "Ctrl+D",
+    "quit": "Esc",
+    "preset": "Ctrl+P",
+    "help": "?"
+  },
+  "help": {
+    "header": "━━━ 도움말 ━━━",
+    "lines": [
+      "Tab      : 모듈 선택/해제",
+      "Enter    : 선택 확정 및 설치",
+      "Ctrl+P   : 프리셋 불러오기",
+      "Esc      : 종료",
+      "/        : 검색"
+    ]
+  },
+  "icons": {
+    "selected": "✓",
+    "unselected": "○",
+    "folder": "📂",
+    "module": "📦",
+    "dependency": "↳",
+    "installing": "⏳",
+    "success": "✅",
+    "error": "❌",
+    "warning": "⚠️"
+  }
+}

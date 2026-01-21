@@ -68,11 +68,13 @@ for pkg in gtk+-3.0 webkit2gtk-4.1 glib-2.0; do
     fi
 done
 
-# Tauri CLI 설치 (전역)
-echo "📦 Tauri CLI 설치 중..."
+# Tauri CLI 확인
+echo "📦 Tauri CLI 확인 중..."
 if ! command -v cargo-tauri &> /dev/null; then
-    cargo install tauri-cli --quiet 2>&1 | tail -3
+    echo "❌ Tauri CLI(cargo-tauri)가 설치되지 않았습니다. dev.tauri 모듈을 먼저 설치하세요."
+    exit 1
 fi
+echo "✅ Tauri CLI 준비됨"
 
 # 간단한 Tauri 프로젝트 생성
 echo "📝 Tauri 프로젝트 생성 중..."

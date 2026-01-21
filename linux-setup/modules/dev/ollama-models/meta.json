@@ -1,0 +1,8 @@
+{
+  "id": "dev.ollama-models",
+  "name": "Ollama Models",
+  "description": "Download popular LLM models",
+  "category": "dev/local-llm",
+  "requires": ["dev.ollama"],
+  "variants": ["llama3.1", "mistral", "phi3", "gemma2", "codellama", "qwen2"]
+}

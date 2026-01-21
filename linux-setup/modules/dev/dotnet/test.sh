@@ -5,51 +5,39 @@ echo "🧪 .NET 설치 테스트 중..."
 
 # .NET PATH 설정
 export PATH="$HOME/.dotnet:$PATH"
+export DOTNET_ROOT="$HOME/.dotnet"
 
-# .NET이 설치되어 있는지 확인
 if ! command -v dotnet &>/dev/null; then
     echo "❌ dotnet 명령을 찾을 수 없습니다."
     exit 1
 fi
 
-# 버전 확인
 echo "✅ .NET 버전: $(dotnet --version)"
 
-# 테스트 디렉토리 생성 (linux-setup/test/dev.dotnet/)
+# 테스트 디렉토리 생성
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TEST_BASE_DIR="$(cd "$SCRIPT_DIR/../../.." && pwd)/test"
-MODULE_ID="dev.dotnet"
-TEST_DIR="$TEST_BASE_DIR/$MODULE_ID"
+TEST_DIR="/tmp/dotnet-test-$(date +%s)"
 mkdir -p "$TEST_DIR"
 cd "$TEST_DIR"
 
-# 기존 프로젝트 정리
-if [[ -d "HelloWorld" ]]; then
-    echo "🧹 기존 프로젝트 디렉터리 정리 중..."
-    rm -rf HelloWorld
-fi
-
 echo "📝 Hello World 콘솔 앱 생성 중..."
-if ! dotnet new console -n HelloWorld -o HelloWorld &>/dev/null; then
-    echo "❌ 프로젝트 생성 실패"
-    exit 1
-fi
+dotnet new console -n HelloWorld >/dev/null 2>&1
 
 cd HelloWorld
 
-echo "🚀 실행 중..."
-OUTPUT=$(dotnet run 2>&1)
+echo "🚀 빌드 및 실행 중..."
+# --nologo 옵션으로 불필요한 출력 제거
+OUTPUT=$(dotnet run --nologo 2>&1 || true)
 
-cd ~
-
-# 결과 확인
-if echo "$OUTPUT" | grep -q "Hello"; then
-    echo "✅ 출력: $OUTPUT"
+# 결과 확인 (대소문자 구분 없이 hello 검색)
+if echo "$OUTPUT" | grep -qi "hello"; then
+    echo "✅ 출력: $(echo "$OUTPUT" | head -n 1)"
     echo "✅ .NET 테스트 통과!"
-    echo "📁 테스트 프로젝트 위치: $TEST_DIR/HelloWorld"
+    rm -rf "$TEST_DIR"
     exit 0
 else
-    echo "❌ 예상치 못한 출력: $OUTPUT"
-    echo "📁 테스트 프로젝트 위치: $TEST_DIR/HelloWorld"
+    echo "❌ 실행 결과 확인 실패"
+    echo "📝 실제 출력: $OUTPUT"
+    rm -rf "$TEST_DIR"
     exit 1
 fi

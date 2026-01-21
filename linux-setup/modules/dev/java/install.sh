@@ -1,99 +1,112 @@
 #!/bin/bash
 set -e
-VERSION="${1:-}"
+VERSION="${1:-17}"
+
+# 라이브러리 로드 (필요시)
+if ! command -v install_packages &>/dev/null; then
+    CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    # .../modules/dev/java -> ../../../lib
+    LIB_DIR="$(cd "$CURRENT_DIR/../../../lib" && pwd)"
+    if [[ -f "$LIB_DIR/core.sh" ]]; then
+        source "$LIB_DIR/core.sh"
+    fi
+fi
+
+# OS 감지 확인
+if [ -z "${OS_ID:-}" ]; then
+    detect_os
+fi
+
+# 패키지 매핑 함수
+get_java_package() {
+    local ver="$1"
+    local os="${OS_ID:-unknown}"
+    
+    if [[ "$os" == "fedora" ]]; then
+        case "$ver" in
+            8) echo "java-1.8.0-openjdk-devel" ;;
+            11) echo "java-11-openjdk-devel" ;;
+            17) echo "java-17-openjdk-devel" ;;
+            21) echo "java-21-openjdk-devel" ;;
+            22) echo "java-22-openjdk-devel" ;;
+            25) echo "java-latest-openjdk-devel" ;; # Fedora might not have 25 yet, using latest
+            *) echo "java-latest-openjdk-devel" ;;
+        esac
+    elif [[ "$os" == "ubuntu" || "$os" == "debian" || "$os" == "pop" || "$os" == "linuxmint" ]]; then
+        case "$ver" in
+            8) echo "openjdk-8-jdk" ;;
+            11) echo "openjdk-11-jdk" ;;
+            17) echo "openjdk-17-jdk" ;;
+            21) echo "openjdk-21-jdk" ;;
+            25) echo "openjdk-25-jdk" ;; # Might not exist
+            *) echo "default-jdk" ;;
+        esac
+    else
+        echo ""
+    fi
+}
+
+PKG_NAME=$(get_java_package "$VERSION")
+
+# 1. 시스템 패키지 매니저 시도
+INSTALLED_NATIVE=false
+if [[ -n "$PKG_NAME" ]]; then
+    echo "📦 시스템 패키지로 Java $VERSION 설치 시도 ($PKG_NAME)..."
+    # install_packages는 에러 시 1 반환 가정
+    if install_packages "$PKG_NAME"; then
+        echo "✅ Java 설치 완료 (System Package)"
+        INSTALLED_NATIVE=true
+    else
+        echo "⚠️  시스템 패키지 설치 실패. Fallback 모드로 전환합니다."
+    fi
+fi
+
+if [[ "$INSTALLED_NATIVE" == "true" ]]; then
+    exit 0
+fi
+
+# 2. Fallback: SDKMAN
+echo "🔄 SDKMAN을 통한 설치 시도..."
+
 export SDKMAN_DIR="$HOME/.sdkman"
 export sdkman_auto_answer=true
 
+# SDKMAN 없으면 설치
 if [[ ! -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]]; then
-    echo "SDKMAN이 설치되어 있지 않습니다: $SDKMAN_DIR"
-    echo "먼저 dev.sdkman 모듈을 설치하세요."
-    exit 1
+    echo "SDKMAN 다운로드 및 설치 중..."
+    curl -s "https://get.sdkman.io" | bash
 fi
 
-# SDKMAN 초기화 (ZSH_VERSION 등 미정의 변수 참조로 인한 set -u 오류 방지)
-# shellcheck disable=SC1090
-nounset_was_on=0
-case "$-" in *u*) nounset_was_on=1 ;; esac
+# SDKMAN 초기화
 set +u
 source "$SDKMAN_DIR/bin/sdkman-init.sh"
-if (( nounset_was_on )); then set -u; fi
+set -u
 
 if ! type sdk >/dev/null 2>&1; then
-    echo "SDKMAN 초기화에 실패했습니다 (sdk 명령을 찾을 수 없음)."
+    echo "❌ SDKMAN 초기화 실패"
     exit 1
 fi
 
-if [[ -z "$VERSION" ]]; then
-    VERSION="17" # Default to 17 if not specified
-fi
-
-pick_latest_temurin_for_major() {
-    local major="$1"
-    # sdk list java 출력에서 temurin 식별자(예: 21.0.5-tem)만 추출 후 버전 정렬
-    sdk list java 2>/dev/null \
-        | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+-tem' \
-        | grep -E "^${major}\." \
-        | sort -V \
-        | tail -n 1
-}
-
-VERSION_STR=""
-
-# VERSION이 이미 구체 버전 식별자면 그대로 사용(예: 21.0.5-tem)
-if [[ "$VERSION" == *.* || "$VERSION" == *-* ]]; then
-    VERSION_STR="$VERSION"
-else
-    # major만 받은 경우(21/17/8): 가능한 최신 temurin 후보 선택
-    VERSION_STR="$(pick_latest_temurin_for_major "$VERSION")"
-    if [[ -z "$VERSION_STR" ]]; then
-        # temurin 후보를 못 찾으면 major alias로 설치를 시도(설치 후 디렉토리로 성공 판정)
-        VERSION_STR="$VERSION"
+# 기존 로직 재사용 (버전 매핑 등)
+# SDKMAN용 버전 문자열 계산
+sdk_version="$VERSION"
+if [[ "$VERSION" =~ ^[0-9]+$ ]]; then
+    # 간단히 Temurin 최신 버전 선택 로직 (생략하거나 단순화)
+    # 여기서는 SDKMAN의 기본 식별자 사용 시도
+    sdk_version="$VERSION-tem" 
+    # 하지만 정확한 식별자를 모르면 쿼리가 필요함.
+    # 이전 스크립트의 로직을 일부 가져옴
+    echo "SDKMAN에서 Java $VERSION 검색 중..."
+    
+    # sdk list java 결과에서 버전 파싱은 복잡하므로
+    # 사용자가 정확한 버전을 입력하지 않은 경우 
+    # 단순히 'java x.y.z-tem' 패턴 매칭 시도
+    
+    CANDIDATE=$(sdk list java | grep -Eo "${VERSION}\.[0-9]+\.[0-9]+-tem" | head -1 || true)
+    if [[ -n "$CANDIDATE" ]]; then
+        sdk_version="$CANDIDATE"
     fi
 fi
 
-JAVA_DIR="$SDKMAN_DIR/candidates/java/$VERSION_STR"
-
-set +u
-if [[ -d "$JAVA_DIR" ]]; then
-    echo "✅ Java $VERSION ($VERSION_STR) 이미 설치됨"
-    sdk default java "$VERSION_STR" >/dev/null 2>&1 || echo "  (default 설정 건너뜀)"
-else
-    echo "Java $VERSION ($VERSION_STR) 설치 중..."
-    # pipefail + yes| 파이프 조합은 SIGPIPE로 성공을 실패로 오판할 수 있어 here-string 사용
-    set +e
-    sdk install java "$VERSION_STR" <<<"y"
-    install_rc=$?
-    set -e
-    # 0 또는 1 (이미 설치됨)은 성공으로 처리
-    if [[ $install_rc -ne 0 && $install_rc -ne 1 ]]; then
-        echo "⚠️  Java 설치 명령 실패 (exit=$install_rc), 설치 여부를 확인합니다..."
-    fi
-
-    # major alias로 설치한 경우, 실제 설치된 디렉토리명이 다를 수 있어 재탐색
-    if [[ ! -d "$JAVA_DIR" && "$VERSION_STR" =~ ^[0-9]+$ ]]; then
-        resolved_dir=$(ls -1 "$SDKMAN_DIR/candidates/java" 2>/dev/null | grep -E "^${VERSION_STR}\\.[0-9]+\\.[0-9]+-" | sort -V | tail -n 1 || true)
-        if [[ -n "$resolved_dir" ]]; then
-            JAVA_DIR="$SDKMAN_DIR/candidates/java/$resolved_dir"
-            VERSION_STR="$resolved_dir"
-        fi
-    fi
-
-    if [[ -d "$JAVA_DIR" ]]; then
-        echo "✅ Java 설치 완료: $VERSION_STR"
-        sdk default java "$VERSION_STR" >/dev/null 2>&1 || echo "  (default 설정 건너뜀)"
-        
-        # 시스템 전역 경로 심볼릭 링크 생성 (편의성)
-        if [[ -x "$JAVA_DIR/bin/java" ]]; then
-            echo "전역 심볼릭 링크 생성 중..."
-            sudo ln -sf "$JAVA_DIR/bin/java" /usr/local/bin/java
-            sudo ln -sf "$JAVA_DIR/bin/javac" /usr/local/bin/javac
-        fi
-    else
-        echo "❌ Java 설치 실패: $VERSION_STR (플랫폼/배포판에서 제공되지 않을 수 있음)"
-        echo "   확인: sdk list java"
-        exit 1
-    fi
-fi
-if (( nounset_was_on )); then
-    set -u
-fi
+echo "SDKMAN으로 Java 설치: $sdk_version"
+sdk install java "$sdk_version" <<<"y"

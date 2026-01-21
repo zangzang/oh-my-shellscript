@@ -1,13 +1,12 @@
 #!/bin/bash
 set -e
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../../../lib/distro.sh"
 
-if command -v zsh &>/dev/null; then
-    echo "Zsh 이미 설치됨 ($(zsh --version))"
-    exit 0
-fi
+detect_os
+echo "Installing Zsh..."
+install_packages zsh yakuake
 
-echo "Zsh 및 Yakuake 설치 중..."
-sudo apt install -y zsh yakuake
 
 # 기본 쉘을 Zsh로 변경
 if [ "$(basename "$SHELL")" != "zsh" ]; then

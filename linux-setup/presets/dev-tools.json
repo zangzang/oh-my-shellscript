@@ -1,0 +1,9 @@
+{
+  "name": "Self-Hosted Dev Tools",
+  "description": "Portainer (Docker GUI) and Gitea (Git Service)",
+  "modules": [
+    { "id": "dev.docker" },
+    { "id": "dev.docker-stack", "params": { "version": "portainer" } },
+    { "id": "dev.docker-stack", "params": { "version": "gitea" } }
+  ]
+}

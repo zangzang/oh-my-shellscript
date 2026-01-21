@@ -1,0 +1,52 @@
+{
+  "system": {
+    "name": "🔧 System",
+    "description": "시스템 필수 도구 및 설정",
+    "order": 1,
+    "modules": ["update", "build-tools", "dev-libs", "cli-tools", "essentials", "zsh", "nerd-fonts", "oh-my-posh", "shell-config", "ssh-server"]
+  },
+  "tools": {
+    "name": "🛠️ Tools",
+    "description": "CLI 유틸리티",
+    "order": 2,
+    "modules": ["fastfetch"]
+  },
+  "dev": {
+    "name": "💻 Development",
+    "description": "개발 언어 및 런타임",
+    "order": 3,
+    "subcategories": {
+      "languages": {
+        "name": "📝 Languages",
+        "description": "프로그래밍 언어",
+        "modules": ["java", "python", "node", "nvm", "rust", "dotnet"]
+      },
+      "build": {
+        "name": "🏗️ Build Tools",
+        "description": "빌드 및 패키지 관리",
+        "modules": ["sdkman", "maven", "gradle"]
+      },
+      "infrastructure": {
+        "name": "🐳 Infrastructure",
+        "description": "컨테이너 및 인프라",
+        "modules": ["docker", "docker-stack"]
+      },
+      "ai": {
+        "name": "🤖 AI/ML",
+        "description": "AI 및 머신러닝 도구",
+        "modules": ["cuda", "ollama", "ollama-models", "open-webui"]
+      },
+      "mobile": {
+        "name": "📱 Mobile",
+        "description": "모바일 개발",
+        "modules": ["android", "flutter", "tauri"]
+      }
+    }
+  },
+  "gui": {
+    "name": "🖥️ GUI Apps",
+    "description": "데스크탑 애플리케이션",
+    "order": 4,
+    "modules": ["chrome", "vscode", "dbeaver", "sts", "fcitx5"]
+  }
+}

@@ -4,7 +4,7 @@
   "modules": [
     { "id": "dev.dotnet", "params": { "version": "9" } },
     { "id": "dev.dotnet", "params": { "version": "8", "selected": false } },
-    { "id": "dev.dotnet", "params": { "version": "10", "selected": false } },
+    { "id": "dev.dotnet", "params": { "version": "10" } },
     { "id": "gui.vscode", "params": { "selected": false } }
   ]
 }
