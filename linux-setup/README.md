@@ -6,11 +6,12 @@ Kubuntu 25.04 (Plasma 6 + Wayland) 및 다양한 Linux 환경을 위한 **모듈
 ## ✨ 주요 기능
 
 *   **🖥️ Python TUI**: `textual` 라이브러리 기반의 빠르고 반응성 좋은 인터페이스
-*   **🌳 트리 뷰**: 카테고리별 모듈을 계층적으로 표시, 접기/펼치기 지원
-*   **📦 Variants 지원**: Java, .NET 등 버전별 선택 가능 (서브트리로 그룹화)
+*   **🌳 구조화된 트리**: **Presets**(프리셋)와 **Modules**(개별 모듈)가 최상위 메뉴로 분리되어 제공
+*   **📦 Multi-Preset 지원**: 여러 개의 프리셋을 동시에 선택하여 조합 가능
 *   **🔗 의존성 자동 해결**: `meta.json`의 `requires` 필드로 자동 추적
 *   **💾 프리셋 저장**: 현재 선택을 프리셋으로 저장하여 재사용
-*   **🔍 Dry Run**: 실제 설치 전 시뮬레이션으로 확인
+*   **📊 상세 요약 리포트**: 설치 후 성공, 실패, **이미 설치됨(Skipped)** 상태와 소요 시간 표시
+*   **🔍 상세 Simulation**: 실제 실행될 Bash 명령어와 환경변수를 미리 확인
 *   **⚡ 빠른 시작**: Ctrl+C로 언제든 깔끔하게 중단
 
 ## 🚀 빠른 시작
@@ -40,12 +41,12 @@ python3 setup.py
 |---|---|
 | **↑↓** | 트리 탐색 |
 | **Enter** | 노드 펼치기/접기 |
-| **Space** | 모듈 선택/해제 |
-| **Tab** | 왼쪽(트리) ↔ 오른쪽(선택 목록) 패널 이동 |
-| **i** | 설치 시작 |
+| **Space** | 항목 선택/해제 (프리셋 및 모듈 모두 지원) |
+| **Tab** | 패널 간 포커스 이동 (트리 ↔ 선택 목록 ↔ 모듈 정보) |
+| **F5** | 설치 시작 |
 | **d** | 시뮬레이션 (Dry Run) |
 | **s** | 현재 선택을 프리셋으로 저장 |
-| **p** | 프리셋 로드 |
+| **p** | 프리셋 목록 순환 |
 | **q / ESC** | 종료 |
 
 ### 4. 명령줄 옵션
@@ -67,7 +68,6 @@ python3 setup.py --preset full-dev --dry-run
 linux-setup/
 ├── setup.py            # 🆕 메인 실행 스크립트 (Python TUI)
 ├── bootstrap.sh        # 🆕 사전 설치 스크립트
-├── easy-setup.sh       # (레거시) Bash 기반 TUI
 ├── config/             # 🆕 설정 파일
 │   └── categories.json # 카테고리 트리 정의
 ├── lib/                # Bash 공통 함수 라이브러리
@@ -87,22 +87,19 @@ linux-setup/
 ┌─────────────────────────────────────────────────────────────────┐
 │  🐧 Linux Setup Assistant v4.0                                  │
 ├────────────────────────────────┬────────────────────────────────┤
-│ 🐧 Modules                     │ ━━━ 선택됨 (Space로 제거) ━━━  │
-│ ├─ 🔧 System                   │   ✓ dev.java:21                │
-│ │  ├─ ☐ System Update          │   ✓ dev.docker                 │
-│ │  ├─ ☑ Build Tools            │   ✓ gui.vscode                 │
-│ │  └─ ...                      │                                │
-│ ├─ 💻 Development              ├────────────────────────────────┤
-│ │  ├─ Runtime & SDK            │ ━━━ 모듈 정보 ━━━              │
-│ │  │  ├─ 📦 Java (JDK)         │ Java (JDK)                     │
-│ │  │  │  ├─ ☐ 8                │ Java Development Kit           │
-│ │  │  │  ├─ ☐ 17               │                                │
-│ │  │  │  ├─ ☑ 21               │ 의존성:                        │
-│ │  │  │  └─ ☐ 25               │   ↳ dev.sdkman                 │
-│ │  │  └─ ...                   │                                │
-│ └─ ...                         │ 버전: 8, 17, 21, 25            │
+│ 📂 Presets                     │ ━━━ 선택됨 (Space로 제거) ━━━  │
+│ ├─ ☑ Full Dev Setup            │   ✓ system.update              │
+│ └─ ☐ Base System               │   ✓ dev.java:21                │
+│ 📦 Modules                     │   ...                          │
+│ ├─ 🔧 System                   ├────────────────────────────────┤
+│ │  ├─ ☑ System Update          │ ━━━ 모듈 정보 (ID: dev.java) ━━│
+│ │  ├─ ☑ Build Tools            │ Java (JDK) (dev.java)          │
+│ │  └─ ...                      │ Java Development Kit           │
+│ └─ ...                         │                                │
+│                                │ 의존성:                        │
+│                                │   ↳ dev.sdkman                 │
 ├────────────────────────────────┴────────────────────────────────┤
-│ q 종료 | i 설치(i) | d 시뮬(d) | s 저장(s) | p 프리셋(p) | Tab   │
+│ q 종료 | F5 설치 | d 시뮬 | s 저장 | p 프리셋 | Tab 포커스      │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -234,16 +231,6 @@ presets/custom_20260122_153000.json
 
 - 터미널: 256색 또는 트루컬러 지원 (kitty, alacritty, gnome-terminal 등)
 - 폰트: Nerd Font (아이콘 표시용)
-
-## 🔄 레거시 모드
-
-기존 Bash 기반 TUI도 여전히 사용 가능합니다:
-
-```bash
-./easy-setup.sh
-```
-
-단, Python TUI (`setup.py`)가 더 빠르고 기능이 풍부합니다.
 
 ## 🐛 문제 해결
 

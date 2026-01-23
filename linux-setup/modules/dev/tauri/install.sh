@@ -27,10 +27,19 @@ if [[ -f "$HOME/.cargo/env" ]]; then
     source "$HOME/.cargo/env"
 fi
 
+if ! command -v cargo &> /dev/null; then
+    # PATH에 없을 경우를 대비해 수동으로 추가 시도
+    export PATH="$HOME/.cargo/bin:$PATH"
+fi
+
+if ! command -v cargo &> /dev/null; then
+    log_error "Cargo(Rust)를 찾을 수 없습니다. dev.rust 모듈이 설치되었는지 확인하세요."
+    exit 1
+fi
+
 # Tauri CLI 설치
 if ! command -v cargo-tauri &> /dev/null; then
     log_info "📦 Tauri CLI 설치 중 (컴파일에 시간이 다소 소요될 수 있습니다)..."
-    # --quiet을 제거하여 진행 상황을 볼 수 있게 하거나, 최소한의 로그 출력
     cargo install tauri-cli
 else
     log_info "✅ Tauri CLI가 이미 설치되어 있습니다."

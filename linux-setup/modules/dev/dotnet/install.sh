@@ -1,5 +1,9 @@
 #!/bin/bash
 set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../../../lib/distro.sh"
+
 VERSION="$1"
 
 if [[ -z "$VERSION" ]]; then
@@ -12,6 +16,10 @@ if [[ "$VERSION" =~ ^[0-9]+$ ]]; then
 fi
 
 echo ".NET SDK $VERSION 설치 중..."
+
+# 필수 의존성 설치 (curl, awk)
+echo "📦 필수 의존성 확인 중..."
+install_packages curl gawk
 
 # .NET 설치 (다른 모듈들과 일관되게 curl | bash 방식 사용)
 if ! curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel "$VERSION" --install-dir "$HOME/.dotnet" --no-path; then

@@ -3,5 +3,5 @@
   "name": "Tauri",
   "description": "Tauri (System Pkg or Rustup)",
   "category": "dev/cross-platform",
-  "requires": ["system.build-tools"]
+  "requires": ["system.build-tools", "dev.rust"]
 }

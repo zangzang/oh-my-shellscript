@@ -1,0 +1,15 @@
+{
+  "name": "테스트 올라마",
+  "description": "자동 생성된 프리셋 (2026-01-23 22:18)",
+  "modules": [
+    {
+      "id": "dev.ollama"
+    },
+    {
+      "id": "dev.ollama-models",
+      "params": {
+        "version": "phi3"
+      }
+    }
+  ]
+}
