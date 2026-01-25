@@ -3,6 +3,9 @@
 # Oh My Shell Script - One-line Installer
 # https://github.com/zangzang/oh-my-shellscript
 #
+# Usage:
+#   curl -fsSL https://is.gd/nrzE95 | bash
+#
 
 set -e
 
