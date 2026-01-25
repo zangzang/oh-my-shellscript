@@ -3,5 +3,5 @@
   "name": "MCP SQLite Server",
   "description": "SQLite database access for AI models (Python)",
   "category": "ai/agents",
-  "dependencies": ["dev.python"]
+  "requires": ["dev.python"]
 }

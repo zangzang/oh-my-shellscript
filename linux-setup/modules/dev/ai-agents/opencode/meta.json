@@ -3,5 +3,5 @@
   "name": "Open Code",
   "description": "Open Code Agent CLI",
   "category": "ai/agents",
-  "dependencies": []
+  "requires": []
 }

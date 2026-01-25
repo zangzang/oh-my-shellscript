@@ -3,5 +3,5 @@
   "name": "Gemini CLI",
   "description": "Google Gemini AI CLI Tool",
   "category": "ai/agents",
-  "dependencies": ["dev.node"]
+  "requires": ["dev.node"]
 }

@@ -3,5 +3,5 @@
   "name": "MCP n8n Server",
   "description": "n8n workflow integration for AI models",
   "category": "ai/agents",
-  "dependencies": ["dev.node"]
+  "requires": ["dev.node"]
 }

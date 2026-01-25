@@ -3,5 +3,5 @@
   "name": "Claude Code",
   "description": "Anthropic Claude Code CLI",
   "category": "ai/agents",
-  "dependencies": ["dev.node"]
+  "requires": ["dev.node"]
 }

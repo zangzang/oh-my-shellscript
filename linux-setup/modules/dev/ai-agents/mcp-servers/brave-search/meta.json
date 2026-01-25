@@ -3,5 +3,5 @@
   "name": "MCP Brave Search Server",
   "description": "Web search via Brave for AI models (Node.js)",
   "category": "ai/agents",
-  "dependencies": ["dev.node"]
+  "requires": ["dev.node"]
 }

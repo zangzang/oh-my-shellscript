@@ -3,5 +3,5 @@
   "name": "MCP Tools",
   "description": "Model Context Protocol SDK and Tools",
   "category": "ai/agents",
-  "dependencies": ["dev.python", "dev.node"]
+  "requires": ["dev.python", "dev.node"]
 }

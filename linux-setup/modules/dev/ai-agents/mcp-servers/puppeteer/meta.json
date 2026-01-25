@@ -3,5 +3,5 @@
   "name": "MCP Puppeteer Server",
   "description": "Chrome automation for AI models (Puppeteer)",
   "category": "ai/agents",
-  "dependencies": ["dev.node"]
+  "requires": ["dev.node"]
 }
