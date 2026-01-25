@@ -1,8 +1,0 @@
-/mnt/d/ws/zangzang/my-shell-script/linux-setup/test/dev.dotnet/HelloWorld/obj/Debug/net10.0/HelloWorld.GeneratedMSBuildEditorConfig.editorconfig
-/mnt/d/ws/zangzang/my-shell-script/linux-setup/test/dev.dotnet/HelloWorld/obj/Debug/net10.0/HelloWorld.AssemblyInfoInputs.cache
-/mnt/d/ws/zangzang/my-shell-script/linux-setup/test/dev.dotnet/HelloWorld/obj/Debug/net10.0/HelloWorld.AssemblyInfo.cs
-/mnt/d/ws/zangzang/my-shell-script/linux-setup/test/dev.dotnet/HelloWorld/obj/Debug/net10.0/HelloWorld.csproj.CoreCompileInputs.cache
-/mnt/d/ws/zangzang/my-shell-script/linux-setup/test/dev.dotnet/HelloWorld/obj/Debug/net10.0/HelloWorld.sourcelink.json
-/mnt/d/ws/zangzang/my-shell-script/linux-setup/test/dev.dotnet/HelloWorld/obj/Debug/net10.0/HelloWorld.dll
-/mnt/d/ws/zangzang/my-shell-script/linux-setup/test/dev.dotnet/HelloWorld/obj/Debug/net10.0/refint/HelloWorld.dll
-/mnt/d/ws/zangzang/my-shell-script/linux-setup/test/dev.dotnet/HelloWorld/obj/Debug/net10.0/HelloWorld.pdb
