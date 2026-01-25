@@ -18,9 +18,8 @@ fi
 
 # Node MCP SDK (if relevant/available)
 if command -v npm &> /dev/null; then
-    # Checking if there is a global CLI or SDK installer
-    # For now, just logging as it's often a library.
-    echo "Node.js is available for MCP server implementations."
+    echo "Installing Node.js MCP SDK..."
+    npm install -g @modelcontextprotocol/sdk
 fi
 
 echo "MCP Tools setup complete."

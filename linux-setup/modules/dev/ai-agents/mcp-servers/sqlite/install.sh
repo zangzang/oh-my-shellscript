@@ -4,8 +4,9 @@ set -e
 # Install MCP SQLite Server
 echo "Installing MCP SQLite Server..."
 
-if command -v uv &> /dev/null; then
-    uv tool install mcp-server-sqlite
+if command -v npm &> /dev/null; then
+    npm install -g @modelcontextprotocol/server-sqlite
 else
-    pip install mcp-server-sqlite
+    echo "npm not found. Please install Node.js and npm."
+    exit 1
 fi

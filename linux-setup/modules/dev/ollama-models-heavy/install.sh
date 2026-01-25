@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-MODEL="${1:-llama3.1}"
+MODEL="${1:-llama3.3}"
 
 echo "📥 Downloading Medium/Large Ollama model: $MODEL"
 
