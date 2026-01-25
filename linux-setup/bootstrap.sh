@@ -1,14 +1,14 @@
 #!/bin/bash
 #
-# Linux Setup Assistant - 부트스트랩 스크립트
-# Python TUI 실행을 위한 사전 준비
+# Linux Setup Assistant - Bootstrap Script
+# Prepares the environment for running Python TUI
 #
 set -e
 
-echo "🚀 Linux Setup Assistant 부트스트랩"
+echo "🚀 Linux Setup Assistant Bootstrap"
 echo "=================================="
 
-# 색상 정의
+# Color definitions
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -18,13 +18,13 @@ log_info() { echo -e "${GREEN}[INFO]${NC} $1"; }
 log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
-# 스크립트 디렉토리
+# Script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# 1. Python3 확인
-log_info "Python3 확인 중..."
+# 1. Check Python3
+log_info "Checking for Python3..."
 if ! command -v python3 &>/dev/null; then
-    log_warn "Python3가 설치되어 있지 않습니다. 설치 중..."
+    log_warn "Python3 is not installed. Attempting to install..."
     if command -v apt-get &>/dev/null; then
         sudo apt-get update
         sudo apt-get install -y python3 python3-pip python3-venv
@@ -35,18 +35,18 @@ if ! command -v python3 &>/dev/null; then
     elif command -v pacman &>/dev/null; then
         sudo pacman -S --noconfirm python python-pip
     else
-        log_error "패키지 관리자를 찾을 수 없습니다. Python3를 수동으로 설치해주세요."
+        log_error "Could not find a supported package manager. Please install Python3 manually."
         exit 1
     fi
 fi
 
 PYTHON_VERSION=$(python3 --version 2>&1)
-log_info "Python 버전: $PYTHON_VERSION"
+log_info "Python version: $PYTHON_VERSION"
 
-# 2. pip 확인 및 업그레이드
-log_info "pip 확인 중..."
+# 2. Check pip and upgrade
+log_info "Checking for pip..."
 if ! python3 -m pip --version &>/dev/null; then
-    log_warn "pip가 없습니다. 설치 중..."
+    log_warn "pip not found. Installing..."
     if command -v apt-get &>/dev/null; then
         sudo apt-get install -y python3-pip
     else
@@ -54,26 +54,26 @@ if ! python3 -m pip --version &>/dev/null; then
     fi
 fi
 
-# 3. textual 설치
-log_info "textual 라이브러리 확인 중..."
+# 3. Install textual
+log_info "Checking for 'textual' library..."
 if ! python3 -c "import textual" 2>/dev/null; then
-    log_info "textual 설치 중..."
+    log_info "Installing textual..."
     python3 -m pip install --user textual
 fi
 
 TEXTUAL_VERSION=$(python3 -c "import textual; print(textual.__version__)" 2>/dev/null || echo "unknown")
-log_info "textual 버전: $TEXTUAL_VERSION"
+log_info "Textual version: $TEXTUAL_VERSION"
 
-# 4. 터미널 환경 확인
-log_info "터미널 환경 확인 중..."
+# 4. Check terminal environment
+log_info "Checking terminal environment..."
 if [[ -z "$TERM" ]]; then
     export TERM=xterm-256color
-    log_warn "TERM 환경변수 설정: xterm-256color"
+    log_warn "Setting TERM: xterm-256color"
 fi
 
-# 5. config 디렉토리 확인
+# 5. Verify config directory
 if [[ ! -d "$SCRIPT_DIR/config" ]]; then
-    log_warn "config 디렉토리가 없습니다. 기본 설정 생성 중..."
+    log_warn "Config directory missing. Creating default config..."
     mkdir -p "$SCRIPT_DIR/config"
     
     # 기본 categories.json 생성
@@ -127,21 +127,9 @@ fi
 
 echo ""
 echo "=================================="
-log_info "부트스트랩 완료!"
-echo ""
-echo "실행 방법:"
-echo "  cd $SCRIPT_DIR"
-echo "  python3 setup.py"
-echo ""
-echo "옵션:"
-echo "  python3 setup.py --preset java-dev     # 프리셋 로드"
-echo "  python3 setup.py --preset base --execute  # 바로 설치"
+log_info "Bootstrap complete!"
 echo ""
 
-# 바로 실행할지 묻기
-read -p "지금 바로 실행하시겠습니까? (y/N): " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    cd "$SCRIPT_DIR"
-    exec python3 setup.py "$@"
-fi
+# Execute setup assistant directly
+cd "$SCRIPT_DIR"
+exec python3 setup.py "$@"
