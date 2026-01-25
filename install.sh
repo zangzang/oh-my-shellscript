@@ -4,7 +4,7 @@
 # https://github.com/zangzang/oh-my-shellscript
 #
 # Usage:
-#   curl -fsSL https://is.gd/nrzE95 | bash
+#   curl -fsSL https://raw.githubusercontent.com/zangzang/oh-my-shellscript/main/install.sh | bash
 #
 
 set -e

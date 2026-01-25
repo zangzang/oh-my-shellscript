@@ -2,22 +2,28 @@
 
 Automated environment setup scripts for Linux and Windows.
 
-To install **Oh My Shell Script**, simply run the following command in your terminal:
+To install **Oh My Shell Script**, run the following command in your terminal:
 
 ```bash
-curl -fsSL https://is.gd/nrzE95 | bash
+curl -fsSL https://raw.githubusercontent.com/zangzang/oh-my-shellscript/main/install.sh | bash
 ```
 
-### Manual Installation
+### Manual Installation (Without Git)
 
-1. Ensure `git` and `python3` are installed.
-2. Clone this repository to `~/oh-my-shellscript`.
+If you don't have `git` installed yet, you can download and run the installer directly:
+
+1. Download the installer:
    ```bash
-   git clone https://github.com/zangzang/oh-my-shellscript.git ~/oh-my-shellscript
-   cd ~/oh-my-shellscript
+   curl -O https://raw.githubusercontent.com/zangzang/oh-my-shellscript/main/install.sh
+   # or using wget
+   # wget https://raw.githubusercontent.com/zangzang/oh-my-shellscript/main/install.sh
+   ```
+2. Run the installer:
+   ```bash
+   chmod +x install.sh
    ./install.sh
    ```
-3. Run the setup assistant.
+3. Once the installation is complete, you can run the setup assistant from anywhere:
    ```bash
    omss
    ```
