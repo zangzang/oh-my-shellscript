@@ -36,6 +36,11 @@
         "description": "AI 및 머신러닝 도구",
         "modules": ["cuda", "ollama", "ollama-models", "open-webui"]
       },
+      "ai-agents": {
+        "name": "👾 AI Agents",
+        "description": "AI 에이전트 및 CLI 도구",
+        "modules": ["gemini-cli", "claude-code", "opencode", "mcp-tools", "mcp-servers"]
+      },
       "mobile": {
         "name": "📱 Mobile",
         "description": "모바일 개발",

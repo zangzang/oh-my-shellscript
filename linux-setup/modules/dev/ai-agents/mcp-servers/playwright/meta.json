@@ -1,0 +1,7 @@
+{
+  "id": "dev.ai-agents.mcp-servers.playwright",
+  "name": "MCP Playwright Server",
+  "description": "Browser automation for AI models (Playwright)",
+  "category": "dev",
+  "dependencies": ["dev.node"]
+}

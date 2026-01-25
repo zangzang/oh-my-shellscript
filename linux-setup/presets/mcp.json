@@ -1,0 +1,17 @@
+{
+  "name": "MCP Tools & Servers",
+  "category": "AI",
+  "description": "Model Context Protocol SDKs and Standard Servers (Filesystem, GitHub, DB, etc.)",
+  "modules": [
+    { "id": "dev.ai-agents.mcp-tools" },
+    { "id": "dev.ai-agents.mcp-servers.filesystem" },
+    { "id": "dev.ai-agents.mcp-servers.github" },
+    { "id": "dev.ai-agents.mcp-servers.postgres" },
+    { "id": "dev.ai-agents.mcp-servers.sqlite" },
+    { "id": "dev.ai-agents.mcp-servers.brave-search" },
+    { "id": "dev.ai-agents.mcp-servers.memory" },
+    { "id": "dev.ai-agents.mcp-servers.playwright" },
+    { "id": "dev.ai-agents.mcp-servers.puppeteer" },
+    { "id": "dev.ai-agents.mcp-servers.n8n" }
+  ]
+}

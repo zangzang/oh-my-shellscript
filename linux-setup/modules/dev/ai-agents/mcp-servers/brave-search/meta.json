@@ -1,0 +1,7 @@
+{
+  "id": "dev.ai-agents.mcp-servers.brave-search",
+  "name": "MCP Brave Search Server",
+  "description": "Web search via Brave for AI models (Node.js)",
+  "category": "dev",
+  "dependencies": ["dev.node"]
+}

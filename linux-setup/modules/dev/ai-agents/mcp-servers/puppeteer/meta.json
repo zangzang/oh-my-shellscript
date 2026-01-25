@@ -1,0 +1,7 @@
+{
+  "id": "dev.ai-agents.mcp-servers.puppeteer",
+  "name": "MCP Puppeteer Server",
+  "description": "Chrome automation for AI models (Puppeteer)",
+  "category": "dev",
+  "dependencies": ["dev.node"]
+}

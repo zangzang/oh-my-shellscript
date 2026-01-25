@@ -259,17 +259,36 @@ class ModuleTree(Tree):
         self._build_tree()
     
     def _build_presets(self):
-        """프리셋 목록 구성"""
+        """프리셋 목록 구성 (카테고리 그룹화 및 정렬 적용)"""
         presets_node = self.root.add("📂 Presets", expand=True)
-        for preset_file in sorted(PRESETS_DIR.glob("*.json")):
+        
+        # 1. 모든 프리셋 로드 및 분류
+        preset_groups = {}  # category -> list of (name, file_name)
+        
+        for preset_file in PRESETS_DIR.glob("*.json"):
             try:
-                data = json.loads(preset_file.read_text())
+                data = json.loads(preset_file.read_text(encoding='utf-8'))
                 name = data.get("name", preset_file.stem)
-                # 프리셋 노드 추가 (체크박스 아이콘 사용)
-                node = presets_node.add_leaf(f"☐ {name}")
-                self.node_map[str(node._id)] = f"preset:{preset_file.name}"
+                category = data.get("category", "General") # 카테고리 없으면 General
+                
+                if category not in preset_groups:
+                    preset_groups[category] = []
+                preset_groups[category].append((name, preset_file.name))
             except Exception:
                 pass
+        
+        # 2. 카테고리별 정렬 및 트리 구성
+        # 카테고리 이름으로 정렬
+        for category in sorted(preset_groups.keys()):
+            # General은 최상위(또는 별도)로 두고 싶다면 로직 추가 가능하지만, 일단 알파벳순
+            cat_node = presets_node.add(f"📁 {category}", expand=True)
+            
+            # 그룹 내 아이템 이름으로 정렬
+            items = sorted(preset_groups[category], key=lambda x: x[0])
+            
+            for name, filename in items:
+                node = cat_node.add_leaf(f"☐ {name}")
+                self.node_map[str(node._id)] = f"preset:{filename}"
 
     def _build_tree(self):
         """카테고리 기반 트리 구성"""
@@ -541,7 +560,7 @@ class SetupApp(App):
     
     def on_mount(self):
         self.title = "🐧 Linux Setup Assistant v4.0"
-        self.sub_title = "Space: 선택 | F5: 설치 | d: 시뮬 | s: 저장 | q: 종료"
+        self.sub_title = ""
         
         # 프리셋 로드
         if self.preset_arg:

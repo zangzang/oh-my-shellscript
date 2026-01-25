@@ -1,0 +1,10 @@
+{
+  "name": "AI Agents",
+  "category": "AI",
+  "description": "Gemini CLI, Claude Code, and Open Code",
+  "modules": [
+    { "id": "dev.ai-agents.gemini-cli" },
+    { "id": "dev.ai-agents.claude-code" },
+    { "id": "dev.ai-agents.opencode" }
+  ]
+}

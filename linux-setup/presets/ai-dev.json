@@ -1,5 +1,6 @@
 {
   "name": "Local LLM Environment",
+  "category": "AI",
   "description": "Ollama engine, Models, and Open WebUI (No Python required)",
   "modules": [
     { "id": "dev.docker" },

@@ -1,0 +1,7 @@
+{
+  "id": "dev.ai-agents.mcp-servers.github",
+  "name": "MCP GitHub Server",
+  "description": "GitHub integration for AI models (Node.js)",
+  "category": "dev",
+  "dependencies": ["dev.node"]
+}
