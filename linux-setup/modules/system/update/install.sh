@@ -28,25 +28,40 @@ fix_tmp_dir() {
 
 fix_tmp_dir
 
-echo "🔄 Running system update..."
+ui_log_info "🔄 Running system update..."
 
 if [[ "$OS_ID" == "fedora" ]]; then
     # DNF Optimization
     if ! grep -q "fastestmirror=True" /etc/dnf/dnf.conf 2>/dev/null; then
-        echo "⚡ Applying DNF optimization (fastestmirror, max_parallel_downloads)..."
+        ui_log_info "⚡ Applying DNF optimization (fastestmirror, max_parallel_downloads)..."
         echo "fastestmirror=True" | sudo tee -a /etc/dnf/dnf.conf > /dev/null
         echo "max_parallel_downloads=10" | sudo tee -a /etc/dnf/dnf.conf > /dev/null
     fi
-    sudo dnf update -y
+    
+    ui_log_info "Cleaning DNF cache and refreshing metadata..."
+    sudo dnf clean all
+    
+    ui_log_info "Executing system upgrade (Fedora)..."
+    # Using --best and --allowerasing to handle dependency conflicts more gracefully,
+    # but dnf will still protect essential packages like systemd-udev.
+    if ! sudo dnf upgrade -y --refresh; then
+        ui_log_warn "Standard upgrade failed. Trying with --best --allowerasing..."
+        sudo dnf upgrade -y --best --allowerasing
+    fi
+    
 elif [[ "$OS_ID" == "ubuntu" || "$OS_ID" == "debian" || "$OS_ID" == "pop" || "$OS_ID" == "linuxmint" ]]; then
     # Ubuntu/Debian
     # Check gpgv
     if ! command -v gpgv >/dev/null 2>&1; then
-        echo "Installing gpgv..."
+        ui_log_info "Installing gpgv..."
         sudo apt-get install -y --no-install-recommends gpgv || sudo apt-get install -y --no-install-recommends gnupg
     fi
+    ui_log_info "Updating package lists..."
     sudo apt update
+    ui_log_info "Executing system upgrade (Ubuntu/Debian)..."
     sudo apt upgrade -y
 else
-    echo "⚠️  OS not supported for auto-update: $OS_ID"
+    ui_log_warn "⚠️  OS not supported for auto-update: $OS_ID"
 fi
+
+ui_log_success "System update complete."

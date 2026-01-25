@@ -36,4 +36,10 @@ fi
 
 install_packages "${PACKAGES[@]}"
 
-ui_log_success "CLI tools installation complete."
+# Verification
+if command -v jq &>/dev/null || command -v vim &>/dev/null; then
+    ui_log_success "CLI tools installation complete."
+else
+    ui_log_error "Critical CLI tools (jq, vim) not found. Installation may have failed."
+    exit 1
+fi

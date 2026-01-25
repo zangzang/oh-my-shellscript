@@ -10,6 +10,8 @@ if ! command -v ui_log_info &>/dev/null; then
     fi
 fi
 
-# Install OpenCode (Example - assuming it's an npm package or similar)
-# If it's a different installation method, this should be adjusted.
-npm_install_g "opencode"
+if ! command -v opencode &> /dev/null; then
+    npm_install_g "opencode-agent"
+else
+    ui_log_info "OpenCode Agent is already installed."
+fi

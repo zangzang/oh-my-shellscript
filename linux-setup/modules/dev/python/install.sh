@@ -48,24 +48,26 @@ else
 fi
 
 if [[ "$INSTALLED_NATIVE" == "true" ]]; then
+    ui_log_success "Python $VERSION (Native) installation complete"
     exit 0
 fi
 
 # 2. Fallback: Pyenv
-echo "🔄 Trying Fallback (Pyenv)..."
+ui_log_info "🔄 Trying Fallback (Pyenv)..."
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 
 if [ ! -d "$PYENV_ROOT" ]; then
-    echo "Installing Pyenv..."
+    ui_log_info "Installing Pyenv..."
     if curl https://pyenv.run | bash; then
-        echo "Pyenv installed"
+        ui_log_success "Pyenv installed"
     else
-        echo "Pyenv installation failed"
+        ui_log_error "Pyenv installation failed"
         exit 1
     fi
 fi
 
+# Load pyenv
 eval "$(pyenv init -)" 2>/dev/null || true
 
 LATEST_VERSION=$(pyenv install --list 2>/dev/null | grep -E "^\s*${VERSION//./\.}\.[0-9]+$" | tail -1 | xargs)
@@ -73,6 +75,15 @@ if [ -z "$LATEST_VERSION" ]; then
     LATEST_VERSION="$VERSION"
 fi
 
-echo "Installing Python $LATEST_VERSION via Pyenv..."
+ui_log_info "Installing Python $LATEST_VERSION via Pyenv..."
 pyenv install "$LATEST_VERSION" --skip-existing
 pyenv global "$LATEST_VERSION"
+
+# Final Verification
+if command -v python3 &>/dev/null || command -v python &>/dev/null; then
+    ui_log_success "Python $LATEST_VERSION (Pyenv) installation complete"
+    exit 0
+else
+    ui_log_error "Python installation failed via both Native and Pyenv."
+    exit 1
+fi

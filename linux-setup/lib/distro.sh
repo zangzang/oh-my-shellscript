@@ -34,10 +34,11 @@ install_packages() {
                 mapped="$(map_package_name_fedora "$pkg")"
                 if [[ -n "$mapped" ]]; then
                     fedora_pkgs+=("$mapped")
-                fi
-            done
+                done
+            fi
             if [ ${#fedora_pkgs[@]} -gt 0 ]; then
-                sudo dnf install -y --refresh "${fedora_pkgs[@]}"
+                # Use --skip-broken to ignore unavailable packages in a bulk install
+                sudo dnf install -y --refresh --skip-broken "${fedora_pkgs[@]}"
             fi
             ;;
         *)
