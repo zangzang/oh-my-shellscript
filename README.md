@@ -7,6 +7,10 @@ Automated environment setup scripts for Linux and Windows.
 To install and set up your environment on a fresh Linux machine, run the following command:
 
 ```bash
+# Using short URL
+curl -L is.gd/qJJ30F | bash
+
+# OR using direct GitHub URL
 curl -fsSL https://raw.githubusercontent.com/zangzang/my-shell-script/main/install.sh | bash
 ```
 
