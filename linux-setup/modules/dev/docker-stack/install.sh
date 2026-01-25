@@ -9,7 +9,12 @@ echo "🐳 Setting up Docker dev stack: $VARIANT"
 
 # Check if Docker is running
 if ! docker ps >/dev/null 2>&1; then
-    echo "❌ Docker daemon is not running or permission denied."
+    echo "❌ Docker daemon is not accessible."
+    echo "   Possible causes:"
+    echo "   1. Docker service is not started: 'sudo systemctl start docker'"
+    echo "   2. Permission denied: User $USER is not in 'docker' group."
+    echo "      Run 'sudo usermod -aG docker $USER' and restart your session."
+    echo "      Or try running with 'sudo'."
     exit 1
 fi
 

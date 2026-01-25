@@ -3,6 +3,6 @@
   "name": "Java (JDK)",
   "description": "Java Development Kit (System Pkg or SDKMAN)",
   "category": "dev/runtime",
-  "requires": [],
+  "requires": ["system.update"],
   "variants": ["8", "17", "21", "25"]
 }

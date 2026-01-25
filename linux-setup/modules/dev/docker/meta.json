@@ -2,5 +2,6 @@
   "id": "dev.docker",
   "name": "Docker",
   "description": "Docker Engine and Docker Compose",
-  "category": "dev/infra"
+  "category": "dev/infra",
+  "requires": ["system.update"]
 }

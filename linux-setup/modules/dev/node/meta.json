@@ -3,6 +3,6 @@
   "name": "Node.js",
   "description": "Node.js (System Pkg or NVM)",
   "category": "dev/runtime",
-  "requires": [],
+  "requires": ["system.update"],
   "variants": ["lts", "current", "20", "18"]
 }

@@ -856,6 +856,26 @@ def save_preset(selected_items: list[str], preset_name: str = None):
     return preset_path
 
 
+def save_session(selected_items: list[str]):
+    """Save the current selection for recovery"""
+    session_file = CONFIG_DIR / "last_session.json"
+    try:
+        session_file.write_text(json.dumps(selected_items, indent=2), encoding='utf-8')
+    except Exception:
+        pass
+
+
+def load_session() -> list[str]:
+    """Load the last saved selection"""
+    session_file = CONFIG_DIR / "last_session.json"
+    if session_file.exists():
+        try:
+            return json.loads(session_file.read_text(encoding='utf-8'))
+        except Exception:
+            return []
+    return []
+
+
 def run_installation(install_list: list[str], selected_items: list[str] = None, dry_run: bool = False):
     """Execute the installation sequence in the terminal"""
     print("\n" + "=" * 50)
@@ -1086,6 +1106,23 @@ def main():
     preset_arg = args.preset
     current_selection = None
     
+    # Check for last session
+    last_session = load_session()
+    if last_session and not preset_arg:
+        print("\n" + "=" * 50)
+        print("📂 Last session found. Would you like to load your previous selection?")
+        print(f"   Modules: {', '.join(last_session[:5])}{'...' if len(last_session) > 5 else ''}")
+        try:
+            choice = input("\nLoad last session? (Y/n): ").strip().lower()
+            if choice != 'n':
+                current_selection = last_session
+                print("✅ Last session loaded.")
+            else:
+                print("🆕 Starting with clean selection.")
+        except KeyboardInterrupt:
+            print("\n")
+            sys.exit(0)
+
     while True:
         app = SetupApp(preset=preset_arg, action=action_arg, initial_selection=current_selection)
         result = app.run()
@@ -1100,6 +1137,9 @@ def main():
         mode, install_list, selected_items = result
         current_selection = selected_items # Preserve current selection
         
+        # Save session automatically whenever selection is returned
+        save_session(selected_items)
+        
         if mode == "save":
             print("\n" + "=" * 50)
             name = input("Preset Name (Enter for auto-gen): ").strip() or None
@@ -1107,6 +1147,8 @@ def main():
             input("\n✅ Saved. Press Enter to return to selection screen...")
         elif mode == "execute":
             run_installation(install_list, selected_items, dry_run=False)
+            # Remove session after successful install completion if needed, 
+            # but usually keeping it is safer for re-runs.
             break
         elif mode == "dry-run":
             run_installation(install_list, selected_items, dry_run=True)

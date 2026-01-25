@@ -3,5 +3,5 @@
   "name": "Essential Tools Bundle (Full)",
   "description": "Meta-package that installs build tools, dev libs, and CLI utilities",
   "category": "system",
-  "requires": ["system.build-tools", "system.dev-libs", "system.cli-tools"]
+  "requires": ["system.update", "system.build-tools", "system.dev-libs", "system.cli-tools"]
 }

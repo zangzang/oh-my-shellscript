@@ -3,5 +3,5 @@
   "name": "Rust",
   "description": "Rust (System Pkg or Rustup)",
   "category": "dev/runtime",
-  "requires": ["system.build-tools"]
+  "requires": ["system.update", "system.build-tools"],
 }
