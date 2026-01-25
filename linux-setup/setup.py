@@ -15,7 +15,7 @@ from typing import Optional
 # Check for textual installation
 try:
     from textual.app import App, ComposeResult
-    from textual.widgets import Tree, Static, Footer, Header, Button, Label, ListView, ListItem, RichLog
+    from textual.widgets import Tree, Static, Footer, Header, Button, Label, ListView, ListItem, RichLog, Input
     from textual.containers import Horizontal, Vertical, Container
     from textual.binding import Binding
     from textual import events
@@ -23,7 +23,7 @@ except ImportError:
     print("Library 'textual' is required. Installing...")
     subprocess.run([sys.executable, "-m", "pip", "install", "textual", "-q"])
     from textual.app import App, ComposeResult
-    from textual.widgets import Tree, Static, Footer, Header, Button, Label, ListView, ListItem, RichLog
+    from textual.widgets import Tree, Static, Footer, Header, Button, Label, ListView, ListItem, RichLog, Input
     from textual.containers import Horizontal, Vertical, Container
     from textual.binding import Binding
     from textual import events
@@ -46,7 +46,10 @@ class ModuleInfo:
     def meta(self) -> dict:
         if self._meta is None:
             if self.meta_file.exists():
-                self._meta = json.loads(self.meta_file.read_text())
+                try:
+                    self._meta = json.loads(self.meta_file.read_text(encoding='utf-8'))
+                except:
+                    self._meta = {}
             else:
                 self._meta = {}
         return self._meta
@@ -64,6 +67,10 @@ class ModuleInfo:
         return self.meta.get("description", "")
     
     @property
+    def category(self) -> str:
+        return self.meta.get("category", "uncategorized")
+
+    @property
     def requires(self) -> list:
         return self.meta.get("requires", [])
     
@@ -77,31 +84,76 @@ class ModuleManager:
     def __init__(self):
         self.modules: dict[str, ModuleInfo] = {}
         self.categories: dict = {}
-        self.selected: set[str] = set()
-        self._load_modules()
+        self.selected: set[str] = set() # Actual installation targets
+        self.context_items: dict[str, bool] = {} # UI list items (id -> is_selected)
+        
+        # 1. Load Categories Skeleton
         self._load_categories()
-    
-    def _load_modules(self):
-        """Load all modules from directory"""
-        for meta_file in MODULES_DIR.rglob("meta.json"):
-            mod = ModuleInfo(meta_file.parent)
-            if mod.id:
-                self.modules[mod.id] = mod
-                # Also allow access by folder name
-                self.modules[meta_file.parent.name] = mod
+        # 2. Load Modules and Assign to Categories
+        self._load_modules()
     
     def _load_categories(self):
         """Load category configurations"""
         cat_file = CONFIG_DIR / "categories.json"
         if cat_file.exists():
-            self.categories = json.loads(cat_file.read_text())
-    
+            self.categories = json.loads(cat_file.read_text(encoding='utf-8'))
+        else:
+            self.categories = {}
+
+    def _load_modules(self):
+        """Load all modules and register them into categories"""
+        for meta_file in MODULES_DIR.rglob("meta.json"):
+            mod = ModuleInfo(meta_file.parent)
+            if not mod.id:
+                continue
+                
+            self.modules[mod.id] = mod
+            self.modules[meta_file.parent.name] = mod # Alias by folder name
+            
+            # Dynamic Category Assignment
+            # Format: "top_category" or "top_category/subcategory"
+            cat_path = mod.category.split("/")
+            top_cat = cat_path[0]
+            
+            if top_cat not in self.categories:
+                # Add unknown top category
+                self.categories[top_cat] = {
+                    "name": top_cat.capitalize(),
+                    "order": 999,
+                    "modules": []
+                }
+            
+            target_container = self.categories[top_cat]
+            
+            if len(cat_path) > 1:
+                sub_cat = cat_path[1]
+                if "subcategories" not in target_container:
+                    target_container["subcategories"] = {}
+                
+                if sub_cat not in target_container["subcategories"]:
+                    target_container["subcategories"][sub_cat] = {
+                        "name": sub_cat.capitalize(),
+                        "modules": []
+                    }
+                
+                # Ensure modules list exists (even if category was loaded from config)
+                if "modules" not in target_container["subcategories"][sub_cat]:
+                    target_container["subcategories"][sub_cat]["modules"] = []
+                
+                # Add to subcategory
+                if mod.id not in target_container["subcategories"][sub_cat]["modules"]:
+                    target_container["subcategories"][sub_cat]["modules"].append(mod.id)
+            else:
+                # Add to top category
+                if "modules" not in target_container:
+                    target_container["modules"] = []
+                if mod.id not in target_container["modules"]:
+                    target_container["modules"].append(mod.id)
+
     def get_module(self, mod_id: str) -> Optional[ModuleInfo]:
         """Find module by ID or folder name"""
-        # Direct match
         if mod_id in self.modules:
             return self.modules[mod_id]
-        # Split variant (e.g., dev.java:17 -> dev.java)
         base_id = mod_id.split(":")[0]
         return self.modules.get(base_id)
     
@@ -109,9 +161,17 @@ class ModuleManager:
         """Toggle selection of a module"""
         if item_id in self.selected:
             self.selected.discard(item_id)
+            self.context_items[item_id] = False
         else:
             self.selected.add(item_id)
+            self.context_items[item_id] = True
     
+    def remove_from_context(self, item_id: str):
+        """Completely remove item from context list"""
+        self.selected.discard(item_id)
+        if item_id in self.context_items:
+            del self.context_items[item_id]
+
     def resolve_dependencies(self) -> list[str]:
         """Resolve dependencies and return installation order"""
         result = []
@@ -138,36 +198,51 @@ class ModuleManager:
         """Load modules from a preset file"""
         if clear_selection:
             self.selected.clear()
+            self.context_items.clear()
         
         if preset_file.exists():
-            data = json.loads(preset_file.read_text())
-            for entry in data.get("modules", []):
-                mod_id = entry.get("id", "")
-                version = entry.get("params", {}).get("version", "")
-                selected = entry.get("params", {}).get("selected", True)
-                
-                if selected:
+            try:
+                data = json.loads(preset_file.read_text(encoding='utf-8'))
+                for entry in data.get("modules", []):
+                    mod_id = entry.get("id", "")
+                    version = entry.get("params", {}).get("version", "")
+                    selected = entry.get("params", {}).get("selected", True)
+                    
                     key = f"{mod_id}:{version}" if version else mod_id
-                    self.selected.add(key)
+                    
+                    # Add to context list
+                    self.context_items[key] = selected
+                    
+                    if selected:
+                        self.selected.add(key)
+                    elif not clear_selection:
+                        self.selected.discard(key)
+            except Exception as e:
+                pass
 
     def unload_preset(self, preset_file: Path):
-        """Remove modules of a preset from selection"""
+        """Uncheck modules of a preset (keep in context list)"""
         if preset_file.exists():
-            data = json.loads(preset_file.read_text())
-            for entry in data.get("modules", []):
-                mod_id = entry.get("id", "")
-                version = entry.get("params", {}).get("version", "")
-                
-                key = f"{mod_id}:{version}" if version else mod_id
-                self.selected.discard(key)
+            try:
+                data = json.loads(preset_file.read_text(encoding='utf-8'))
+                for entry in data.get("modules", []):
+                    mod_id = entry.get("id", "")
+                    version = entry.get("params", {}).get("version", "")
+                    
+                    key = f"{mod_id}:{version}" if version else mod_id
+                    
+                    self.selected.discard(key)
+                    self.context_items[key] = False 
+            except Exception:
+                pass
 
 
 class SelectedList(ListView):
-    """List of selected items (supports removal)"""
+    """List of selected items (supports toggle/removal)"""
     
     BINDINGS = [
-        Binding("space", "remove_item", "Remove", show=True),
-        Binding("delete", "remove_item", "Remove", show=False),
+        Binding("space", "toggle_item", "Toggle", show=True),
+        Binding("delete", "remove_item", "Remove", show=True),
         Binding("backspace", "remove_item", "Remove", show=False),
     ]
     
@@ -176,24 +251,50 @@ class SelectedList(ListView):
         self.manager = manager
     
     def refresh_list(self):
-        """Refresh the displayed list of selected items"""
+        """Refresh the displayed list based on context_items"""
         self.clear()
-        for item in sorted(self.manager.selected):
-            list_item = ListItem(Label(f"[green]✓[/] {item}"))
+        # Sort items: Selected first, then alphabetical
+        sorted_items = sorted(
+            self.manager.context_items.items(),
+            key=lambda x: (not x[1], x[0])
+        )
+        
+        for item, is_selected in sorted_items:
+            if is_selected:
+                icon = "[green]☑[/]"
+                label = f"{icon} {item}"
+            else:
+                icon = "[dim]☐[/]"
+                label = f"{icon} [dim]{item}[/]"
+            
+            list_item = ListItem(Label(label))
             list_item.data = item  # Store data for retrieval
             self.append(list_item)
     
-    def action_remove_item(self):
-        """Remove the highlighted item from selection"""
+    def action_toggle_item(self):
+        """Toggle the highlighted item (Space)"""
         if self.highlighted_child:
             item_id = getattr(self.highlighted_child, 'data', None)
             if item_id:
-                self.manager.selected.discard(item_id)
+                self.manager.toggle(item_id)
                 self.refresh_list()
-                # Also update the tree view
+                # Update tree view
                 try:
-                    tree = self.app.query_one(ModuleTree)
-                    tree.refresh_all_labels()
+                    self.app.query_one(ModuleTree).refresh_all_labels()
+                except Exception:
+                    pass
+
+    def action_remove_item(self):
+        """Completely remove item from list (Delete)"""
+        if self.highlighted_child:
+            item_id = getattr(self.highlighted_child, 'data', None)
+            if item_id:
+                self.manager.remove_from_context(item_id)
+                self.refresh_list()
+                self.app.notify(f"Removed '{item_id}'. Use the Tree View to add it back.")
+                # Update tree view
+                try:
+                    self.app.query_one(ModuleTree).refresh_all_labels()
                 except Exception:
                     pass
 
@@ -225,6 +326,7 @@ class InfoPanel(RichLog):
                     self.write(f"[dim]{mod.description}[/]")
                 
                 self.write(f"[dim]ID: {mod.id}[/]")
+                self.write(f"[dim]Category: {mod.category}[/]")
                 
                 if mod.requires:
                     self.write("")
@@ -233,7 +335,7 @@ class InfoPanel(RichLog):
                         self.write(f"  ↳ {dep}")
                 if mod.variants:
                     self.write("")
-                    self.write(f"[cyan]Variants:[/]")
+                    self.write(f"[cyan]Variants:[/ ] {', '.join(mod.variants)}")
         else:
             self.write("[dim]Select a module to see details")
 
@@ -250,18 +352,27 @@ class ModuleTree(Tree):
         self.manager = manager
         self.node_map: dict[str, str] = {}  # node_id -> module_id
         self.show_root = False
+        self.filter_text = ""
     
     def on_mount(self):
         """Build the tree structure on mount"""
-        self.root.expand()
-        self._build_presets()
-        self._build_tree()
+        self.rebuild_tree()
     
+    def rebuild_tree(self, filter_text: str = ""):
+        """Rebuild the tree with filtering"""
+        self.filter_text = filter_text.lower()
+        self.clear()
+        self.node_map.clear()
+        self.root.expand()
+        
+        self._build_presets()
+        self._build_modules()
+        
     def _build_presets(self):
-        """Build the presets section grouped by category"""
+        """Build the presets section"""
         presets_node = self.root.add("📂 Presets", expand=True)
         
-        # 1. Load and group all presets
+        # Load and group all presets
         preset_groups = {}  # category -> list of (name, file_name)
         
         for preset_file in PRESETS_DIR.glob("*.json"):
@@ -270,70 +381,132 @@ class ModuleTree(Tree):
                 name = data.get("name", preset_file.stem)
                 category = data.get("category", "General")
                 
+                # Filter check
+                if self.filter_text and self.filter_text not in name.lower() and self.filter_text not in category.lower():
+                    continue
+                
                 if category not in preset_groups:
                     preset_groups[category] = []
                 preset_groups[category].append((name, preset_file.name))
             except Exception:
                 pass
         
-        # 2. Build tree nodes sorted by category name
+        # Build nodes
+        has_presets = False
         for category in sorted(preset_groups.keys()):
             cat_node = presets_node.add(f"📁 {category}", expand=True)
             
-            # Sort items within group by name
             items = sorted(preset_groups[category], key=lambda x: x[0])
-            
             for name, filename in items:
                 node = cat_node.add_leaf(f"☐ {name}")
                 self.node_map[str(node._id)] = f"preset:{filename}"
+                has_presets = True
+        
+        if not has_presets and self.filter_text:
+            presets_node.label = "[dim]📂 Presets (No matches)[/im]"
+            presets_node.collapse()
 
-    def _build_tree(self):
-        """Build the module tree based on category configuration"""
+    def _build_modules(self):
+        """Build the module tree based on dynamically loaded categories"""
         modules_root = self.root.add("📦 Modules", expand=True)
         
         categories = self.manager.categories
         
-        # Sort categories by defined order
-        sorted_cats = sorted(
-            categories.items(),
-            key=lambda x: x[1].get("order", 99)
-        )
-        
-        for cat_key, cat_data in sorted_cats:
-            cat_name = cat_data.get("name", cat_key)
-            cat_node = modules_root.add(cat_name, expand=True)
+        if isinstance(categories, dict):
+            sorted_cats = sorted(categories.items(), key=lambda x: x[1].get("order", 999))
             
-            # Subcategories
-            if "subcategories" in cat_data:
-                for sub_key, sub_data in cat_data["subcategories"].items():
-                    sub_name = sub_data.get("name", sub_key)
-                    sub_node = cat_node.add(sub_name, expand=True)
+            has_modules = False
+            for cat_key, cat_data in sorted_cats:
+                cat_name = cat_data.get("name", cat_key)
+                
+                # Check if we should add this category (if filter matches category name)
+                cat_match = self.filter_text in cat_name.lower()
+                
+                # Create a temporary list of children to add
+                children_to_add = []
+                
+                # Subcategories
+                if "subcategories" in cat_data:
+                    sorted_subs = sorted(cat_data["subcategories"].items(), key=lambda x: x[0])
+                    for sub_key, sub_data in sorted_subs:
+                        sub_name = sub_data.get("name", sub_key)
+                        sub_match = self.filter_text in sub_name.lower()
+                        
+                        # Check modules inside subcategory
+                        mod_nodes = []
+                        for mod_id in sub_data.get("modules", []):
+                            res = self._create_module_node_data(mod_id, force_include=cat_match or sub_match)
+                            if res:
+                                mod_nodes.append(res)
+                        
+                        if sub_match or mod_nodes:
+                            children_to_add.append(("sub", sub_name, mod_nodes))
+
+                # Direct modules
+                if "modules" in cat_data:
+                    for mod_id in cat_data.get("modules", []):
+                        res = self._create_module_node_data(mod_id, force_include=cat_match)
+                        if res:
+                            children_to_add.append(("mod", res))
+                
+                # If category matches or has matching children, add to tree
+                if children_to_add or cat_match:
+                    cat_node = modules_root.add(cat_name, expand=True)
+                    has_modules = True
                     
-                    for mod_folder in sub_data.get("modules", []):
-                        self._add_module_nodes(sub_node, mod_folder)
-            
-            # Direct modules
-            for mod_folder in cat_data.get("modules", []):
-                self._add_module_nodes(cat_node, mod_folder)
-    
-    def _add_module_nodes(self, parent_node, mod_folder: str):
-        """Add module nodes to a parent category node"""
-        mod = self.manager.modules.get(mod_folder)
-        if not mod:
-            return
+                    for child in children_to_add:
+                        if child[0] == "sub":
+                            _, sub_name, mods = child
+                            sub_node = cat_node.add(sub_name, expand=True)
+                            for m in mods:
+                                self._add_node_to_tree(sub_node, m)
+                        else:
+                            _, m = child
+                            self._add_node_to_tree(cat_node, m)
         
+        if not has_modules and self.filter_text:
+            modules_root.label = "[dim]📦 Modules (No matches)[/im]"
+            modules_root.collapse()
+
+    def _create_module_node_data(self, mod_id: str, force_include: bool = False):
+        """Check filter and return module node data structure"""
+        mod = self.manager.get_module(mod_id)
+        if not mod:
+            return None
+        
+        # Check filter
+        match = force_include or (self.filter_text in mod.name.lower()) or (self.filter_text in mod.id.lower())
+        
+        if not match:
+            return None
+            
+        return mod
+
+    def _add_node_to_tree(self, parent_node, mod):
+        """Actually add the node to the tree widget"""
         if mod.variants:
-            # Group variants in a sub-tree
-            mod_node = parent_node.add(f"📦 {mod.name}", expand=False)
+            mod_node = parent_node.add(f"📦 {mod.name}", expand=bool(self.filter_text))
             for v in mod.variants:
                 key = f"{mod.id}:{v}"
                 mark = "☑" if key in self.manager.selected else "☐"
+                # Check context too
+                if self.manager.context_items.get(key) is False: # Explicitly unselected
+                    mark = "☐"
+                elif self.manager.context_items.get(key) is True:
+                    mark = "☑"
+                    
                 label = f"{mark} {v}"
                 node = mod_node.add_leaf(label)
                 self.node_map[str(node._id)] = key
         else:
             key = mod.id
             mark = "☑" if key in self.manager.selected else "☐"
+            # Check context
+            if self.manager.context_items.get(key) is False:
+                mark = "☐"
+            elif self.manager.context_items.get(key) is True:
+                mark = "☑"
+
             label = f"{mark} {mod.name}"
             node = parent_node.add_leaf(label)
             self.node_map[str(node._id)] = key
@@ -366,8 +539,7 @@ class ModuleTree(Tree):
 
                 self.refresh_all_labels()
                 try:
-                    selected_list = self.app.query_one(SelectedList)
-                    selected_list.refresh_list()
+                    self.app.query_one(SelectedList).refresh_list()
                 except Exception:
                     pass
                 return
@@ -377,8 +549,7 @@ class ModuleTree(Tree):
             self._update_node_label(node, item_id)
             # Update selected list view
             try:
-                selected_list = self.app.query_one(SelectedList)
-                selected_list.refresh_list()
+                self.app.query_one(SelectedList).refresh_list()
             except Exception:
                 pass
     
@@ -389,10 +560,17 @@ class ModuleTree(Tree):
 
         mod = self.manager.get_module(mod_id)
         if mod:
-            mark = "☑" if mod_id in self.manager.selected else "☐"
+            # Determine status from context items if available, else selected set
+            is_selected = False
+            if mod_id in self.manager.context_items:
+                is_selected = self.manager.context_items[mod_id]
+            else:
+                is_selected = mod_id in self.manager.selected
+            
+            mark = "☑" if is_selected else "☐"
+            
             if ":" in mod_id:
                 version = mod_id.split(":")[1]
-                # Show only version for variant modules
                 node.set_label(f"{mark} {version}")
             else:
                 node.set_label(f"{mark} {mod.name}")
@@ -414,7 +592,7 @@ class ModuleTree(Tree):
             if item_id.startswith("preset:"):
                 preset_file = PRESETS_DIR / item_id.split(":", 1)[1]
                 try:
-                    data = json.loads(preset_file.read_text())
+                    data = json.loads(preset_file.read_text(encoding='utf-8'))
                     desc = data.get("description", "")
                     modules = data.get("modules", [])
                     
@@ -426,10 +604,14 @@ class ModuleTree(Tree):
                     for m in modules:
                         mid = m.get("id", "")
                         ver = m.get("params", {}).get("version", "")
+                        selected = m.get("params", {}).get("selected", True)
+                        
+                        status = "☑" if selected else "☐"
+                        
                         if ver:
-                            lines.append(f"  - {mid} ({ver})")
+                            lines.append(f"  {status} {mid} ({ver})")
                         else:
-                            lines.append(f"  - {mid}")
+                            lines.append(f"  {status} {mid}")
                     
                     try:
                         info = self.app.query_one(InfoPanel)
@@ -475,6 +657,11 @@ class SetupApp(App):
         border: solid green;
         padding: 1;
         overflow-y: auto;
+    }
+    
+    #search-box {
+        dock: top;
+        margin-bottom: 1;
     }
     
     #info-panel {
@@ -527,6 +714,7 @@ class SetupApp(App):
         Binding("p", "load_preset", "Preset(p)"),
         Binding("d", "dry_run", "Simul(d)"),
         Binding("s", "save_preset", "Save(s)"),
+        Binding("/", "focus_search", "Search(/)"),
         Binding("tab", "focus_next", "SwitchPanel", show=True),
     ]
     
@@ -535,6 +723,10 @@ class SetupApp(App):
         self.manager = ModuleManager()
         if initial_selection:
             self.manager.selected = set(initial_selection)
+            # Restore context from selection
+            for item in initial_selection:
+                self.manager.context_items[item] = True
+                
         self.preset_arg = preset
         self.action_mode = action
     
@@ -542,10 +734,11 @@ class SetupApp(App):
         yield Header()
         with Horizontal():
             with Container(id="tree-panel"):
+                yield Input(placeholder="Search modules... (/)", id="search-box")
                 yield ModuleTree(self.manager)
             with Container(id="info-panel"):
                 with Container(id="selected-box"):
-                    yield Label("[bold cyan]━━━ Selected (Space to remove) ━━━[/]")
+                    yield Label("[bold cyan]━━━ Selected Modules (Space: Toggle / Del: Remove) ━━━[/]")
                     yield SelectedList(self.manager)
                 with Container(id="info-box"):
                     yield Label("[bold yellow]━━━ Module Info ━━━[/]")
@@ -566,7 +759,7 @@ class SetupApp(App):
                 self.notify(f"Preset loaded: {preset_path.stem}")
 
         # Refresh selected list if there's an initial selection
-        if self.manager.selected:
+        if self.manager.context_items:
             try:
                 self.query_one(SelectedList).refresh_list()
             except Exception:
@@ -577,6 +770,21 @@ class SetupApp(App):
             self.call_later(self.action_install)
         elif self.action_mode == "dry-run":
             self.call_later(self.action_dry_run)
+
+    def on_input_changed(self, event: Input.Changed):
+        """Handle search input change"""
+        if event.input.id == "search-box":
+            try:
+                self.query_one(ModuleTree).rebuild_tree(event.value)
+            except Exception:
+                pass
+
+    def action_focus_search(self):
+        """Focus the search box"""
+        try:
+            self.query_one("#search-box").focus()
+        except Exception:
+            pass
 
     def action_quit(self):
         """Quit the application"""
@@ -663,7 +871,7 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
         meta_found = False
         for meta_file in MODULES_DIR.rglob("meta.json"):
             try:
-                meta = json.loads(meta_file.read_text())
+                meta = json.loads(meta_file.read_text(encoding='utf-8'))
                 if meta.get("id") == mod_id:
                     name = meta.get("name", mod_id)
                     install_script = meta_file.parent / "install.sh"
@@ -724,7 +932,7 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
             found = False
             for meta_file in MODULES_DIR.rglob("meta.json"):
                 try:
-                    meta = json.loads(meta_file.read_text())
+                    meta = json.loads(meta_file.read_text(encoding='utf-8'))
                     if meta.get("id") == mod_id:
                         install_script = meta_file.parent / "install.sh"
                         if install_script.exists():

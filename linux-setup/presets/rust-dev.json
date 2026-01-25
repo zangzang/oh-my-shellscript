@@ -1,5 +1,6 @@
 {
   "name": "Rust Language",
+  "category": "Development",
   "description": "Rust toolchain with rustup",
   "modules": [
     { "id": "dev.rust" },

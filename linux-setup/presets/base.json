@@ -1,7 +1,10 @@
 {
   "name": "Base Setup",
+  "category": "General",
   "description": "Essential system tools, shell environment, and SSH",
   "modules": [
+    { "id": "system.update" },
+    { "id": "system.swap" },
     { "id": "system.build-tools" },
     { "id": "system.dev-libs" },
     { "id": "system.cli-tools" },

@@ -2,6 +2,6 @@
   "id": "dev.ai-agents.mcp-servers.n8n",
   "name": "MCP n8n Server",
   "description": "n8n workflow integration for AI models",
-  "category": "dev",
+  "category": "ai/agents",
   "dependencies": ["dev.node"]
 }

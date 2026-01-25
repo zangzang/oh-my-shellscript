@@ -1,5 +1,6 @@
 {
   "name": "Java Language",
+  "category": "Development",
   "description": "Java 17/21 with SDKMAN",
   "modules": [
     { "id": "dev.sdkman" },

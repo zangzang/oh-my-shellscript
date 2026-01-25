@@ -1,0 +1,7 @@
+{
+  "id": "system.swap",
+  "name": "Smart Swap (ZRAM + File)",
+  "description": "Hybrid swap setup: ZRAM (1/3 RAM) for speed + Swapfile (1/2 RAM) for stability",
+  "category": "system",
+  "requires": []
+}

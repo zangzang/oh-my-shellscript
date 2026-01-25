@@ -16,8 +16,9 @@ This project is a **modular setup management system** designed to automate repet
 ## 📁 Project Structure
 
 ```
-my-shell-script/
-├── install.sh                  # One-line installation script
+oh-my-shellscript/
+├── install.sh         # Entry point for one-line installation
+├── omss.sh            # Main CLI launcher (wrapper for setup.py)
 ├── linux-setup/                # Linux Automation System ⭐
 │   ├── setup.py                # Main Entry Point (Python TUI)
 │   ├── bootstrap.sh            # Python Environment Bootstrap

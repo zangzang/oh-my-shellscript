@@ -2,6 +2,6 @@
   "id": "dev.ai-agents.mcp-servers.postgres",
   "name": "MCP Postgres Server",
   "description": "PostgreSQL access for AI models (Node.js)",
-  "category": "dev",
+  "category": "ai/agents",
   "dependencies": ["dev.node"]
 }

@@ -1,5 +1,6 @@
 {
   "name": "GUI Tools",
+  "category": "GUI Apps",
   "description": "VS Code, Chrome, DBeaver, and input method",
   "modules": [
     { "id": "gui.vscode" },

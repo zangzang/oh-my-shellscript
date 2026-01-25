@@ -1,5 +1,6 @@
 {
   "name": ".NET Language",
+  "category": "Development",
   "description": ".NET SDK",
   "modules": [
     { "id": "dev.dotnet", "params": { "version": "9" } },

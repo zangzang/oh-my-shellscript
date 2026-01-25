@@ -1,5 +1,6 @@
 {
   "name": "Python Language",
+  "category": "Development",
   "description": "Python runtime and pip",
   "modules": [
     { "id": "dev.python" },

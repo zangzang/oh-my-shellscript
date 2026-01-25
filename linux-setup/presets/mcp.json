@@ -1,6 +1,6 @@
 {
   "name": "MCP Tools & Servers",
-  "category": "AI",
+  "category": "AI & Agents",
   "description": "Model Context Protocol SDKs and Standard Servers (Filesystem, GitHub, DB, etc.)",
   "modules": [
     { "id": "dev.ai-agents.mcp-tools" },

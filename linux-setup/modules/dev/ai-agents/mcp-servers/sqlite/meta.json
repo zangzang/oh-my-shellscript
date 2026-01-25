@@ -2,6 +2,6 @@
   "id": "dev.ai-agents.mcp-servers.sqlite",
   "name": "MCP SQLite Server",
   "description": "SQLite database access for AI models (Python)",
-  "category": "dev",
+  "category": "ai/agents",
   "dependencies": ["dev.python"]
 }

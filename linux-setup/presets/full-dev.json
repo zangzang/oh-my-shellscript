@@ -1,8 +1,10 @@
 {
   "name": "Full Dev Setup",
+  "category": "General",
   "description": "Complete development environment with all languages and tools",
   "modules": [
     { "id": "system.build-tools" },
+    { "id": "system.swap" },
     { "id": "system.dev-libs" },
     { "id": "system.cli-tools" },
     { "id": "tools.fastfetch" },

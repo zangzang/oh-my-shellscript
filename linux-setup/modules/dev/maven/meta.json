@@ -2,6 +2,6 @@
   "id": "dev.maven",
   "name": "Apache Maven",
   "description": "Maven build tool via SDKMAN",
-  "category": "dev",
+  "category": "dev/infra",
   "requires": ["dev.sdkman", "dev.java"]
 }

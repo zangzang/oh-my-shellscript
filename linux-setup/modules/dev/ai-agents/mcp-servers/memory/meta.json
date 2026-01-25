@@ -2,6 +2,6 @@
   "id": "dev.ai-agents.mcp-servers.memory",
   "name": "MCP Memory Server",
   "description": "Knowledge graph memory for AI models (Node.js)",
-  "category": "dev",
+  "category": "ai/agents",
   "dependencies": ["dev.node"]
 }

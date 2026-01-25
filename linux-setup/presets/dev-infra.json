@@ -1,5 +1,6 @@
 {
   "name": "Backend Infra Stack",
+  "category": "Docker",
   "description": "DB (Postgres, Redis) + Message Broker (RabbitMQ)",
   "modules": [
     { "id": "dev.docker" },

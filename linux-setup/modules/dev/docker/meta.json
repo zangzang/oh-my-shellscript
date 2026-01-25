@@ -2,5 +2,5 @@
   "id": "dev.docker",
   "name": "Docker",
   "description": "Docker Engine and Docker Compose",
-  "category": "dev/infrastructure"
+  "category": "dev/infra"
 }

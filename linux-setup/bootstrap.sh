@@ -20,6 +20,7 @@ log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
 # Script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # 1. Check Python3
 log_info "Checking for Python3..."
@@ -71,63 +72,25 @@ if [[ -z "$TERM" ]]; then
     log_warn "Setting TERM: xterm-256color"
 fi
 
-# 5. Verify config directory
-if [[ ! -d "$SCRIPT_DIR/config" ]]; then
-    log_warn "Config directory missing. Creating default config..."
-    mkdir -p "$SCRIPT_DIR/config"
+# 5. Ensure execution permissions for omss.sh
+log_info "Setting execution permissions for launcher..."
+if [[ -f "$ROOT_DIR/omss.sh" ]]; then
+    chmod +x "$ROOT_DIR/omss.sh"
     
-    # 기본 categories.json 생성
-    cat > "$SCRIPT_DIR/config/categories.json" << 'EOF'
-{
-  "system": {
-    "name": "🔧 System",
-    "order": 1,
-    "modules": ["update", "build-tools", "essentials", "dev-libs", "cli-tools", "nerd-fonts", "oh-my-posh", "zsh", "shell-config", "ssh-server"]
-  },
-  "tools": {
-    "name": "🛠️ Tools",
-    "order": 2,
-    "modules": ["fastfetch"]
-  },
-  "dev": {
-    "name": "💻 Development",
-    "order": 3,
-    "subcategories": {
-      "runtime": {
-        "name": "Runtime & SDK",
-        "modules": ["nvm", "node", "python", "java", "sdkman", "dotnet", "rust"]
-      },
-      "build": {
-        "name": "Build Tools",
-        "modules": ["maven", "gradle"]
-      },
-      "container": {
-        "name": "Container & Infra",
-        "modules": ["docker", "docker-stack"]
-      },
-      "mobile": {
-        "name": "Mobile & Desktop",
-        "modules": ["flutter", "android", "tauri"]
-      },
-      "ai": {
-        "name": "AI & ML",
-        "modules": ["cuda", "ollama", "ollama-models", "open-webui"]
-      }
-    },
-    "modules": []
-  },
-  "gui": {
-    "name": "🖥️ GUI Apps",
-    "order": 4,
-    "modules": ["vscode", "chrome", "dbeaver", "sts", "fcitx5"]
-  }
-}
-EOF
+    # Create symbolic link to ~/.local/bin/omss for global access
+    BIN_DIR="$HOME/.local/bin"
+    mkdir -p "$BIN_DIR"
+    
+    # Remove existing link if it exists and create new one
+    rm -f "$BIN_DIR/omss"
+    ln -s "$ROOT_DIR/omss.sh" "$BIN_DIR/omss"
+    log_info "Global command 'omss' registered at $BIN_DIR/omss"
 fi
 
 echo ""
 echo "=================================="
 log_info "Bootstrap complete!"
+log_info "You can now run './omss.sh' here or simply 'omss' from anywhere."
 echo ""
 
 # Execute setup assistant directly

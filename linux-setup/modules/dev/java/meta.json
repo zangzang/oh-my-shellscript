@@ -2,7 +2,7 @@
   "id": "dev.java",
   "name": "Java (JDK)",
   "description": "Java Development Kit (System Pkg or SDKMAN)",
-  "category": "dev/languages",
+  "category": "dev/runtime",
   "requires": [],
   "variants": ["8", "17", "21", "25"]
 }

@@ -1,0 +1,12 @@
+{
+  "id": "dev.ollama-models-light",
+  "name": "Ollama Models (Lightweight)",
+  "description": "Small LLM models (< 4B params), good for low-spec machines",
+  "category": "ai/engine",
+  "requires": ["dev.ollama"],
+  "variants": [
+    "llama3.2:3b",
+    "gemma:2b",
+    "phi-4-mini"
+  ]
+}

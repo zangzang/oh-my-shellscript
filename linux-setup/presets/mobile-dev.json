@@ -1,5 +1,6 @@
 {
   "name": "Mobile Development (Android/Flutter)",
+  "category": "Mobile & Desktop",
   "description": "Android SDK, Emulator, Flutter, Java, VSCode",
   "modules": [
     { "id": "system.build-tools" },

@@ -2,23 +2,31 @@
 
 Automated environment setup scripts for Linux and Windows.
 
-## 🚀 Quick Install (Linux)
-
-To install and set up your environment on a fresh Linux machine, run the following command:
+To install **Oh My Shell Script**, simply run the following command in your terminal:
 
 ```bash
-# Using short URL
-curl -L is.gd/qJJ30F | bash
-
-# OR using direct GitHub URL
-curl -fsSL https://raw.githubusercontent.com/zangzang/my-shell-script/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/zangzang/oh-my-shellscript/main/install.sh | bash
 ```
 
-This script will:
-1. Install `git` if it's missing.
-2. Clone this repository to `~/my-shell-script`.
-3. Run the bootstrap process to set up Python and dependencies.
-4. Launch the setup assistant.
+### Manual Installation
+
+1. Ensure `git` and `python3` are installed.
+2. Clone this repository to `~/oh-my-shellscript`.
+   ```bash
+   git clone https://github.com/zangzang/oh-my-shellscript.git ~/oh-my-shellscript
+   cd ~/oh-my-shellscript
+   ./install.sh
+   ```
+3. Run the setup assistant.
+   ```bash
+   omss
+   ```
+
+## 🐧 Supported Linux Distros
+
+- **Debian/Ubuntu Based**: Ubuntu, Debian, Pop!_OS, Linux Mint, etc.
+- **Fedora**: Fedora 39, 40, 41.
+- *Note: Other distributions will show a compatibility error message upon execution.*
 
 ## 📂 Project Structure
 

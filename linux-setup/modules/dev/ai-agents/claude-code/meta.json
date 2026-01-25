@@ -2,6 +2,6 @@
   "id": "dev.ai-agents.claude-code",
   "name": "Claude Code",
   "description": "Anthropic Claude Code CLI",
-  "category": "dev",
+  "category": "ai/agents",
   "dependencies": ["dev.node"]
 }

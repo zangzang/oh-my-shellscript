@@ -2,7 +2,7 @@
   "id": "dev.python",
   "name": "Python",
   "description": "Python (System Pkg or Pyenv)",
-  "category": "dev/runtimes",
+  "category": "dev/runtime",
   "requires": ["system.dev-libs"],
   "variants": ["3.12", "3.11", "3.10", "3.13"]
 }

@@ -1,5 +1,6 @@
 {
   "name": "Self-Hosted Dev Tools",
+  "category": "Docker",
   "description": "Portainer (Docker GUI) and Gitea (Git Service)",
   "modules": [
     { "id": "dev.docker" },

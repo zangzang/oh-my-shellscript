@@ -2,7 +2,7 @@
   "id": "dev.node",
   "name": "Node.js",
   "description": "Node.js (System Pkg or NVM)",
-  "category": "dev/runtimes",
+  "category": "dev/runtime",
   "requires": [],
   "variants": ["lts", "current", "20", "18"]
 }

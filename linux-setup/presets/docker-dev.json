@@ -1,8 +1,10 @@
 {
   "name": "Docker Development Stack",
+  "category": "Docker",
   "description": "Docker Engine + Common DB/Cache Stacks",
   "modules": [
     { "id": "system.build-tools" },
+    { "id": "system.swap" },
     { "id": "dev.docker" },
     { "id": "dev.docker-stack", "params": { "version": "postgres" } },
     { "id": "dev.docker-stack", "params": { "version": "redis" } },

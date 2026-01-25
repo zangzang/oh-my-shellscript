@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# My Shell Script - One-line Installer
-# https://github.com/zangzang/my-shell-script
+# Oh My Shell Script - One-line Installer
+# https://github.com/zangzang/oh-my-shellscript
 #
 
 set -e
@@ -18,12 +18,12 @@ log_success() { echo -e "${GREEN}[SUCCESS]${NC} $1"; }
 log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
-REPO_URL="https://github.com/zangzang/my-shell-script.git"
-INSTALL_DIR="$HOME/my-shell-script"
+REPO_URL="https://github.com/zangzang/oh-my-shellscript.git"
+INSTALL_DIR="$HOME/oh-my-shellscript"
 BRANCH="main"
 
 echo "========================================"
-echo "   My Shell Script Installer"
+echo "   Oh My Shell Script Installer"
 echo "========================================"
 
 # 1. Check/Install Git

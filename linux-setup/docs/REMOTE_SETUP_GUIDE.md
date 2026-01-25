@@ -56,10 +56,15 @@ ssh user@remote "cd ~/linux-setup && ./bootstrap.sh"
 ### Example: Setting up Tauri Dev Environment on Remote
 
 1. **Step 1: Set NOPASSWD (Once)**
-2. **Step 2: Sync Project Files**
-   `scp -r . user@remote:~/my-shell-script`
-3. **Step 3: Run Preset (Automated)**
-   `ssh user@remote "cd ~/my-shell-script/linux-setup && ./setup.py --preset tauri-dev --execute"`
+1. **Copy Repo to Remote:**
+   ```bash
+   scp -r . user@remote:~/oh-my-shellscript
+   ```
+
+2. **Run Setup on Remote:**
+   ```bash
+   ssh user@remote "cd ~/oh-my-shellscript/linux-setup && ./setup.py --preset tauri-dev --execute"
+   ```
 
 ## 4. Troubleshooting
 

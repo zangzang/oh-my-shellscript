@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-MODEL="${1:-llama3.1}"
+MODEL="${1:-llama3.2:3b}"
 
-echo "📥 Downloading Ollama model: $MODEL"
+echo "📥 Downloading Lightweight Ollama model: $MODEL"
 
 # Wait for Ollama service to respond
 attempt=0

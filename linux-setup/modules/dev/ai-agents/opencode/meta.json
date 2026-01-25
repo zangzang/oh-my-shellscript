@@ -2,6 +2,6 @@
   "id": "dev.ai-agents.opencode",
   "name": "Open Code",
   "description": "Open Code Agent CLI",
-  "category": "dev",
+  "category": "ai/agents",
   "dependencies": []
 }

@@ -1,5 +1,6 @@
 {
   "name": "Node.js Language",
+  "category": "Development",
   "description": "Node.js with NVM",
   "modules": [
     { "id": "dev.nvm" },

@@ -1,5 +1,6 @@
 {
   "name": "Monitoring Stack",
+  "category": "Docker",
   "description": "Prometheus & Grafana for metrics and visualization",
   "modules": [
     { "id": "dev.docker" },

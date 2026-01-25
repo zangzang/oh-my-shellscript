@@ -1,110 +1,51 @@
-[
-  {
-    "id": "system",
+{
+  "system": {
     "name": "🔧 System",
     "description": "Essential system tools and configurations",
-    "order": 1,
-    "modules": [
-      "update",
-      "build-tools",
-      "essentials",
-      "dev-libs",
-      "cli-tools",
-      "nerd-fonts",
-      "oh-my-posh",
-      "zsh",
-      "shell-config",
-      "ssh-server"
-    ]
+    "order": 1
   },
-  {
-    "id": "tools",
+  "tools": {
     "name": "🛠️ Tools",
     "description": "CLI Utilities",
-    "order": 2,
-    "modules": [
-      "fastfetch"
-    ]
+    "order": 2
   },
-  {
-    "id": "dev",
+  "dev": {
     "name": "💻 Development",
-    "description": "Development languages and runtimes",
+    "description": "Programming languages and dev infrastructure",
     "order": 3,
     "subcategories": {
       "runtime": {
-        "name": "Programming Languages",
-        "description": "Programming languages",
-        "modules": [
-          "nvm",
-          "node",
-          "python",
-          "java",
-          "sdkman",
-          "dotnet",
-          "rust"
-        ]
-      },
-      "build": {
-        "name": "Build & Package Management",
-        "description": "Build and package management",
-        "modules": [
-          "maven",
-          "gradle"
-        ]
-      },
-      "container": {
-        "name": "Container & Infra",
-        "description": "Container and infrastructure tools",
-        "modules": [
-          "docker",
-          "docker-stack"
-        ]
-      },
-      "ai": {
-        "name": "AI & Machine Learning",
-        "description": "AI and machine learning tools",
-        "modules": [
-          "cuda",
-          "ollama",
-          "ollama-models",
-          "open-webui"
-        ]
-      },
-      "ai-agents": {
-        "name": "AI Agents & CLI Tools",
-        "description": "AI agents and CLI tools",
-        "modules": [
-          "claude-code",
-          "gemini-cli",
-          "mcp-servers",
-          "mcp-tools",
-          "opencode"
-        ]
+        "name": "Languages & Runtimes",
+        "description": "Programming languages"
       },
       "mobile": {
-        "name": "Mobile Development",
-        "description": "Mobile development",
-        "modules": [
-          "flutter",
-          "android",
-          "tauri"
-        ]
+        "name": "Mobile & Desktop",
+        "description": "Cross-platform development"
+      },
+      "infra": {
+        "name": "Infrastructure & Build",
+        "description": "Docker and build tools"
       }
-    },
-    "modules": []
+    }
   },
-  {
-    "id": "gui",
+  "ai": {
+    "name": "🤖 AI & Machine Learning",
+    "description": "LLMs, Agents, and AI Tools",
+    "order": 4,
+    "subcategories": {
+      "engine": {
+        "name": "Engines & Models",
+        "description": "Local LLM runtime and models"
+      },
+      "agents": {
+        "name": "Agents & Tools",
+        "description": "AI Agents and CLI utilities"
+      }
+    }
+  },
+  "gui": {
     "name": "🖥️ GUI Apps",
     "description": "Desktop applications",
-    "order": 4,
-    "modules": [
-      "vscode",
-      "chrome",
-      "dbeaver",
-      "sts",
-      "fcitx5"
-    ]
+    "order": 5
   }
-]
+}

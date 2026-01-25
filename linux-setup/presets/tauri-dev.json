@@ -1,5 +1,6 @@
 {
   "name": "Tauri Desktop Development",
+  "category": "Mobile & Desktop",
   "description": "Complete Tauri desktop app development environment with Rust, Node.js, and system dependencies",
   "modules": [
     { "id": "system.update" },

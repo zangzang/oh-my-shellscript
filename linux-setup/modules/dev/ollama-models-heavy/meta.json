@@ -1,0 +1,13 @@
+{
+  "id": "dev.ollama-models-heavy",
+  "name": "Ollama Models (Medium/Large)",
+  "description": "Standard & Coding LLM models (7B+), requires 8GB+ RAM",
+  "category": "ai/engine",
+  "requires": ["dev.ollama"],
+  "variants": [
+    "llama3.1",
+    "deepseek-r1:7b",
+    "qwen2.5-coder:7b",
+    "mistral"
+  ]
+}
