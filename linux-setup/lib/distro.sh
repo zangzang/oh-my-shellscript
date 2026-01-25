@@ -37,7 +37,7 @@ install_packages() {
                 fi
             done
             if [ ${#fedora_pkgs[@]} -gt 0 ]; then
-                sudo dnf install -y --setopt=strict=0 "${fedora_pkgs[@]}"
+                sudo dnf install -y --refresh "${fedora_pkgs[@]}"
             fi
             ;;
         *)

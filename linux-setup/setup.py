@@ -47,7 +47,7 @@ class ModuleInfo:
         if self._meta is None:
             if self.meta_file.exists():
                 try:
-                    self._meta = json.loads(self.meta_file.read_text(encoding='utf-8'))
+                    self._meta = json.loads(self.meta_file.read_text(encoding='utf-8', errors='replace'))
                 except:
                     self._meta = {}
             else:
@@ -96,7 +96,7 @@ class ModuleManager:
         """Load category configurations"""
         cat_file = CONFIG_DIR / "categories.json"
         if cat_file.exists():
-            self.categories = json.loads(cat_file.read_text(encoding='utf-8'))
+            self.categories = json.loads(cat_file.read_text(encoding='utf-8', errors='replace'))
         else:
             self.categories = {}
 
@@ -202,7 +202,7 @@ class ModuleManager:
         
         if preset_file.exists():
             try:
-                data = json.loads(preset_file.read_text(encoding='utf-8'))
+                data = json.loads(preset_file.read_text(encoding='utf-8', errors='replace'))
                 for entry in data.get("modules", []):
                     mod_id = entry.get("id", "")
                     version = entry.get("params", {}).get("version", "")
@@ -224,7 +224,7 @@ class ModuleManager:
         """Uncheck modules of a preset (keep in context list)"""
         if preset_file.exists():
             try:
-                data = json.loads(preset_file.read_text(encoding='utf-8'))
+                data = json.loads(preset_file.read_text(encoding='utf-8', errors='replace'))
                 for entry in data.get("modules", []):
                     mod_id = entry.get("id", "")
                     version = entry.get("params", {}).get("version", "")
@@ -377,7 +377,7 @@ class ModuleTree(Tree):
         
         for preset_file in PRESETS_DIR.glob("*.json"):
             try:
-                data = json.loads(preset_file.read_text(encoding='utf-8'))
+                data = json.loads(preset_file.read_text(encoding='utf-8', errors='replace'))
                 name = data.get("name", preset_file.stem)
                 category = data.get("category", "General")
                 
@@ -592,7 +592,7 @@ class ModuleTree(Tree):
             if item_id.startswith("preset:"):
                 preset_file = PRESETS_DIR / item_id.split(":", 1)[1]
                 try:
-                    data = json.loads(preset_file.read_text(encoding='utf-8'))
+                    data = json.loads(preset_file.read_text(encoding='utf-8', errors='replace'))
                     desc = data.get("description", "")
                     modules = data.get("modules", [])
                     
@@ -870,7 +870,7 @@ def load_session() -> list[str]:
     session_file = CONFIG_DIR / "last_session.json"
     if session_file.exists():
         try:
-            return json.loads(session_file.read_text(encoding='utf-8'))
+            return json.loads(session_file.read_text(encoding='utf-8', errors='replace'))
         except Exception:
             return []
     return []
@@ -891,7 +891,7 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
         meta_found = False
         for meta_file in MODULES_DIR.rglob("meta.json"):
             try:
-                meta = json.loads(meta_file.read_text(encoding='utf-8'))
+                meta = json.loads(meta_file.read_text(encoding='utf-8', errors='replace'))
                 if meta.get("id") == mod_id:
                     name = meta.get("name", mod_id)
                     install_script = meta_file.parent / "install.sh"
@@ -952,7 +952,7 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
             found = False
             for meta_file in MODULES_DIR.rglob("meta.json"):
                 try:
-                    meta = json.loads(meta_file.read_text(encoding='utf-8'))
+                    meta = json.loads(meta_file.read_text(encoding='utf-8', errors='replace'))
                     if meta.get("id") == mod_id:
                         install_script = meta_file.parent / "install.sh"
                         if install_script.exists():
@@ -964,6 +964,7 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
                             
                             # Pass variant as environment variable
                             env = dict(os.environ)
+                            env["DEBIAN_FRONTEND"] = "noninteractive"
                             if variant:
                                 env["VERSION"] = variant
                                 env["VARIANT"] = variant
@@ -978,7 +979,8 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT,
                                 text=True,
-                                bufsize=1
+                                bufsize=1,
+                                errors='replace'
                             )
                             
                             output_log = []
