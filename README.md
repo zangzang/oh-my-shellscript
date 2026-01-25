@@ -23,6 +23,6 @@ This script will:
 ## 📂 Project Structure
 
 - **linux-setup/**: Python-based TUI setup assistant for Linux.
-- **windows-setup/**: Setup scripts for Windows.
-- **bash/**: Useful bash aliases and utilities.
-- **pwsh/**: PowerShell scripts.
+- **windows-setup/**: (Planned) Setup scripts for Windows.
+- **bash/**: (Planned) Useful bash aliases and utilities.
+- **pwsh/**: (Planned) PowerShell scripts.
