@@ -1,6 +1,6 @@
 {
   "name": "Rust Developer Extensions",
-  "description": "Rust 개발 관련 확장",
+  "description": "Extensions for Rust development",
   "extensions": [
     "rust-lang.rust-analyzer",
     "tamasfe.even-better-toml",

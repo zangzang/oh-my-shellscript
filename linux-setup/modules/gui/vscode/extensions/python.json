@@ -1,6 +1,6 @@
 {
   "name": "Python Developer Extensions",
-  "description": "Python 개발 관련 확장",
+  "description": "Extensions for Python development",
   "extensions": [
     "ms-python.python",
     "ms-python.vscode-pylance",

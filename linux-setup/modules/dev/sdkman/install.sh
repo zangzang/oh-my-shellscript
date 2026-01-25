@@ -5,8 +5,8 @@ export SDKMAN_DIR="$HOME/.sdkman"
 export sdkman_auto_answer=true
 
 if [ -d "$SDKMAN_DIR" ]; then
-    echo "SDKMAN 이미 설치됨"
-    # SDKMAN 초기화하여 Maven, Gradle 설치 확인
+    echo "SDKMAN is already installed"
+    # Initialize SDKMAN to check Maven, Gradle
     if [ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]; then
         nounset_was_on=0
         case "$-" in *u*) nounset_was_on=1 ;; esac
@@ -16,15 +16,15 @@ if [ -d "$SDKMAN_DIR" ]; then
         if (( nounset_was_on )); then set -u; fi
     fi
 else
-    echo "SDKMAN 설치 중..."
+    echo "Installing SDKMAN..."
     if curl -s "https://get.sdkman.io?rcupdate=false" | bash; then
-        echo "SDKMAN 설치 완료"
+        echo "SDKMAN installation complete"
     else
-        echo "SDKMAN 설치 실패"
+        echo "SDKMAN installation failed"
         exit 1
     fi
     
-    # SDKMAN 초기화
+    # Initialize SDKMAN
     if [ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]; then
         nounset_was_on=0
         case "$-" in *u*) nounset_was_on=1 ;; esac
@@ -35,9 +35,9 @@ else
     fi
 fi
 
-# Maven 설치 (sdk 명령도 set -u 문제 회피)
+# Install Maven
 if ! command -v mvn &>/dev/null; then
-    echo "Maven 설치 중..."
+    echo "Installing Maven..."
     nounset_was_on=0
     case "$-" in *u*) nounset_was_on=1 ;; esac
     set +u
@@ -46,18 +46,18 @@ if ! command -v mvn &>/dev/null; then
     install_rc=$?
     set -e
     if [[ $install_rc -eq 0 || $install_rc -eq 1 ]]; then
-        echo "✅ Maven 설치 완료"
+        echo "✅ Maven installation complete"
     else
-        echo "⚠️  Maven 설치 명령 실패 (exit=$install_rc)"
+        echo "⚠️  Maven installation command failed (exit=$install_rc)"
     fi
     if (( nounset_was_on )); then set -u; fi
 else
-    echo "✅ Maven 이미 설치됨"
+    echo "✅ Maven already installed"
 fi
 
-# Gradle 설치
+# Install Gradle
 if ! command -v gradle &>/dev/null; then
-    echo "Gradle 설치 중..."
+    echo "Installing Gradle..."
     nounset_was_on=0
     case "$-" in *u*) nounset_was_on=1 ;; esac
     set +u
@@ -66,13 +66,13 @@ if ! command -v gradle &>/dev/null; then
     install_rc=$?
     set -e
     if [[ $install_rc -eq 0 || $install_rc -eq 1 ]]; then
-        echo "✅ Gradle 설치 완료"
+        echo "✅ Gradle installation complete"
     else
-        echo "⚠️  Gradle 설치 명령 실패 (exit=$install_rc)"
+        echo "⚠️  Gradle installation command failed (exit=$install_rc)"
     fi
     if (( nounset_was_on )); then set -u; fi
 else
-    echo "✅ Gradle 이미 설치됨"
+    echo "✅ Gradle already installed"
 fi
 
-echo "SDKMAN, Maven, Gradle 설정 완료"
+echo "SDKMAN, Maven, Gradle setup complete"

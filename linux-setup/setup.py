@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Linux Setup Assistant v4.0 - Python TUI (textual)
-빠르고 직관적인 모듈 선택 인터페이스
+Fast and intuitive module selection interface
 """
 
 import json
@@ -12,7 +12,7 @@ import time
 from pathlib import Path
 from typing import Optional
 
-# textual 설치 확인
+# Check for textual installation
 try:
     from textual.app import App, ComposeResult
     from textual.widgets import Tree, Static, Footer, Header, Button, Label, ListView, ListItem, RichLog
@@ -20,7 +20,7 @@ try:
     from textual.binding import Binding
     from textual import events
 except ImportError:
-    print("textual 라이브러리가 필요합니다. 설치 중...")
+    print("Library 'textual' is required. Installing...")
     subprocess.run([sys.executable, "-m", "pip", "install", "textual", "-q"])
     from textual.app import App, ComposeResult
     from textual.widgets import Tree, Static, Footer, Header, Button, Label, ListView, ListItem, RichLog
@@ -36,7 +36,7 @@ CONFIG_DIR = SCRIPT_DIR / "config"
 
 
 class ModuleInfo:
-    """모듈 정보 클래스"""
+    """Module information class"""
     def __init__(self, path: Path):
         self.path = path
         self.meta_file = path / "meta.json"
@@ -73,7 +73,7 @@ class ModuleInfo:
 
 
 class ModuleManager:
-    """모듈 관리자"""
+    """Module manager class"""
     def __init__(self):
         self.modules: dict[str, ModuleInfo] = {}
         self.categories: dict = {}
@@ -82,38 +82,38 @@ class ModuleManager:
         self._load_categories()
     
     def _load_modules(self):
-        """모든 모듈 로드"""
+        """Load all modules from directory"""
         for meta_file in MODULES_DIR.rglob("meta.json"):
             mod = ModuleInfo(meta_file.parent)
             if mod.id:
                 self.modules[mod.id] = mod
-                # 폴더명으로도 접근 가능하게
+                # Also allow access by folder name
                 self.modules[meta_file.parent.name] = mod
     
     def _load_categories(self):
-        """카테고리 설정 로드"""
+        """Load category configurations"""
         cat_file = CONFIG_DIR / "categories.json"
         if cat_file.exists():
             self.categories = json.loads(cat_file.read_text())
     
     def get_module(self, mod_id: str) -> Optional[ModuleInfo]:
-        """모듈 ID 또는 폴더명으로 모듈 찾기"""
-        # 직접 매치
+        """Find module by ID or folder name"""
+        # Direct match
         if mod_id in self.modules:
             return self.modules[mod_id]
-        # variant 분리 (dev.java:17 -> dev.java)
+        # Split variant (e.g., dev.java:17 -> dev.java)
         base_id = mod_id.split(":")[0]
         return self.modules.get(base_id)
     
     def toggle(self, item_id: str):
-        """선택 토글"""
+        """Toggle selection of a module"""
         if item_id in self.selected:
             self.selected.discard(item_id)
         else:
             self.selected.add(item_id)
     
     def resolve_dependencies(self) -> list[str]:
-        """의존성 해결하여 설치 순서 반환"""
+        """Resolve dependencies and return installation order"""
         result = []
         visited = set()
         
@@ -135,7 +135,7 @@ class ModuleManager:
         return result
     
     def load_preset(self, preset_file: Path, clear_selection: bool = True):
-        """프리셋 로드"""
+        """Load modules from a preset file"""
         if clear_selection:
             self.selected.clear()
         
@@ -151,7 +151,7 @@ class ModuleManager:
                     self.selected.add(key)
 
     def unload_preset(self, preset_file: Path):
-        """프리셋 모듈 제거"""
+        """Remove modules of a preset from selection"""
         if preset_file.exists():
             data = json.loads(preset_file.read_text())
             for entry in data.get("modules", []):
@@ -163,12 +163,12 @@ class ModuleManager:
 
 
 class SelectedList(ListView):
-    """선택된 항목 리스트 (제거 가능)"""
+    """List of selected items (supports removal)"""
     
     BINDINGS = [
-        Binding("space", "remove_item", "제거", show=True),
-        Binding("delete", "remove_item", "제거", show=False),
-        Binding("backspace", "remove_item", "제거", show=False),
+        Binding("space", "remove_item", "Remove", show=True),
+        Binding("delete", "remove_item", "Remove", show=False),
+        Binding("backspace", "remove_item", "Remove", show=False),
     ]
     
     def __init__(self, manager: ModuleManager):
@@ -176,21 +176,21 @@ class SelectedList(ListView):
         self.manager = manager
     
     def refresh_list(self):
-        """리스트 새로고침"""
+        """Refresh the displayed list of selected items"""
         self.clear()
         for item in sorted(self.manager.selected):
             list_item = ListItem(Label(f"[green]✓[/] {item}"))
-            list_item.data = item  # 데이터 저장
+            list_item.data = item  # Store data for retrieval
             self.append(list_item)
     
     def action_remove_item(self):
-        """선택된 항목 제거"""
+        """Remove the highlighted item from selection"""
         if self.highlighted_child:
             item_id = getattr(self.highlighted_child, 'data', None)
             if item_id:
                 self.manager.selected.discard(item_id)
                 self.refresh_list()
-                # 트리도 업데이트
+                # Also update the tree view
                 try:
                     tree = self.app.query_one(ModuleTree)
                     tree.refresh_all_labels()
@@ -199,7 +199,7 @@ class SelectedList(ListView):
 
 
 class InfoPanel(RichLog):
-    """모듈 정보 패널"""
+    """Panel for displaying module information"""
     
     def __init__(self, manager: ModuleManager):
         super().__init__(highlight=True, markup=True)
@@ -208,12 +208,12 @@ class InfoPanel(RichLog):
         self.can_focus = True
     
     def set_content(self, content: str):
-        """내용 설정 (Static.update 대체)"""
+        """Set information content directly"""
         self.clear()
         self.write(content)
     
     def update_info(self, mod_id: str = ""):
-        """모듈 정보 업데이트"""
+        """Update information based on module ID"""
         self.current_id = mod_id
         self.clear()
         
@@ -224,26 +224,25 @@ class InfoPanel(RichLog):
                 if mod.description:
                     self.write(f"[dim]{mod.description}[/]")
                 
-                # 모듈 ID 표시
                 self.write(f"[dim]ID: {mod.id}[/]")
                 
                 if mod.requires:
                     self.write("")
-                    self.write("[yellow]의존성:[/]")
+                    self.write("[yellow]Dependencies:[/]")
                     for dep in mod.requires:
                         self.write(f"  ↳ {dep}")
                 if mod.variants:
                     self.write("")
-                    self.write(f"[cyan]버전:[/] {', '.join(mod.variants)}")
+                    self.write(f"[cyan]Variants:[/]")
         else:
-            self.write("[dim]모듈을 선택하세요[/]")
+            self.write("[dim]Select a module to see details")
 
 
 class ModuleTree(Tree):
-    """모듈 트리 위젯"""
+    """Tree widget for displaying presets and modules"""
     
     BINDINGS = [
-        Binding("space", "toggle_select", "선택", show=True),
+        Binding("space", "toggle_select", "Toggle", show=True),
     ]
     
     def __init__(self, manager: ModuleManager):
@@ -253,23 +252,23 @@ class ModuleTree(Tree):
         self.show_root = False
     
     def on_mount(self):
-        """트리 구성"""
+        """Build the tree structure on mount"""
         self.root.expand()
         self._build_presets()
         self._build_tree()
     
     def _build_presets(self):
-        """프리셋 목록 구성 (카테고리 그룹화 및 정렬 적용)"""
+        """Build the presets section grouped by category"""
         presets_node = self.root.add("📂 Presets", expand=True)
         
-        # 1. 모든 프리셋 로드 및 분류
+        # 1. Load and group all presets
         preset_groups = {}  # category -> list of (name, file_name)
         
         for preset_file in PRESETS_DIR.glob("*.json"):
             try:
                 data = json.loads(preset_file.read_text(encoding='utf-8'))
                 name = data.get("name", preset_file.stem)
-                category = data.get("category", "General") # 카테고리 없으면 General
+                category = data.get("category", "General")
                 
                 if category not in preset_groups:
                     preset_groups[category] = []
@@ -277,13 +276,11 @@ class ModuleTree(Tree):
             except Exception:
                 pass
         
-        # 2. 카테고리별 정렬 및 트리 구성
-        # 카테고리 이름으로 정렬
+        # 2. Build tree nodes sorted by category name
         for category in sorted(preset_groups.keys()):
-            # General은 최상위(또는 별도)로 두고 싶다면 로직 추가 가능하지만, 일단 알파벳순
             cat_node = presets_node.add(f"📁 {category}", expand=True)
             
-            # 그룹 내 아이템 이름으로 정렬
+            # Sort items within group by name
             items = sorted(preset_groups[category], key=lambda x: x[0])
             
             for name, filename in items:
@@ -291,13 +288,12 @@ class ModuleTree(Tree):
                 self.node_map[str(node._id)] = f"preset:{filename}"
 
     def _build_tree(self):
-        """카테고리 기반 트리 구성"""
-        # 모듈 최상위 노드 생성
+        """Build the module tree based on category configuration"""
         modules_root = self.root.add("📦 Modules", expand=True)
         
         categories = self.manager.categories
         
-        # 카테고리 순서대로
+        # Sort categories by defined order
         sorted_cats = sorted(
             categories.items(),
             key=lambda x: x[1].get("order", 99)
@@ -307,7 +303,7 @@ class ModuleTree(Tree):
             cat_name = cat_data.get("name", cat_key)
             cat_node = modules_root.add(cat_name, expand=True)
             
-            # 서브카테고리
+            # Subcategories
             if "subcategories" in cat_data:
                 for sub_key, sub_data in cat_data["subcategories"].items():
                     sub_name = sub_data.get("name", sub_key)
@@ -316,18 +312,18 @@ class ModuleTree(Tree):
                     for mod_folder in sub_data.get("modules", []):
                         self._add_module_nodes(sub_node, mod_folder)
             
-            # 직접 모듈
+            # Direct modules
             for mod_folder in cat_data.get("modules", []):
                 self._add_module_nodes(cat_node, mod_folder)
     
     def _add_module_nodes(self, parent_node, mod_folder: str):
-        """모듈 노드 추가"""
+        """Add module nodes to a parent category node"""
         mod = self.manager.modules.get(mod_folder)
         if not mod:
             return
         
         if mod.variants:
-            # variants가 있으면 항상 서브트리로 그룹화
+            # Group variants in a sub-tree
             mod_node = parent_node.add(f"📦 {mod.name}", expand=False)
             for v in mod.variants:
                 key = f"{mod.id}:{v}"
@@ -343,12 +339,12 @@ class ModuleTree(Tree):
             self.node_map[str(node._id)] = key
 
     def action_toggle_select(self):
-        """스페이스로 선택 토글"""
+        """Handle toggle selection on space key"""
         node = self.cursor_node
         if node and str(node._id) in self.node_map:
             item_id = self.node_map[str(node._id)]
             
-            # 프리셋 선택 처리
+            # Handle preset selection
             if item_id.startswith("preset:"):
                 current_label = str(node.label)
                 is_checked = "☑" in current_label
@@ -356,17 +352,17 @@ class ModuleTree(Tree):
                 preset_file = PRESETS_DIR / item_id.split(":", 1)[1]
                 
                 if is_checked:
-                    # 체크 해제 -> 모듈 제거
+                    # Uncheck -> Remove modules
                     new_label = current_label.replace("☑ ", "☐ ")
                     node.set_label(new_label)
                     self.manager.unload_preset(preset_file)
-                    self.app.notify(f"프리셋 해제: {preset_file.stem}")
+                    self.app.notify(f"Unloaded preset: {preset_file.stem}")
                 else:
-                    # 체크 -> 모듈 추가 (기존 선택 유지)
+                    # Check -> Add modules (keep existing)
                     new_label = current_label.replace("☐ ", "☑ ")
                     node.set_label(new_label)
                     self.manager.load_preset(preset_file, clear_selection=False)
-                    self.app.notify(f"프리셋 추가: {preset_file.stem}")
+                    self.app.notify(f"Loaded preset: {preset_file.stem}")
 
                 self.refresh_all_labels()
                 try:
@@ -376,10 +372,10 @@ class ModuleTree(Tree):
                     pass
                 return
 
-            # 일반 모듈 선택 처리
+            # Handle standard module selection
             self.manager.toggle(item_id)
             self._update_node_label(node, item_id)
-            # 선택 리스트 업데이트
+            # Update selected list view
             try:
                 selected_list = self.app.query_one(SelectedList)
                 selected_list.refresh_list()
@@ -387,8 +383,7 @@ class ModuleTree(Tree):
                 pass
     
     def _update_node_label(self, node, mod_id: str):
-        """노드 라벨 업데이트"""
-        # 프리셋 노드는 업데이트 제외
+        """Update node label with checkbox mark"""
         if mod_id.startswith("preset:"):
             return
 
@@ -397,25 +392,25 @@ class ModuleTree(Tree):
             mark = "☑" if mod_id in self.manager.selected else "☐"
             if ":" in mod_id:
                 version = mod_id.split(":")[1]
-                # variants 있는 모듈은 버전만 표시
+                # Show only version for variant modules
                 node.set_label(f"{mark} {version}")
             else:
                 node.set_label(f"{mark} {mod.name}")
     
     def on_tree_node_selected(self, event: Tree.NodeSelected):
-        """노드 선택 시 정보 표시"""
+        """Display info when node is selected"""
         self._show_node_info(event.node)
     
     def on_tree_node_highlighted(self, event: Tree.NodeHighlighted):
-        """노드 커서 이동 시 정보 표시"""
+        """Display info when node is highlighted (cursor moves)"""
         self._show_node_info(event.node)
     
     def _show_node_info(self, node):
-        """노드 정보 표시"""
+        """Show information about the node in info panel"""
         if str(node._id) in self.node_map:
             item_id = self.node_map[str(node._id)]
             
-            # 프리셋 정보 표시
+            # Show preset information
             if item_id.startswith("preset:"):
                 preset_file = PRESETS_DIR / item_id.split(":", 1)[1]
                 try:
@@ -427,7 +422,7 @@ class ModuleTree(Tree):
                     if desc:
                         lines.append(f"[dim]{desc}[/]")
                     lines.append("")
-                    lines.append(f"[yellow]포함된 모듈 ({len(modules)}개):[/]")
+                    lines.append(f"[yellow]Included Modules ({len(modules)}):[/]")
                     for m in modules:
                         mid = m.get("id", "")
                         ver = m.get("params", {}).get("version", "")
@@ -445,7 +440,7 @@ class ModuleTree(Tree):
                     pass
                 return
 
-            # 일반 모듈 정보 표시
+            # Show standard module information
             try:
                 info = self.app.query_one(InfoPanel)
                 info.update_info(item_id)
@@ -453,14 +448,13 @@ class ModuleTree(Tree):
                 pass
     
     def refresh_all_labels(self):
-        """모든 노드 라벨 새로고침"""
+        """Refresh labels for all nodes in the tree"""
         for node_id, mod_id in self.node_map.items():
-            # 노드 찾아서 업데이트
             for node in self.root.children:
                 self._refresh_node_recursive(node, mod_id)
     
     def _refresh_node_recursive(self, node, target_mod_id: str):
-        """재귀적으로 노드 업데이트"""
+        """Recursively update node labels matching the target module ID"""
         node_id_str = str(node._id)
         if node_id_str in self.node_map and self.node_map[node_id_str] == target_mod_id:
             self._update_node_label(node, target_mod_id)
@@ -469,7 +463,7 @@ class ModuleTree(Tree):
 
 
 class SetupApp(App):
-    """메인 애플리케이션"""
+    """Main Textual Application"""
     
     CSS = """
     Screen {
@@ -527,13 +521,13 @@ class SetupApp(App):
     """
     
     BINDINGS = [
-        Binding("q", "quit", "종료"),
-        Binding("escape", "quit", "종료", show=False),
-        Binding("f5", "install", "설치(F5)"),
-        Binding("p", "load_preset", "프리셋(p)"),
-        Binding("d", "dry_run", "시뮬(d)"),
-        Binding("s", "save_preset", "저장(s)"),
-        Binding("tab", "focus_next", "패널", show=True),
+        Binding("q", "quit", "Quit"),
+        Binding("escape", "quit", "Quit", show=False),
+        Binding("f5", "install", "Install(F5)"),
+        Binding("p", "load_preset", "Preset(p)"),
+        Binding("d", "dry_run", "Simul(d)"),
+        Binding("s", "save_preset", "Save(s)"),
+        Binding("tab", "focus_next", "SwitchPanel", show=True),
     ]
     
     def __init__(self, preset: str = None, action: str = None, initial_selection: list = None):
@@ -551,10 +545,10 @@ class SetupApp(App):
                 yield ModuleTree(self.manager)
             with Container(id="info-panel"):
                 with Container(id="selected-box"):
-                    yield Label("[bold cyan]━━━ 선택됨 (Space로 제거) ━━━[/]")
+                    yield Label("[bold cyan]━━━ Selected (Space to remove) ━━━[/]")
                     yield SelectedList(self.manager)
                 with Container(id="info-box"):
-                    yield Label("[bold yellow]━━━ 모듈 정보 ━━━[/]")
+                    yield Label("[bold yellow]━━━ Module Info ━━━[/]")
                     yield InfoPanel(self.manager)
         yield Footer()
     
@@ -562,36 +556,36 @@ class SetupApp(App):
         self.title = "🐧 Linux Setup Assistant v4.0"
         self.sub_title = ""
         
-        # 프리셋 로드
+        # Load preset from argument
         if self.preset_arg:
             preset_path = Path(self.preset_arg)
             if not preset_path.exists():
                 preset_path = PRESETS_DIR / f"{self.preset_arg}.json"
             if preset_path.exists():
                 self.manager.load_preset(preset_path)
-                self.notify(f"프리셋 로드: {preset_path.stem}")
+                self.notify(f"Preset loaded: {preset_path.stem}")
 
-        # 선택된 항목이 있으면 리스트 새로고침
+        # Refresh selected list if there's an initial selection
         if self.manager.selected:
             try:
                 self.query_one(SelectedList).refresh_list()
             except Exception:
                 pass
         
-        # 액션 모드
+        # Immediate action modes
         if self.action_mode == "execute":
             self.call_later(self.action_install)
         elif self.action_mode == "dry-run":
             self.call_later(self.action_dry_run)
 
     def action_quit(self):
-        """종료"""
+        """Quit the application"""
         self.exit()
 
     def action_install(self):
-        """설치 실행"""
+        """Initiate installation"""
         if not self.manager.selected:
-            self.notify("선택된 모듈이 없습니다!", severity="warning")
+            self.notify("No modules selected!", severity="warning")
             return
         
         install_list = self.manager.resolve_dependencies()
@@ -599,9 +593,9 @@ class SetupApp(App):
         self.exit(result=("execute", install_list, selected_items))
 
     def action_dry_run(self):
-        """시뮬레이션"""
+        """Initiate simulation (Dry Run)"""
         if not self.manager.selected:
-            self.notify("선택된 모듈이 없습니다!", severity="warning")
+            self.notify("No modules selected!", severity="warning")
             return
         
         install_list = self.manager.resolve_dependencies()
@@ -609,24 +603,23 @@ class SetupApp(App):
         self.exit(result=("dry-run", install_list, selected_items))
 
     def action_save_preset(self):
-        """현재 선택을 프리셋으로 저장"""
+        """Save current selection as a new preset"""
         if not self.manager.selected:
-            self.notify("선택된 모듈이 없습니다!", severity="warning")
+            self.notify("No modules selected!", severity="warning")
             return
         
         selected_items = list(self.manager.selected)
         self.exit(result=("save", [], selected_items))
 
     def action_load_preset(self):
-        """프리셋 선택 (간단 버전)"""
+        """Preset cycle (Quick selection)"""
         presets = list(PRESETS_DIR.glob("*.json"))
         if presets:
-            # 첫 번째 프리셋 로드 (추후 선택 UI 추가)
-            self.notify("p를 여러 번 눌러 프리셋 순환")
+            self.notify("Press 'p' multiple times to cycle presets")
 
 
 def save_preset(selected_items: list[str], preset_name: str = None):
-    """선택된 항목을 프리셋으로 저장"""
+    """Save the selected items into a preset JSON file"""
     from datetime import datetime
     
     if not preset_name:
@@ -635,7 +628,7 @@ def save_preset(selected_items: list[str], preset_name: str = None):
     
     preset_data = {
         "name": preset_name,
-        "description": f"자동 생성된 프리셋 ({datetime.now().strftime('%Y-%m-%d %H:%M')})",
+        "description": f"Auto-generated preset ({datetime.now().strftime('%Y-%m-%d %H:%M')})",
         "modules": []
     }
     
@@ -651,22 +644,22 @@ def save_preset(selected_items: list[str], preset_name: str = None):
     
     preset_path = PRESETS_DIR / f"{preset_name}.json"
     preset_path.write_text(json.dumps(preset_data, indent=2, ensure_ascii=False))
-    print(f"✅ 프리셋 저장됨: {preset_path}")
+    print(f"✅ Preset saved: {preset_path}")
     return preset_path
 
 
 def run_installation(install_list: list[str], selected_items: list[str] = None, dry_run: bool = False):
-    """설치 실행"""
+    """Execute the installation sequence in the terminal"""
     print("\n" + "=" * 50)
-    print(f"📦 설치 순서 ({'시뮬레이션' if dry_run else '실제 설치'})")
+    print(f"📦 Installation Sequence ({'Simulation' if dry_run else 'Actual Installation'})")
     print("=" * 50)
     
-    # 설치 계획 상세 출력
+    # Detail installation plan
     for i, item in enumerate(install_list, 1):
         mod_id = item.split(":")[0]
         variant = item.split(":")[1] if ":" in item else ""
         
-        # 모듈 메타데이터 찾기
+        # Search for module metadata
         meta_found = False
         for meta_file in MODULES_DIR.rglob("meta.json"):
             try:
@@ -681,11 +674,11 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
                             cmd = f"bash {install_script}"
                             if variant:
                                 cmd += f" {variant}"
-                            print(f"     ➜ 실행: {cmd}")
+                            print(f"     ➜ Command: {cmd}")
                             if variant:
-                                print(f"     ➜ 환경변수: VERSION={variant}")
+                                print(f"     ➜ Env: VERSION={variant}")
                         else:
-                            print(f"     ⚠️  경고: 설치 스크립트 없음 ({install_script})")
+                            print(f"     ⚠️  Warning: Installation script missing ({install_script})")
                     else:
                         print(f"  {i}. {name} ({mod_id})")
                     
@@ -695,29 +688,29 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
                 continue
         
         if not meta_found:
-            print(f"  {i}. {item} (⚠️ 메타데이터 못 찾음)")
+            print(f"  {i}. {item} (⚠️ Metadata not found)")
 
     print()
     
     if dry_run:
-        print("🔍 시뮬레이션 모드 - 실제 설치 없음")
+        print("🔍 Simulation Mode - No actual changes made")
         return
     
-    # 프리셋 저장 제안 (실제 설치 시에만)
+    # Suggest saving current selection as preset
     if selected_items:
         try:
-            save = input("설치 전 이 선택을 프리셋으로 저장하시겠습니까? (y/N): ").strip().lower()
+            save = input("Would you like to save this selection as a preset before installing? (y/N): ").strip().lower()
             if save == 'y':
-                name = input("프리셋 이름 (Enter=자동): ").strip() or None
+                name = input("Preset Name (Enter for auto-gen): ").strip() or None
                 save_preset(selected_items, name)
         except KeyboardInterrupt:
-            print("\n\n⚠️ 취소되었습니다.")
+            print("\n\n⚠️ Cancelled.")
             return
     
-    print("\n🚀 설치를 시작합니다... (Ctrl+C로 중단 가능)")
+    print("\n🚀 Starting installation... (Ctrl+C to abort)")
     print("-" * 50)
     
-    # 실제 설치
+    # Execution
     results = []
     start_total = time.time()
     cancelled = False
@@ -727,7 +720,7 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
             mod_id = item.split(":")[0]
             variant = item.split(":")[1] if ":" in item else ""
             
-            # 모듈 경로 찾기
+            # Find module path
             found = False
             for meta_file in MODULES_DIR.rglob("meta.json"):
                 try:
@@ -736,12 +729,12 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
                         install_script = meta_file.parent / "install.sh"
                         if install_script.exists():
                             print(f"\n{'='*50}")
-                            print(f">>> [{meta.get('name', mod_id)}] 설치 중...")
+                            print(f">>> Installing [{meta.get('name', mod_id)}]...")
                             if variant:
                                 print(f"    variant: {variant}")
                             print("=" * 50)
                             
-                            # 환경변수로 variant 전달
+                            # Pass variant as environment variable
                             env = dict(os.environ)
                             if variant:
                                 env["VERSION"] = variant
@@ -749,7 +742,7 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
                             
                             start_mod = time.time()
                             
-                            # subprocess.Popen으로 실시간 출력 및 캡처
+                            # Use subprocess.Popen for real-time output
                             process = subprocess.Popen(
                                 ["bash", str(install_script), variant] if variant else ["bash", str(install_script)],
                                 env=env,
@@ -761,7 +754,7 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
                             )
                             
                             output_log = []
-                            # 실시간 출력 스트리밍
+                            # Stream output
                             for line in process.stdout:
                                 print(line, end='')
                                 output_log.append(line)
@@ -770,11 +763,11 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
                             result_code = process.returncode
                             duration = time.time() - start_mod
                             
-                            # 결과 분석 (이미 설치됨 확인)
+                            # Analyze results (check for idempotency skip)
                             full_output = "".join(output_log)
                             is_skipped = False
                             if result_code == 0:
-                                if "이미 설치되어 있습니다" in full_output or "already installed" in full_output or "이미 설치됨" in full_output:
+                                if "already installed" in full_output.lower() or "이미 설치됨" in full_output:
                                     is_skipped = True
                             
                             if is_skipped:
@@ -792,18 +785,18 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
                             })
 
                             if result_code != 0:
-                                print(f"❌ 실패: {mod_id}")
+                                print(f"❌ Failed: {mod_id}")
                             elif is_skipped:
-                                print(f"⏭️  건너뜀: {mod_id} (이미 설치됨)")
+                                print(f"⏭️  Skipped: {mod_id} (Already installed)")
                             else:
-                                print(f"✅ 완료: {mod_id}")
+                                print(f"✅ Completed: {mod_id}")
                             found = True
                         break
                 except Exception as e:
-                    print(f"⚠️ 오류: {e}")
+                    print(f"⚠️ Error: {e}")
             
             if not found:
-                print(f"⚠️ 모듈을 찾을 수 없음: {mod_id}")
+                print(f"⚠️ Module not found: {mod_id}")
                 results.append({
                     "id": mod_id,
                     "name": mod_id,
@@ -815,17 +808,17 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
         cancelled = True
         print("\n")
         print("=" * 50)
-        print("⚠️ 사용자에 의해 취소되었습니다.")
+        print("⚠️ Cancelled by user.")
         print("=" * 50)
     
     total_duration = time.time() - start_total
     
-    # 요약 리포트 출력
+    # Summary Report
     print("\n\n")
     print("=" * 60)
-    print(f"📊 설치 요약 리포트 (총 소요시간: {total_duration:.1f}초)")
+    print(f"📊 Installation Summary Report (Total Duration: {total_duration:.1f}s)")
     print("=" * 60)
-    print(f"{'모듈 ID':<20} | {'상태':<10} | {'소요시간':<10}")
+    print(f"{ 'Module ID':<20} | {'Status':<10} | {'Duration':<10}")
     print("-" * 60)
     
     success_count = 0
@@ -833,10 +826,10 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
     skip_count = 0
     
     for res in results:
-        status_icon = "✅ 성공"
-        if res["status"] == "FAILED": status_icon = "❌ 실패"
-        elif res["status"] == "SKIPPED": status_icon = "⏭️  건너뜀"
-        elif res["status"] == "NOT_FOUND": status_icon = "⚠️ 없음"
+        status_icon = "✅ SUCCESS"
+        if res["status"] == "FAILED": status_icon = "❌ FAILED"
+        elif res["status"] == "SKIPPED": status_icon = "⏭️  SKIPPED"
+        elif res["status"] == "NOT_FOUND": status_icon = "⚠️ MISSING"
         
         print(f"{res['id']:<20} | {status_icon:<10} | {res['duration']:.1f}s")
         
@@ -849,31 +842,31 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
             
     print("-" * 60)
     if cancelled:
-        print("⚠️  설치가 중단되었습니다.")
+        print("⚠️  Installation Aborted.")
     else:
-        print(f"✨ 전체 결과: 성공 {success_count} / 건너뜀 {skip_count} / 실패 {fail_count}")
+        print(f"✨ Overall Results: Success {success_count} / Skipped {skip_count} / Failed {fail_count}")
     print("=" * 60)
     print()
     
     if dry_run:
-        input("엔터를 누르면 메뉴로 돌아갑니다...")
+        input("Press Enter to return to menu...")
 
 
 def main():
     import argparse
     import signal
     
-    # SIGINT (Ctrl+C) graceful 처리
+    # Graceful SIGINT (Ctrl+C) handling
     def signal_handler(sig, frame):
-        print("\n\n⚠️ 취소되었습니다.")
+        print("\n\n⚠️ Cancelled.")
         sys.exit(0)
     
     signal.signal(signal.SIGINT, signal_handler)
     
     parser = argparse.ArgumentParser(description="Linux Setup Assistant")
-    parser.add_argument("--preset", "-p", help="프리셋 이름 또는 경로")
-    parser.add_argument("--execute", "--run", action="store_true", help="바로 실행")
-    parser.add_argument("--dry-run", action="store_true", help="시뮬레이션")
+    parser.add_argument("--preset", "-p", help="Preset name or path")
+    parser.add_argument("--execute", "--run", action="store_true", help="Run installation immediately")
+    parser.add_argument("--dry-run", action="store_true", help="Simulate installation")
     args = parser.parse_args()
     
     action_arg = None
@@ -889,7 +882,7 @@ def main():
         app = SetupApp(preset=preset_arg, action=action_arg, initial_selection=current_selection)
         result = app.run()
         
-        # 첫 실행 이후 인자 초기화
+        # Reset arguments after first run
         action_arg = None
         preset_arg = None
         
@@ -897,22 +890,20 @@ def main():
             break
             
         mode, install_list, selected_items = result
-        current_selection = selected_items # 현재 선택 상태 저장
+        current_selection = selected_items # Preserve current selection
         
         if mode == "save":
             print("\n" + "=" * 50)
-            name = input("프리셋 이름 (Enter=자동): ").strip() or None
+            name = input("Preset Name (Enter for auto-gen): ").strip() or None
             save_preset(selected_items, name)
-            input("\n✅ 저장되었습니다. Enter를 누르면 선택 화면으로 돌아갑니다...")
+            input("\n✅ Saved. Press Enter to return to selection screen...")
         elif mode == "execute":
             run_installation(install_list, selected_items, dry_run=False)
-            # 실제 설치 후에는 종료하거나, 필요시 루프를 유지할 수 있음
-            # 현재는 설치 완료 후 종료하도록 설정
             break
         elif mode == "dry-run":
             run_installation(install_list, selected_items, dry_run=True)
             print("\n" + "=" * 50)
-            input("🔍 시뮬레이션이 완료되었습니다. Enter를 누르면 선택 화면으로 돌아갑니다...")
+            input("🔍 Simulation complete. Press Enter to return to selection screen...")
 
 
 

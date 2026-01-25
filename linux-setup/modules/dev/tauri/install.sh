@@ -4,11 +4,11 @@ set -euo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/../../../lib/core.sh"
 
-log_info "Tauri 필수 시스템 패키지 설치 중..."
+log_info "Installing Tauri system prerequisites..."
 
 detect_os
 
-# Tauri 의존성 패키지 (https://tauri.app/start/prerequisites/#linux)
+# Tauri dependencies (https://tauri.app/start/prerequisites/#linux)
 PACKAGES=(
   "libgtk-3-dev"           
   "libglib2.0-dev"         
@@ -22,27 +22,27 @@ PACKAGES=(
 
 install_packages "${PACKAGES[@]}"
 
-# Rust 환경 로드
+# Load Rust environment
 if [[ -f "$HOME/.cargo/env" ]]; then
     source "$HOME/.cargo/env"
 fi
 
 if ! command -v cargo &> /dev/null; then
-    # PATH에 없을 경우를 대비해 수동으로 추가 시도
+    # Manually try adding to PATH
     export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
 if ! command -v cargo &> /dev/null; then
-    log_error "Cargo(Rust)를 찾을 수 없습니다. dev.rust 모듈이 설치되었는지 확인하세요."
+    log_error "Cargo (Rust) not found. Please verify 'dev.rust' module is installed."
     exit 1
 fi
 
-# Tauri CLI 설치
+# Install Tauri CLI
 if ! command -v cargo-tauri &> /dev/null; then
-    log_info "📦 Tauri CLI 설치 중 (컴파일에 시간이 다소 소요될 수 있습니다)..."
+    log_info "📦 Installing Tauri CLI (Compilation may take some time)..."
     cargo install tauri-cli
 else
-    log_info "✅ Tauri CLI가 이미 설치되어 있습니다."
+    log_info "✅ Tauri CLI is already installed."
 fi
 
-log_success "Tauri 개발 환경 구성 완료"
+log_success "Tauri development environment setup complete"

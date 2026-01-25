@@ -1,6 +1,6 @@
 {
   "name": ".NET Developer Extensions",
-  "description": "C#/.NET 개발 관련 확장",
+  "description": "Extensions for C#/.NET development",
   "extensions": [
     "ms-dotnettools.csharp",
     "ms-dotnettools.csdevkit",

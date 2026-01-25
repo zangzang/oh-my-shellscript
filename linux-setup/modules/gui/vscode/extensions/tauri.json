@@ -1,6 +1,6 @@
 {
   "name": "Tauri Developer Extensions",
-  "description": "Tauri 크로스플랫폼 데스크톱 앱 개발 관련 확장",
+  "description": "Extensions for Tauri cross-platform desktop app development",
   "extensions": [
     "tauri-apps.tauri-vscode",
     "swellaby.vscode-rust-test-adapter",

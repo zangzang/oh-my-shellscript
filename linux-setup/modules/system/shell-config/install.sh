@@ -48,7 +48,7 @@ export NVM_DIR="$HOME/.nvm"
 # Pyenv (Python)
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-if command -v pyenv &> /dev/null; then
+if command -v pyenv &> /dev/null;
     eval "$(pyenv init -)"
 fi
 
@@ -94,7 +94,7 @@ alias du='ncdu'
 # FZF Configuration
 # =============================================================================
 
-if command -v fzf &> /dev/null; then
+if command -v fzf &> /dev/null;
     # FZF 기본 설정 파일 로드
     [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && source /usr/share/doc/fzf/examples/key-bindings.zsh
     [ -f /usr/share/doc/fzf/examples/completion.zsh ] && source /usr/share/doc/fzf/examples/completion.zsh
@@ -145,7 +145,7 @@ fkill() {
 # Oh My Posh
 # =============================================================================
 
-if command -v oh-my-posh &> /dev/null; then
+if command -v oh-my-posh &> /dev/null;
     if [ -f "$HOME/.config/oh-my-posh/catppuccin_mocha.omp.json" ]; then
         eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/catppuccin_mocha.omp.json)"
     fi
@@ -155,7 +155,7 @@ fi
 # Fastfetch
 # =============================================================================
 
-if command -v fastfetch &> /dev/null; then
+if command -v fastfetch &> /dev/null;
     fastfetch
 fi
 ZSHRC

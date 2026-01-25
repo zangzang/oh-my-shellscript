@@ -1,6 +1,6 @@
 {
   "name": "Base Extensions",
-  "description": "모든 개발자에게 필수인 기본 확장",
+  "description": "Essential extensions for all developers",
   "extensions": [
     "editorconfig.editorconfig",
     "usernamehw.errorlens",

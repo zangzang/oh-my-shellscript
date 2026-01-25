@@ -9,16 +9,16 @@ log() { echo "[validate] $*"; }
 err() { echo "[validate][ERROR] $*"; fail=1; }
 
 if ! command -v jq >/dev/null 2>&1; then
-  err "jq가 필요합니다. 먼저 설치하세요."
+  err "jq is required. Please install it first."
   exit 1
 fi
 
-log "모듈 메타데이터 검증 중..."
+log "Validating module metadata..."
 declare -A module_paths
 
 while IFS= read -r meta; do
   if ! jq -e . >/dev/null 2>&1 <"$meta"; then
-    err "유효하지 않은 JSON: $meta"
+    err "Invalid JSON: $meta"
     continue
   fi
 
@@ -26,47 +26,47 @@ while IFS= read -r meta; do
   name=$(jq -r '.name // empty' "$meta")
 
   if [[ -z "$id" ]]; then
-    err "id 누락: $meta"
+    err "Missing 'id': $meta"
     continue
   fi
   if [[ -z "$name" ]]; then
-    err "name 누락: $meta"
+    err "Missing 'name': $meta"
   fi
 
   if [[ -n "${module_paths[$id]:-}" ]]; then
-    err "중복 모듈 id '$id': ${module_paths[$id]} AND $meta"
+    err "Duplicate module id '$id': ${module_paths[$id]} AND $meta"
   else
     module_paths[$id]="$(dirname "$meta")"
   fi
 
-  # variants 타입 체크
+  # Check variants type
   if jq -e 'has("variants") and (.variants|type!="array")' >/dev/null 2>&1 <"$meta"; then
-    err "variants는 배열이어야 합니다: $meta"
+    err "'variants' must be an array: $meta"
   fi
 
 done < <(find "$SCRIPT_DIR/modules" -name meta.json | sort)
 
-log "모듈 스크립트 존재/권한 확인 중..."
+log "Checking module scripts existence/permissions..."
 for id in "${!module_paths[@]}"; do
   p="${module_paths[$id]}"
   if [[ ! -f "$p/install.sh" ]]; then
-    err "install.sh 누락: $id ($p)"
+    err "Missing install.sh: $id ($p)"
   elif [[ ! -x "$p/install.sh" ]]; then
-    err "install.sh 실행권한 없음: $id ($p/install.sh)"
+    err "install.sh not executable: $id ($p/install.sh)"
   fi
 
 done
 
-log "프리셋 검증 중..."
+log "Validating presets..."
 while IFS= read -r preset; do
   if ! jq -e . >/dev/null 2>&1 <"$preset"; then
-    err "유효하지 않은 JSON: $preset"
+    err "Invalid JSON: $preset"
     continue
   fi
 
-  # modules는 배열이어야 함
+  # modules must be an array
   if ! jq -e '.modules|type=="array"' >/dev/null 2>&1 <"$preset"; then
-    err "modules 배열 누락/형식 오류: $preset"
+    err "'modules' array missing or invalid format: $preset"
     continue
   fi
 
@@ -75,12 +75,12 @@ while IFS= read -r preset; do
     ver=$(jq -r '.params.version // empty' <<<"$entry")
 
     if [[ -z "$mid" ]]; then
-      err "preset 항목 id 누락: $preset"
+      err "Missing item id in preset: $preset"
       continue
     fi
 
     if [[ -z "${module_paths[$mid]:-}" ]]; then
-      err "존재하지 않는 모듈 id '$mid' (preset: $preset)"
+      err "Non-existent module id '$mid' (preset: $preset)"
       continue
     fi
 
@@ -88,7 +88,7 @@ while IFS= read -r preset; do
       meta_path="${module_paths[$mid]}/meta.json"
       if jq -e 'has("variants")' >/dev/null 2>&1 <"$meta_path"; then
         if ! jq -e --arg v "$ver" '(.variants // []) | index($v) != null' >/dev/null 2>&1 <"$meta_path"; then
-          err "preset 버전 '$ver'가 variants에 없음: $mid (preset: $preset)"
+          err "Preset version '$ver' not in variants: $mid (preset: $preset)"
         fi
       fi
     fi

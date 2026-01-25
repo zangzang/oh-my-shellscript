@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# 라이브러리 로드
+# Load Library
 if ! command -v install_packages &>/dev/null; then
     CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     LIB_DIR="$(cd "$CURRENT_DIR/../../../lib" && pwd)"
@@ -10,7 +10,7 @@ fi
 
 detect_os
 
-echo "📦 시스템 패키지로 Rust 설치 시도..."
+echo "📦 Attempting to install Rust via system package..."
 
 PKGS=()
 if [[ "$OS_ID" == "fedora" ]]; then
@@ -23,10 +23,10 @@ fi
 
 INSTALLED_NATIVE=false
 if install_packages "${PKGS[@]}"; then
-    echo "✅ Rust 시스템 패키지 설치 완료"
+    echo "✅ Rust system package installed"
     INSTALLED_NATIVE=true
 else
-    echo "⚠️  시스템 패키지 설치 실패. Fallback 모드로 전환합니다."
+    echo "⚠️  System package installation failed. Switching to fallback mode."
 fi
 
 if [[ "$INSTALLED_NATIVE" == "true" ]]; then
@@ -34,17 +34,17 @@ if [[ "$INSTALLED_NATIVE" == "true" ]]; then
 fi
 
 # Fallback: Rustup
-echo "🔄 Rustup을 통한 설치 시도..."
+echo "🔄 Attempting installation via Rustup..."
 export CARGO_HOME="$HOME/.cargo"
 
 if command -v cargo &>/dev/null; then
-    echo "Rust가 이미 설치되어 있습니다."
+    echo "Rust is already installed."
     exit 0
 fi
 
 if curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y; then
-    echo "Rust 설치 완료 (Rustup)"
+    echo "Rust installation complete (Rustup)"
 else
-    echo "❌ Rust 설치 실패"
+    echo "❌ Rust installation failed"
     exit 1
 fi

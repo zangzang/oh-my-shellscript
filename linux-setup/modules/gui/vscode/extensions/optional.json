@@ -1,6 +1,6 @@
 {
   "name": "Optional Extensions",
-  "description": "선택적 확장 (유틸리티, 테마 등)",
+  "description": "Optional extensions (Utilities, Themes, etc.)",
   "extensions": [
     "dracula-theme.theme-dracula",
     "zhuangtongfa.material-theme",

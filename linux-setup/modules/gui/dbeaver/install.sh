@@ -6,7 +6,10 @@ source "$SCRIPT_DIR/../../../lib/distro.sh"
 detect_os
 
 if command -v dbeaver &>/dev/null; then
-    echo "DBeaver 이미 설치됨."
+echo "DBeaver is already installed."
+echo "Installing DBeaver..."
+# ...
+echo "DBeaver installation complete"
 else
     echo "DBeaver 설치 중..."
     

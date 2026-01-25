@@ -2,11 +2,11 @@
 set -e
 
 if [ -d "$HOME/sts" ] && [ -f "$HOME/sts/SpringToolSuite4" ]; then
-    echo "Spring Tool Suite 이미 설치됨."
+    echo "Spring Tool Suite is already installed."
 else
-    echo "Spring Tool Suite 설치 중..."
+    echo "Installing Spring Tool Suite..."
     
-    # 최신 STS 다운로드 URL (버전에 따라 업데이트 필요)
+    # STS version and download URL (Update as needed)
     STS_VERSION="4.21.1.RELEASE"
     STS_URL="https://download.springsource.com/release/STS4/4.21.1.RELEASE/dist/e4.30/spring-tool-suite-4-4.21.1.RELEASE-e4.30.0-linux.gtk.x86_64.tar.gz"
     
@@ -23,23 +23,23 @@ else
     wget -O "$tmpdir/sts.tar.gz" "$STS_URL"
 
     mkdir -p "$tmpdir/extract"
-    # 일부 파일시스템에서 utime/chmod가 막혀 tar가 실패할 수 있어 옵션으로 회피
+    # Avoid tar issues on some filesystems
     tar -xzf "$tmpdir/sts.tar.gz" -C "$tmpdir/extract" \
         --touch --no-same-owner --no-same-permissions
 
     extracted_dir="$(find "$tmpdir/extract" -maxdepth 1 -type d -name 'sts-*' | head -n 1)"
     if [[ -z "$extracted_dir" ]]; then
-        echo "❌ STS 압축 해제 결과를 찾지 못했습니다."
+        echo "❌ Failed to extract STS."
         exit 1
     fi
 
     rm -rf "$HOME/sts"
     mv "$extracted_dir" "$HOME/sts"
     
-    # 데스크톱 엔트리 디렉토리 생성
+    # Create desktop entry directory
     mkdir -p "$HOME/.local/share/applications"
     
-    # 데스크톱 엔트리 생성
+    # Create desktop entry
     cat > "$HOME/.local/share/applications/sts.desktop" << EOF
 [Desktop Entry]
 Type=Application
@@ -53,6 +53,6 @@ EOF
     
     chmod +x "$HOME/.local/share/applications/sts.desktop"
     
-    echo "Spring Tool Suite 설치 완료"
-    echo "위치: $HOME/sts"
+    echo "Spring Tool Suite installation complete"
+    echo "Location: $HOME/sts"
 fi

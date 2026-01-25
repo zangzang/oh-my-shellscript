@@ -1,7 +1,7 @@
 {
   "id": "dev.ai-agents.mcp-tools",
   "name": "MCP Tools",
-  "description": "Model Context Protocol SDK 및 도구",
+  "description": "Model Context Protocol SDK and Tools",
   "category": "dev",
   "dependencies": ["dev.python", "dev.node"]
 }

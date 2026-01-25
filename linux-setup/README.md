@@ -1,261 +1,114 @@
-# Linux Setup Assistant v4.0 (Python TUI)
+# Linux Setup Assistant
 
-Kubuntu 25.04 (Plasma 6 + Wayland) 및 다양한 Linux 환경을 위한 **모듈식 설정 도구**입니다.
-**Python textual** 기반 TUI로 직관적인 트리 뷰에서 모듈을 선택하고, 프리셋 저장/로드 기능을 제공합니다.
+A **modular setup tool** for Kubuntu 25.04 (Plasma 6 + Wayland) and various Linux environments.
+It provides an intuitive tree view to select modules and save/load presets via a **Python Textual**-based TUI.
 
-## ✨ 주요 기능
+## ✨ Key Features
 
-*   **🖥️ Python TUI**: `textual` 라이브러리 기반의 빠르고 반응성 좋은 인터페이스
-*   **🌳 구조화된 트리**: **Presets**(프리셋)와 **Modules**(개별 모듈)가 최상위 메뉴로 분리되어 제공
-*   **📦 Multi-Preset 지원**: 여러 개의 프리셋을 동시에 선택하여 조합 가능
-*   **🔗 의존성 자동 해결**: `meta.json`의 `requires` 필드로 자동 추적
-*   **💾 프리셋 저장**: 현재 선택을 프리셋으로 저장하여 재사용
-*   **📊 상세 요약 리포트**: 설치 후 성공, 실패, **이미 설치됨(Skipped)** 상태와 소요 시간 표시
-*   **🔍 상세 Simulation**: 실제 실행될 Bash 명령어와 환경변수를 미리 확인
-*   **⚡ 빠른 시작**: Ctrl+C로 언제든 깔끔하게 중단
+*   **🖥️ Python TUI**: Fast and responsive interface based on the `textual` library.
+*   **🌳 Structured Tree**: Segregated menus for **Presets** and **Modules** for easy navigation.
+*   **📦 Multi-Preset Support**: Combine multiple presets by selecting them simultaneously.
+*   **🔗 Auto Dependency Resolution**: Automatically tracks dependencies via `requires` in `meta.json`.
+*   **💾 Save Presets**: Save your current selection as a preset for future reuse.
+*   **📊 Detailed Summary Report**: Displays Success, Failed, and **Skipped (Already installed)** status with duration.
+*   **🔍 Detailed Simulation**: Preview actual Bash commands and environment variables before execution.
+*   **⚡ Fast Stop**: Cleanly abort at any time with Ctrl+C.
 
-## 🚀 빠른 시작
+## 🚀 Quick Start
 
-### 1. 사전 준비 (최초 1회)
+### 1. Prerequisites (First time only)
+
+The `bootstrap.sh` script automatically:
+- Checks/installs Python3
+- Installs/upgrades pip
+- Installs the `textual` library
+- Creates the config directory
+
+### 2. Run
 
 ```bash
-chmod +x bootstrap.sh
+# In the linux-setup directory
 ./bootstrap.sh
 ```
 
-`bootstrap.sh`가 자동으로:
-- Python3 설치 확인
-- pip 설치/업그레이드
-- textual 라이브러리 설치
-- config 디렉토리 생성
+### 3. Key Bindings
 
-### 2. 실행
+| Key | Function |
+| :--- | :--- |
+| **↑↓** | Navigate tree |
+| **Enter** | Expand/Collapse node |
+| **Space** | Toggle selection (Presets & Modules) |
+| **Tab** | Switch focus between panels (Tree ↔ Selected List ↔ Info) |
+| **F5** | Start Installation |
+| **d** | Simulation (Dry Run) |
+| **s** | Save current selection as a preset |
+| **p** | Cycle through preset list |
+| **q / ESC** | Quit |
 
-```bash
-python3 setup.py
-```
-
-### 3. 키 조작
-
-| 키 | 기능 |
-|---|---|
-| **↑↓** | 트리 탐색 |
-| **Enter** | 노드 펼치기/접기 |
-| **Space** | 항목 선택/해제 (프리셋 및 모듈 모두 지원) |
-| **Tab** | 패널 간 포커스 이동 (트리 ↔ 선택 목록 ↔ 모듈 정보) |
-| **F5** | 설치 시작 |
-| **d** | 시뮬레이션 (Dry Run) |
-| **s** | 현재 선택을 프리셋으로 저장 |
-| **p** | 프리셋 목록 순환 |
-| **q / ESC** | 종료 |
-
-### 4. 명령줄 옵션
+### 4. Command Line Options
 
 ```bash
-# 프리셋 로드 후 TUI 실행
+# Load a preset and launch TUI
 python3 setup.py --preset java-dev
 
-# 프리셋 바로 설치 (TUI 건너뜀)
+# Install a preset directly (skip TUI)
 python3 setup.py --preset base --execute
 
-# 시뮬레이션만
+# Simulation only
 python3 setup.py --preset full-dev --dry-run
 ```
 
-## 📂 프로젝트 구조
+## 📂 Project Structure
 
 ```
 linux-setup/
-├── setup.py            # 🆕 메인 실행 스크립트 (Python TUI)
-├── bootstrap.sh        # 🆕 사전 설치 스크립트
-├── config/             # 🆕 설정 파일
-│   └── categories.json # 카테고리 트리 정의
-├── lib/                # Bash 공통 함수 라이브러리
-├── modules/            # 설치 모듈 디렉토리
-│   ├── system/         # 시스템 설정 (update, essentials 등)
-│   ├── dev/            # 개발 도구 (docker, java, node, python 등)
-│   ├── tools/          # CLI 유틸리티 (fastfetch 등)
-│   └── gui/            # GUI 애플리케이션 (vscode, chrome 등)
-├── presets/            # 프리셋 JSON 파일
-├── docs/               # 추가 가이드 문서
-└── test/               # 모듈 테스트 결과 디렉토리
+├── setup.py            # Main execution script (Python TUI)
+├── bootstrap.sh        # Pre-installation bootstrap script
+├── config/             # Configuration files
+│   └── categories.json # Category tree definition
+├── lib/                # Bash common function library
+├── modules/            # Installation modules directory
+│   ├── system/         # System settings (update, essentials, etc.)
+│   ├── dev/            # Development tools (docker, java, node, etc.)
+│   ├── tools/          # CLI utilities
+│   └── gui/            # GUI applications
+├── presets/            # Preset JSON files
+├── docs/               # Additional guide documents
+└── test/               # Module test results directory
 ```
 
-## 🖥️ 화면 구성
+## 🛠️ How to Add a Module
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  🐧 Linux Setup Assistant v4.0                                  │
-├────────────────────────────────┬────────────────────────────────┤
-│ 📂 Presets                     │ ━━━ 선택됨 (Space로 제거) ━━━  │
-│ ├─ ☑ Full Dev Setup            │   ✓ system.update              │
-│ └─ ☐ Base System               │   ✓ dev.java:21                │
-│ 📦 Modules                     │   ...                          │
-│ ├─ 🔧 System                   ├────────────────────────────────┤
-│ │  ├─ ☑ System Update          │ ━━━ 모듈 정보 (ID: dev.java) ━━│
-│ │  ├─ ☑ Build Tools            │ Java (JDK) (dev.java)          │
-│ │  └─ ...                      │ Java Development Kit           │
-│ └─ ...                         │                                │
-│                                │ 의존성:                        │
-│                                │   ↳ dev.sdkman                 │
-├────────────────────────────────┴────────────────────────────────┤
-│ q 종료 | F5 설치 | d 시뮬 | s 저장 | p 프리셋 | Tab 포커스      │
-└─────────────────────────────────────────────────────────────────┘
-```
+To add new software or configuration, create a directory under `modules/` and create two files:
 
-## 🛠️ 모듈 추가 방법
+1. **meta.json**: Define module ID, name, description, and dependencies.
+2. **install.sh**: Write the Bash script for actual installation. (Must be idempotent)
 
-새로운 소프트웨어나 설정을 추가하려면 `modules/` 아래에 디렉토리를 만들고 두 파일을 생성하세요.
-
-**1. meta.json**
-```json
-{
-  "id": "dev.my-tool",
-  "name": "My Custom Tool",
-  "description": "Install my custom tool",
-  "category": "dev",
-  "requires": ["system.build-tools"]
-}
-```
-
-**2. install.sh**
+Example `install.sh`:
 ```bash
-#!/bin/bash
-set -e
-
-# 이미 설치 확인 (멱등성)
 if command -v my-tool &>/dev/null; then
-    echo "my-tool 이미 설치됨"
+    echo "my-tool already installed"
     exit 0
 fi
 
-# Variant가 있으면 환경변수로 전달됨
-VERSION=${VERSION:-"latest"}
-
-echo "Installing My Tool ($VERSION)..."
-# 설치 로직 작성
+# Installation logic
+sudo apt install my-tool
 ```
 
-**3. 카테고리에 등록 (config/categories.json)**
+## 📦 Variants Support
+
+Modules supporting multiple versions can add a `variants` array:
 ```json
-{
-  "dev": {
-    "modules": ["my-tool", ...]
-  }
-}
+"variants": ["17", "21"]
 ```
+These will appear as a sub-tree in the TUI. The selected version is passed as the `VERSION` environment variable to `install.sh`.
 
-## 📦 Variants (버전) 지원
+## 📚 Guide Documents
 
-여러 버전을 지원하는 모듈은 `variants` 배열을 추가합니다:
+- **[REMOTE_SETUP_GUIDE.md](docs/REMOTE_SETUP_GUIDE.md)** - Remote server setup and automation.
+- **[PERMISSIONS.md](docs/PERMISSIONS.md)** - Local permission management.
+- **[JAVA_GUIDE.md](docs/JAVA_GUIDE.md)** - Java development environment configuration.
+- **[VSCODE_EXTENSIONS_GUIDE.md](docs/VSCODE_EXTENSIONS_GUIDE.md)** - VSCode extension configuration.
 
-```json
-{
-  "id": "dev.java",
-  "name": "Java (JDK)",
-  "variants": ["8", "17", "21", "25"],
-  "requires": ["dev.sdkman"]
-}
-```
-
-TUI에서 서브트리로 표시됩니다:
-```
-📦 Java (JDK)
-  ├─ ☐ 8
-  ├─ ☐ 17
-  ├─ ☑ 21
-  └─ ☐ 25
-```
-
-설치 시 `VERSION` 환경변수로 전달:
-```bash
-# install.sh에서
-VERSION=${VERSION:-"21"}
-sdk install java ${VERSION}-tem
-```
-
-## 📋 프리셋
-
-### 사용 가능한 프리셋
-
-| 프리셋 | 설명 |
-|---|---|
-| `base` | 기본 시스템 도구 |
-| `java-dev` | Java 개발 환경 (SDKMAN, JDK, Maven, Gradle) |
-| `node-dev` | Node.js 개발 환경 (NVM, Node) |
-| `python-dev` | Python 개발 환경 |
-| `rust-dev` | Rust 개발 환경 |
-| `dotnet-dev` | .NET 개발 환경 |
-| `docker-dev` | Docker + 개발 스택 |
-| `full-dev` | 전체 개발 환경 |
-| `ai-dev` | AI/ML 환경 (Ollama, CUDA) |
-
-### 프리셋 파일 형식
-
-```json
-{
-  "name": "Java Developer Setup",
-  "description": "Java 개발 환경",
-  "modules": [
-    { "id": "system.update" },
-    { "id": "dev.sdkman" },
-    { "id": "dev.java", "params": { "version": "21" } },
-    { "id": "dev.maven" },
-    { "id": "gui.vscode" }
-  ]
-}
-```
-
-### 프리셋 저장
-
-TUI에서 **s** 키를 누르면 현재 선택을 프리셋으로 저장:
-```
-presets/custom_20260122_153000.json
-```
-
-## 📚 추가 가이드 문서
-
-- **[REMOTE_SETUP_GUIDE.md](docs/REMOTE_SETUP_GUIDE.md)** - SSH 원격 서버 설정 및 자동화
-- **[PERMISSIONS.md](docs/PERMISSIONS.md)** - 로컬 권한 관리 및 압축 처리
-- **[JAVA_GUIDE.md](docs/JAVA_GUIDE.md)** - Java 개발 환경 설정
-- **[VSCODE_EXTENSIONS_GUIDE.md](docs/VSCODE_EXTENSIONS_GUIDE.md)** - VSCode 확장 프로그램 구성
-
-## ⚠️ 요구 사항
-
-### 필수
-
-- **Python 3.10+**
-- **textual** 라이브러리 (`bootstrap.sh`가 자동 설치)
-
-### 권장
-
-- 터미널: 256색 또는 트루컬러 지원 (kitty, alacritty, gnome-terminal 등)
-- 폰트: Nerd Font (아이콘 표시용)
-
-## 🐛 문제 해결
-
-### textual 설치 실패
-
-```bash
-# pip 업그레이드 후 재시도
-python3 -m pip install --upgrade pip
-python3 -m pip install textual
-```
-
-### 화면이 깨져 보임
-
-```bash
-# TERM 환경변수 확인
-export TERM=xterm-256color
-python3 setup.py
-```
-
-### Ctrl+C가 안 먹힘
-
-정상적으로 Ctrl+C를 누르면 "⚠️ 사용자에 의해 취소되었습니다." 메시지와 함께 종료됩니다.
-그래도 안 되면 Ctrl+\ (SIGQUIT)를 시도하세요.
-
----
-
-**버전**: 4.0 (Python TUI)  
-**최종 업데이트**: 2026-01-22
+**Version**: 4.0 (Python TUI)
+**Last Updated**: 2026-01-25

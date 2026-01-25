@@ -1,49 +1,46 @@
-# ☕ Java 관리 가이드 (SDKMAN)
+# ☕ Java Management Guide (SDKMAN)
 
-이 프로젝트는 **SDKMAN!**을 사용하여 여러 버전의 Java를 관리합니다. 설치된 Java 버전을 전환하거나 기본 환경을 설정하는 방법은 다음과 같습니다.
+This project uses **SDKMAN!** to manage multiple versions of Java. Here is how to switch versions or set up the default environment.
 
-## 1. 버전 확인
+## 1. Check Version
 
-프로젝트에서 제공하는 편의 기능을 통해 표준 명령어 외에도 간축 명령어를 사용할 수 있습니다.
+Beyond the standard commands, this project provides a convenience alias:
 
-*   `java -version`: 표준 명령어 (모든 버전)
-*   `java --version`: 표준 명령어 (Java 9 이상)
-*   `java -v`: **[편의 기능]** 사용자의 습관을 고려하여 추가된 간축 명령어 (에러 없이 버전 출력)
+*   `java -version`: Standard command (all versions)
+*   `java --version`: Standard command (Java 9+)
+*   `java -v`: **[Convenience]** Short alias for quick version checking.
 
-## 2. 기본(Default) 버전 설정
+## 2. Set Default Version
 
-시스템 전체(모든 쉘)에서 사용할 기본 Java 버전을 설정하려면 다음 명령어를 사용합니다.
-
-```bash
-# 설치된 버전 목록 확인
-sdk list java | grep installed
-
-# 특정 버전을 기본값으로 고정 (예: Java 21)
-sdk default java 21.0.9-tem
-```
-
-## 3. 현재 터미널 환경에서만 특정 버전 사용
-
-새로운 쉘을 실행할 때 원상복구되지만, 현재 세션에서만 임시로 버전을 바꾸고 싶을 때 사용합니다.
+To set the global default Java version (for all shells):
 
 ```bash
-# 현재 세션에서만 Java 17 사용
-sdk use java 17.0.17-tem
-```
-
-## 4. 새 Java 버전 설치하기
-
-원하는 특정 에디션이나 상위 버전을 추가로 설치하고 싶을 때 사용합니다.
-
-```bash
-# 설치 가능한 목록 확인
+# List installed versions
 sdk list java
 
-# 특정 버전 설치 (예: 23-tem)
+# Set a specific version as default (e.g., Java 21)
+sdk default java 21.0.2-tem
+```
+
+## 3. Temporary Version (Current Session Only)
+
+Use this when you want to switch versions temporarily in the current terminal session:
+
+```bash
+# Use Java 17 only in current session
+sdk use java 17.0.10-tem
+```
+
+## 4. Installing New Java Versions
+
+```bash
+# List available versions to install
+sdk list java
+
+# Install a specific version (e.g., 23-tem)
 sdk install java 23-tem
 ```
 
-## 💡 참고 사항
-
-*   **쉘 지원**: `zsh` 뿐만 아니라 `bash` 환경에서도 SDKMAN 설정이 자동으로 로드되도록 구성되어 있습니다.
-*   **전역 경로**: `/usr/local/bin/java`에 기본 버전의 심볼릭 링크가 걸려 있어, 환경 변수가 로드되지 않는 외부 스크립트에서도 `java` 명령어를 사용할 수 있습니다.
+## 💡 Notes
+*   **Shell Support**: SDKMAN is automatically loaded in both `zsh` and `bash`.
+*   **Global Path**: A symbolic link is maintained at `/usr/local/bin/java` (if configured) so that external scripts can use the `java` command even without loading environment variables.

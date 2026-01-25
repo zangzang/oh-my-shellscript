@@ -1,6 +1,6 @@
 {
   "name": "Node.js Developer Extensions",
-  "description": "Node.js/JavaScript 개발 관련 확장",
+  "description": "Extensions for Node.js/JavaScript development",
   "extensions": [
     "christian-kohler.npm-intellisense",
     "hbenl.vscode-test-explorer",

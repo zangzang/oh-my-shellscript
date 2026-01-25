@@ -5,22 +5,22 @@ VARIANT="${1:-all}"
 STACK_DIR="$HOME/docker-dev-stack"
 mkdir -p "$STACK_DIR"
 
-echo "🐳 Docker 개발 스택 설정 중: $VARIANT"
+echo "🐳 Setting up Docker dev stack: $VARIANT"
 
-# 도커 실행 확인
+# Check if Docker is running
 if ! docker ps >/dev/null 2>&1; then
-    echo "❌ Docker 데몬이 실행 중이지 않거나 권한이 없습니다."
+    echo "❌ Docker daemon is not running or permission denied."
     exit 1
 fi
 
 pull_image() {
     local name=$1
     local image=$2
-    echo "📥 $name 이미지 다운로드 중 ($image)..."
+    echo "📥 Downloading $name image ($image)..."
     docker pull "$image"
 }
 
-# 1. 이미지 다운로드 로직 확장
+# 1. Expand image download logic
 case "$VARIANT" in
     postgres) pull_image "PostgreSQL" "postgres:latest" ;;
     mysql)    pull_image "MySQL" "mysql:latest" ;;
@@ -41,31 +41,18 @@ case "$VARIANT" in
     keycloak) pull_image "Keycloak" "quay.io/keycloak/keycloak:latest" ;;
     localstack) pull_image "LocalStack" "localstack/localstack:latest" ;;
     all)
-        echo "모든 기본 개발 이미지를 다운로드합니다..."
+        echo "Downloading all default development images..."
         for img in "postgres:latest" "mysql:latest" "redis:latest" "mongo:latest" "rabbitmq:3-management" "portainer/portainer-ce:latest"; do
             docker pull "$img"
         done
         ;;
 esac
 
-# 2. docker-compose.yml 템플릿 확장 생성 (Append 형식 대신 덮어쓰기 후 주요 섹션 유지)
+# 2. Create docker-compose.yml template (Overwrite)
 if [ ! -f "$STACK_DIR/docker-compose.yml" ]; then
     echo "version: '3.8'" > "$STACK_DIR/docker-compose.yml"
     echo "services:" >> "$STACK_DIR/docker-compose.yml"
 fi
-
-# 도구별 서비스 정의 추가 (Profiles 활용)
-append_service() {
-    local service_name=$1
-    local content=$2
-    if ! grep -q "$service_name:" "$STACK_DIR/docker-compose.yml"; then
-        echo "$content" >> "$STACK_DIR/docker-compose.yml"
-    fi
-}
-
-# Database definitions (생략 - 기존과 유사하되 profiles 추가)
-# Message Brokers, Monitoring 등 신규 정의 추가...
-# (지면 관계상 핵심 템플릿만 포함)
 
 cat <<EOF > "$STACK_DIR/docker-compose.yml"
 version: '3.8'
@@ -114,4 +101,4 @@ services:
     profiles: ["tools", "all"]
 EOF
 
-echo "✅ Docker 스택 및 설정 파일 업데이트 완료"
+echo "✅ Docker stack and configuration files updated"

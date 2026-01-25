@@ -1,57 +1,110 @@
-{
-  "system": {
+[
+  {
+    "id": "system",
     "name": "🔧 System",
-    "description": "시스템 필수 도구 및 설정",
+    "description": "Essential system tools and configurations",
     "order": 1,
-    "modules": ["update", "build-tools", "dev-libs", "cli-tools", "essentials", "zsh", "nerd-fonts", "oh-my-posh", "shell-config", "ssh-server"]
+    "modules": [
+      "update",
+      "build-tools",
+      "essentials",
+      "dev-libs",
+      "cli-tools",
+      "nerd-fonts",
+      "oh-my-posh",
+      "zsh",
+      "shell-config",
+      "ssh-server"
+    ]
   },
-  "tools": {
+  {
+    "id": "tools",
     "name": "🛠️ Tools",
-    "description": "CLI 유틸리티",
+    "description": "CLI Utilities",
     "order": 2,
-    "modules": ["fastfetch"]
+    "modules": [
+      "fastfetch"
+    ]
   },
-  "dev": {
+  {
+    "id": "dev",
     "name": "💻 Development",
-    "description": "개발 언어 및 런타임",
+    "description": "Development languages and runtimes",
     "order": 3,
     "subcategories": {
-      "languages": {
-        "name": "📝 Languages",
-        "description": "프로그래밍 언어",
-        "modules": ["java", "python", "node", "nvm", "rust", "dotnet"]
+      "runtime": {
+        "name": "Programming Languages",
+        "description": "Programming languages",
+        "modules": [
+          "nvm",
+          "node",
+          "python",
+          "java",
+          "sdkman",
+          "dotnet",
+          "rust"
+        ]
       },
       "build": {
-        "name": "🏗️ Build Tools",
-        "description": "빌드 및 패키지 관리",
-        "modules": ["sdkman", "maven", "gradle"]
+        "name": "Build & Package Management",
+        "description": "Build and package management",
+        "modules": [
+          "maven",
+          "gradle"
+        ]
       },
-      "infrastructure": {
-        "name": "🐳 Infrastructure",
-        "description": "컨테이너 및 인프라",
-        "modules": ["docker", "docker-stack"]
+      "container": {
+        "name": "Container & Infra",
+        "description": "Container and infrastructure tools",
+        "modules": [
+          "docker",
+          "docker-stack"
+        ]
       },
       "ai": {
-        "name": "🤖 AI/ML",
-        "description": "AI 및 머신러닝 도구",
-        "modules": ["cuda", "ollama", "ollama-models", "open-webui"]
+        "name": "AI & Machine Learning",
+        "description": "AI and machine learning tools",
+        "modules": [
+          "cuda",
+          "ollama",
+          "ollama-models",
+          "open-webui"
+        ]
       },
       "ai-agents": {
-        "name": "👾 AI Agents",
-        "description": "AI 에이전트 및 CLI 도구",
-        "modules": ["gemini-cli", "claude-code", "opencode", "mcp-tools", "mcp-servers"]
+        "name": "AI Agents & CLI Tools",
+        "description": "AI agents and CLI tools",
+        "modules": [
+          "claude-code",
+          "gemini-cli",
+          "mcp-servers",
+          "mcp-tools",
+          "opencode"
+        ]
       },
       "mobile": {
-        "name": "📱 Mobile",
-        "description": "모바일 개발",
-        "modules": ["android", "flutter", "tauri"]
+        "name": "Mobile Development",
+        "description": "Mobile development",
+        "modules": [
+          "flutter",
+          "android",
+          "tauri"
+        ]
       }
-    }
+    },
+    "modules": []
   },
-  "gui": {
+  {
+    "id": "gui",
     "name": "🖥️ GUI Apps",
-    "description": "데스크탑 애플리케이션",
+    "description": "Desktop applications",
     "order": 4,
-    "modules": ["chrome", "vscode", "dbeaver", "sts", "fcitx5"]
+    "modules": [
+      "vscode",
+      "chrome",
+      "dbeaver",
+      "sts",
+      "fcitx5"
+    ]
   }
-}
+]

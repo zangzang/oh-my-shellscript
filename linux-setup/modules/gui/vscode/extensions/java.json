@@ -1,6 +1,6 @@
 {
   "name": "Java Developer Extensions",
-  "description": "Java 개발 관련 확장",
+  "description": "Extensions for Java development",
   "extensions": [
     "redhat.java",
     "vscjava.vscode-maven",
