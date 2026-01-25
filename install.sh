@@ -22,7 +22,7 @@ log_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 
 REPO_URL="https://github.com/zangzang/oh-my-shellscript.git"
-INSTALL_DIR="$HOME/oh-my-shellscript"
+INSTALL_DIR="$(pwd)/oh-my-shellscript"
 BRANCH="main"
 
 echo "========================================"
