@@ -253,10 +253,10 @@ class SelectedList(ListView):
     def refresh_list(self):
         """Refresh the displayed list based on context_items"""
         self.clear()
-        # Sort items: Selected first, then alphabetical
+        # Sort items: alphabetical only (no selection-based sorting)
         sorted_items = sorted(
             self.manager.context_items.items(),
-            key=lambda x: (not x[1], x[0])
+            key=lambda x: x[0]
         )
         
         for item, is_selected in sorted_items:

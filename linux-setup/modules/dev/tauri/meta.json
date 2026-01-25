@@ -2,6 +2,6 @@
   "id": "dev.tauri",
   "name": "Tauri",
   "description": "Tauri (System Pkg or Rustup)",
-  "category": "dev/mobile",
-  "requires": ["system.build-tools", "dev.rust"]
+  "category": "dev/framework",
+  "requires": ["dev.rust", "dev.node", "system.build-tools"]
 }

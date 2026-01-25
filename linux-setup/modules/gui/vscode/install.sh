@@ -34,7 +34,9 @@ else
         sudo DEBIAN_FRONTEND=noninteractive apt install -y code
         
     elif [[ "$OS_ID" == "fedora" ]]; then
-        sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+        if command -v rpm &>/dev/null; then
+            sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+        fi
         if [ ! -f /etc/yum.repos.d/vscode.repo ]; then
              echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" | sudo tee /etc/yum.repos.d/vscode.repo > /dev/null
         fi

@@ -1,10 +1,17 @@
 #!/bin/bash
 set -e
 
-# Install Gemini CLI globally
+# Load Library
+if ! command -v ui_log_info &>/dev/null; then
+    CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    LIB_DIR="$(cd "$CURRENT_DIR/../../../../lib" && pwd)"
+    if [[ -f "$LIB_DIR/core.sh" ]]; then
+        source "$LIB_DIR/core.sh"
+    fi
+fi
+
 if ! command -v gemini &> /dev/null; then
-    echo "Installing Gemini CLI..."
-    npm install -g @google/gemini-cli
+    npm_install_g "@google/gemini-cli"
 else
-    echo "Gemini CLI is already installed."
+    ui_log_info "Gemini CLI is already installed."
 fi

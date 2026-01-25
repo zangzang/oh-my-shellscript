@@ -1,25 +1,28 @@
 #!/bin/bash
 set -e
 
-echo "Installing MCP Tools..."
+# Load Library
+if ! command -v ui_log_info &>/dev/null; then
+    CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    LIB_DIR="$(cd "$CURRENT_DIR/../../../../lib" && pwd)"
+    if [[ -f "$LIB_DIR/core.sh" ]]; then
+        source "$LIB_DIR/core.sh"
+    fi
+fi
+
+ui_log_info "Installing MCP Tools..."
 
 # Install uv (fast python package installer, recommended for MCP)
 if ! command -v uv &> /dev/null; then
-    echo "Installing uv..."
+    ui_log_info "Installing uv..."
     curl -LsSf https://astral.sh/uv/install.sh | sh
     source $HOME/.cargo/env 2>/dev/null || true
 fi
 
 # Python MCP SDK
-if command -v pip &> /dev/null; then
-    echo "Installing python mcp sdk..."
-    pip install -U mcp
-fi
+pip_install "mcp"
 
 # Node MCP SDK (if relevant/available)
-if command -v npm &> /dev/null; then
-    echo "Installing Node.js MCP SDK..."
-    npm install -g @modelcontextprotocol/sdk
-fi
+npm_install_g "@modelcontextprotocol/sdk"
 
-echo "MCP Tools setup complete."
+ui_log_success "MCP Tools setup complete."

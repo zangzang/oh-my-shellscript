@@ -7,14 +7,18 @@ mkdir -p "$STACK_DIR"
 
 echo "🐳 Setting up Docker dev stack: $VARIANT"
 
+# Helper to run docker with or without sudo
+run_docker() {
+    if docker ps &>/dev/null; then
+        docker "$@"
+    else
+        sudo docker "$@"
+    fi
+}
+
 # Check if Docker is running
-if ! docker ps >/dev/null 2>&1; then
+if ! run_docker ps >/dev/null 2>&1; then
     echo "❌ Docker daemon is not accessible."
-    echo "   Possible causes:"
-    echo "   1. Docker service is not started: 'sudo systemctl start docker'"
-    echo "   2. Permission denied: User $USER is not in 'docker' group."
-    echo "      Run 'sudo usermod -aG docker $USER' and restart your session."
-    echo "      Or try running with 'sudo'."
     exit 1
 fi
 
@@ -22,7 +26,7 @@ pull_image() {
     local name=$1
     local image=$2
     echo "📥 Downloading $name image ($image)..."
-    docker pull "$image"
+    run_docker pull "$image"
 }
 
 # 1. Expand image download logic
@@ -48,7 +52,7 @@ case "$VARIANT" in
     all)
         echo "Downloading all default development images..."
         for img in "postgres:latest" "mysql:latest" "redis:latest" "mongo:latest" "rabbitmq:3-management" "portainer/portainer-ce:latest"; do
-            docker pull "$img"
+            run_docker pull "$img"
         done
         ;;
 esac

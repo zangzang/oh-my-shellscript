@@ -70,8 +70,8 @@ done
 
 # Check Tauri CLI
 echo "📦 Checking Tauri CLI..."
-if ! command -v cargo-tauri &> /dev/null; then
-    echo "❌ Tauri CLI (cargo-tauri) not installed. Please install 'dev.tauri' module."
+if ! command -v tauri &> /dev/null; then
+    echo "❌ Tauri CLI (tauri) not installed. Please install 'dev.tauri' module."
     exit 1
 fi
 echo "✅ Tauri CLI ready"

@@ -38,11 +38,16 @@ if ! command -v cargo &> /dev/null; then
 fi
 
 # Install Tauri CLI
-if ! command -v cargo-tauri &> /dev/null; then
-    log_info "📦 Installing Tauri CLI (Compilation may take some time)..."
-    cargo install tauri-cli
+if ! command -v tauri &> /dev/null; then
+    ui_log_info "📦 Installing Tauri CLI via npm (Fastest method)..."
+    npm_install_g "@tauri-apps/cli"
 else
-    log_info "✅ Tauri CLI is already installed."
+    ui_log_info "✅ Tauri CLI is already installed."
+fi
+
+# Fallback/Additional check for cargo-tauri if specifically needed
+if ! command -v cargo-tauri &> /dev/null; then
+    ui_log_info "💡 Note: You can also install the Rust-native CLI later with 'cargo install tauri-cli' if desired."
 fi
 
 log_success "Tauri development environment setup complete"

@@ -91,6 +91,58 @@ run_module_test() {
     fi
 }
 
+# Robust npm global installation
+npm_install_g() {
+    local pkg=$1
+    
+    # Try to load NVM if available
+    export NVM_DIR="$HOME/.nvm"
+    if [ -s "$NVM_DIR/nvm.sh" ]; then
+        \. "$NVM_DIR/nvm.sh"
+    fi
+
+    if ! command -v npm &>/dev/null; then
+        ui_log_error "npm not found. Please install Node.js first."
+        return 1
+    fi
+
+    ui_log_info "Installing global npm package: $pkg"
+    if npm install -g "$pkg"; then
+        return 0
+    else
+        ui_log_warn "Permission denied? Trying with sudo..."
+        sudo npm install -g "$pkg"
+    fi
+}
+
+# Robust pip installation
+pip_install() {
+    local pkg=$1
+    
+    local pip_cmd="pip"
+    if ! command -v pip &>/dev/null; then
+        if command -v pip3 &>/dev/null; then
+            pip_cmd="pip3"
+        else
+            ui_log_error "pip not found. Please install Python first."
+            return 1
+        fi
+    fi
+
+    ui_log_info "Installing python package: $pkg"
+    if $pip_cmd install "$pkg"; then
+        return 0
+    else
+        ui_log_warn "Failed to install $pkg. Trying with --user..."
+        if $pip_cmd install --user "$pkg"; then
+            return 0
+        else
+            ui_log_warn "Trying with sudo..."
+            sudo $pip_cmd install "$pkg"
+        fi
+    fi
+}
+
 # Legacy wrapper
 log_info() { ui_log_info "$1"; }
 log_success() { ui_log_success "$1"; }

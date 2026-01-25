@@ -10,9 +10,25 @@ if command -v nvidia-smi &>/dev/null; then
     GPU_FLAG="--gpus all"
 fi
 
+# Helper to run docker with or without sudo
+run_docker() {
+    if docker ps &>/dev/null; then
+        docker "$@"
+    else
+        sudo docker "$@"
+    fi
+}
+
+# Remove existing container if it exists
+if run_docker ps -a --format '{{.Names}}' | grep -q "^open-webui$"; then
+    ui_log_info "Removing existing open-webui container..."
+    run_docker rm -f open-webui
+fi
+
 # Run container
 # Ollama runs on host, so use host networking or host.docker.internal
-docker run -d \
+ui_log_info "Starting Open WebUI container..."
+run_docker run -d \
   -p 3000:8080 \
   $GPU_FLAG \
   --add-host=host.docker.internal:host-gateway \

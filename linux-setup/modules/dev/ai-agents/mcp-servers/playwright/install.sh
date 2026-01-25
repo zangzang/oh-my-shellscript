@@ -1,8 +1,15 @@
 #!/bin/bash
 set -e
 
-# Install MCP Playwright Server
-echo "Installing MCP Playwright Server..."
-# Installing browser binaries is also needed usually
-npm install -g @modelcontextprotocol/server-playwright
-npx playwright install --with-deps chromium
+# Load Library
+if ! command -v ui_log_info &>/dev/null; then
+    CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    LIB_DIR="$(cd "$CURRENT_DIR/../../../../../lib" && pwd)"
+    if [[ -f "$LIB_DIR/core.sh" ]]; then
+        source "$LIB_DIR/core.sh"
+    fi
+fi
+
+npm_install_g "@modelcontextprotocol/server-playwright"
+ui_log_info "Installing Playwright browsers and system dependencies..."
+sudo npx playwright install --with-deps chromium

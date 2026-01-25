@@ -1,10 +1,17 @@
 #!/bin/bash
 set -e
 
-# Install Claude Code CLI
+# Load Library
+if ! command -v ui_log_info &>/dev/null; then
+    CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    LIB_DIR="$(cd "$CURRENT_DIR/../../../../lib" && pwd)"
+    if [[ -f "$LIB_DIR/core.sh" ]]; then
+        source "$LIB_DIR/core.sh"
+    fi
+fi
+
 if ! command -v claude &> /dev/null; then
-    echo "Installing Claude Code CLI..."
-    npm install -g @anthropic-ai/claude-code
+    npm_install_g "@anthropic-ai/claude-code"
 else
-    echo "Claude Code CLI is already installed."
+    ui_log_info "Claude Code CLI is already installed."
 fi

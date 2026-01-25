@@ -6,7 +6,7 @@ source "$SCRIPT_DIR/../../../lib/core.sh"
 
 detect_os
 
-log_info "Configuring Hybrid Swap (ZRAM + Disk Swap)..."
+ui_log_info "Configuring Hybrid Swap (ZRAM + Disk Swap)..."
 
 # -----------------------------------------------------------------------------
 # 1. Calculate Sizes
@@ -20,14 +20,14 @@ ZRAM_SIZE_MB=$((TOTAL_RAM_MB / 3))
 # Disk Swap Size: 1/2 of RAM (Min 1GB, Max 8GB cap recommended, but sticking to 1/2 request)
 SWAPFILE_SIZE_MB=$((TOTAL_RAM_MB / 2))
 
-log_info "Total RAM: ${TOTAL_RAM_MB}MB"
-log_info "Target ZRAM Size (1/3): ${ZRAM_SIZE_MB}MB"
-log_info "Target Swapfile Size (1/2): ${SWAPFILE_SIZE_MB}MB"
+ui_log_info "Total RAM: ${TOTAL_RAM_MB}MB"
+ui_log_info "Target ZRAM Size (1/3): ${ZRAM_SIZE_MB}MB"
+ui_log_info "Target Swapfile Size (1/2): ${SWAPFILE_SIZE_MB}MB"
 
 # -----------------------------------------------------------------------------
 # 2. Configure ZRAM (Priority 100 - Higher used first)
 # -----------------------------------------------------------------------------
-log_info "Setting up ZRAM..."
+ui_log_info "Setting up ZRAM..."
 
 if [[ "$OS_ID" == "ubuntu" || "$OS_ID" == "debian" || "$OS_ID" == "pop" || "$OS_ID" == "linuxmint" ]]; then
     install_packages zram-tools
@@ -55,7 +55,7 @@ EOF"
     sudo systemctl daemon-reload
     sudo systemctl restart systemd-zram-setup@zram0.service
 else
-    log_warn "ZRAM auto-configuration not supported for this OS ($OS_ID). Skipping ZRAM."
+    ui_log_warn "ZRAM auto-configuration not supported for this OS ($OS_ID). Skipping ZRAM."
 fi
 
 # -----------------------------------------------------------------------------
@@ -64,19 +64,20 @@ fi
 SWAPFILE="/swapfile"
 
 if grep -q "$SWAPFILE" /proc/swaps; then
-    log_info "Swapfile already active at $SWAPFILE"
+    ui_log_info "Swapfile already active at $SWAPFILE"
 else
-    log_info "Creating Swapfile ($SWAPFILE_SIZE_MB MB)..."
+    ui_log_info "Creating Swapfile ($SWAPFILE_SIZE_MB MB)..."
     
     # Disable old swap if exists but incorrect size (Advanced logic omitted for safety, just creating if missing)
     if [ -f "$SWAPFILE" ]; then
-        log_warn "$SWAPFILE exists but not active. Recreating..."
+        ui_log_warn "$SWAPFILE exists but not active. Recreating..."
         sudo swapoff "$SWAPFILE" 2>/dev/null || true
         sudo rm "$SWAPFILE"
     fi
 
     # Create file
-    sudo fallocate -l "${SWAPFILE_SIZE_MB}M" "$SWAPFILE" || sudo dd if=/dev/zero of="$SWAPFILE" bs=1M count="$SWAPFILE_SIZE_MB"
+    ui_log_info "Allocating swapfile (this may take a moment)..."
+    sudo dd if=/dev/zero of="$SWAPFILE" bs=1M count="$SWAPFILE_SIZE_MB" status=progress
     
     sudo chmod 600 "$SWAPFILE"
     sudo mkswap "$SWAPFILE"
@@ -85,7 +86,7 @@ else
     # Add to fstab
     if ! grep -q "$SWAPFILE" /etc/fstab; then
         echo "$SWAPFILE none swap sw,pri=50 0 0" | sudo tee -a /etc/fstab
-        log_success "Added $SWAPFILE to /etc/fstab"
+        ui_log_success "Added $SWAPFILE to /etc/fstab"
     fi
 fi
 
@@ -93,7 +94,7 @@ fi
 # 4. Verification
 # -----------------------------------------------------------------------------
 echo ""
-log_info "Current Swap Status:"
-swapon --show
+ui_log_info "Current Swap Status:"
+sudo swapon --show
 free -h
-log_success "Swap configuration complete."
+ui_log_success "Swap configuration complete."

@@ -1,12 +1,13 @@
 #!/bin/bash
 set -e
 
-# Install MCP SQLite Server
-echo "Installing MCP SQLite Server..."
-
-if command -v npm &> /dev/null; then
-    npm install -g @modelcontextprotocol/server-sqlite
-else
-    echo "npm not found. Please install Node.js and npm."
-    exit 1
+# Load Library
+if ! command -v ui_log_info &>/dev/null; then
+    CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    LIB_DIR="$(cd "$CURRENT_DIR/../../../../../lib" && pwd)"
+    if [[ -f "$LIB_DIR/core.sh" ]]; then
+        source "$LIB_DIR/core.sh"
+    fi
 fi
+
+npm_install_g "@modelcontextprotocol/server-sqlite"
