@@ -3,6 +3,23 @@
 A **modular setup tool** for Kubuntu 25.04 (Plasma 6 + Wayland) and various Linux environments.
 It provides an intuitive tree view to select modules and save/load presets via a **Python Textual**-based TUI.
 
+## 🐧 Supported Distributions
+
+This tool is optimized for **Debian/Ubuntu** based systems and **Fedora**.
+
+| Distribution | Compatibility | Notes |
+| :--- | :---: | :--- |
+| **Ubuntu** | ✅ Fully Supported | 22.04 LTS, 24.04 LTS, 24.10 |
+| **Debian** | ✅ Fully Supported | Debian 12 (Bookworm) |
+| **Pop!_OS** | ✅ Fully Supported | 22.04 LTS |
+| **Linux Mint** | ✅ Fully Supported | 21.x, 22.x |
+| **Fedora** | ✅ Fully Supported | Fedora 39, 40, 41 |
+| **Kubuntu** | ✅ Fully Supported | Plasma 6 environments |
+| **Arch Linux** | ⚠️ Partial / Planned | Some modules may work, but not officially supported yet. |
+| **CentOS/RHEL** | ❌ Not Supported | May work with Fedora adjustments, but not tested. |
+
+> **Note:** If you run this on an unsupported distribution, the script will detect it and display an error message indicating that automatic installation is not available.
+
 ## ✨ Key Features
 
 *   **🖥️ Python TUI**: Fast and responsive interface based on the `textual` library.
