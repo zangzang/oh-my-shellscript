@@ -1,0 +1,87 @@
+{
+  "$schema": "./dev-drive.schema.json",
+  "drive": {
+    "letter": "D",
+    "label": "DevDrive",
+    "size": "100GB",
+    "type": "VHD",
+    "vhdPath": "C:\\DevDrives\\DevDrive.vhdx",
+    "vhdType": "Dynamic"
+  },
+  "packages": {
+    "baseDir": "D:\\packages",
+    "profiles": {
+      "npm": {
+        "envVar": "npm_config_cache",
+        "targetPath": "npm",
+        "sourcePaths": ["%APPDATA%\\npm-cache", "%LOCALAPPDATA%\\npm-cache"]
+      },
+      "nuget": {
+        "envVar": "NUGET_PACKAGES",
+        "targetPath": "nuget",
+        "sourcePaths": ["%USERPROFILE%\\.nuget\\packages"]
+      },
+      "pip": {
+        "envVar": "PIP_CACHE_DIR",
+        "targetPath": "pip",
+        "sourcePaths": ["%LOCALAPPDATA%\\pip\\Cache"]
+      },
+      "cargo": {
+        "envVar": "CARGO_HOME",
+        "targetPath": "cargo",
+        "sourcePaths": ["%USERPROFILE%\\.cargo"]
+      },
+      "maven": {
+        "envVar": "MAVEN_OPTS",
+        "envValue": "-Dmaven.repo.local={path}",
+        "targetPath": "maven",
+        "sourcePaths": ["%USERPROFILE%\\.m2\\repository"]
+      },
+      "gradle": {
+        "envVar": "GRADLE_USER_HOME",
+        "targetPath": "gradle",
+        "sourcePaths": ["%USERPROFILE%\\.gradle"]
+      },
+      "vcpkg": {
+        "envVar": "VCPKG_DEFAULT_BINARY_CACHE",
+        "targetPath": "vcpkg",
+        "sourcePaths": ["%LOCALAPPDATA%\\vcpkg\\archives", "%APPDATA%\\vcpkg\\archives"]
+      },
+      "yarn": {
+        "envVar": "YARN_CACHE_FOLDER",
+        "targetPath": "yarn",
+        "sourcePaths": ["%LOCALAPPDATA%\\Yarn\\Cache", "%APPDATA%\\Yarn\\Cache"]
+      },
+      "pnpm": {
+        "envVar": "PNPM_HOME",
+        "targetPath": "pnpm",
+        "sourcePaths": ["%LOCALAPPDATA%\\pnpm"]
+      },
+      "go": {
+        "envVar": "GOPATH",
+        "targetPath": "go",
+        "sourcePaths": ["%USERPROFILE%\\go"]
+      }
+    }
+  },
+  "filters": {
+    "enabled": ["PrjFlt", "MsSecFlt", "WdFilter", "bindFlt", "wcifs", "FileInfo"],
+    "description": {
+      "PrjFlt": "Windows Projected File System (GVFS, sparse enlistment)",
+      "MsSecFlt": "Microsoft Defender for Endpoint EDR sensor",
+      "WdFilter": "Windows Defender filter",
+      "bindFlt": "Docker container support",
+      "wcifs": "Docker container support",
+      "FileInfo": "Windows Performance Recorder, Resource Monitor",
+      "ProcMon24": "Process Monitor (Sysinternals)"
+    }
+  },
+  "presets": {
+    "minimal": ["npm", "nuget"],
+    "frontend": ["npm", "yarn", "pnpm"],
+    "backend-dotnet": ["nuget", "npm"],
+    "backend-java": ["maven", "gradle", "npm"],
+    "fullstack": ["npm", "nuget", "pip", "cargo", "maven", "gradle"],
+    "all": ["npm", "nuget", "pip", "cargo", "maven", "gradle", "vcpkg", "yarn", "pnpm", "go"]
+  }
+}

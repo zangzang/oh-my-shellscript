@@ -1,0 +1,110 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# .NET / C#
+bin/
+obj/
+*.dll
+*.exe
+*.o
+*.so
+*.dylib
+*.su
+*.gch
+*.pcm
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.sln.docstates
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+.vscode/tasks.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# PowerShell
+*.ps1.bak
+*.psm1.bak
+$PSHOME/
+PSGet_modules/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.bak
+*.orig
+*~
+.~*
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Local environment
+.env
+.env.local
+.env.*.local
+
+# Test artifacts
+linux-setup/test/*/
+windows-setup/test/*/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Rust
+target/
+Cargo.lock
+
+# Java
+*.class
+*.jar
+*.war
+.gradle/
+build/
+
+# Misc
+.cache/
+.tmp/
+temp/
+dist/

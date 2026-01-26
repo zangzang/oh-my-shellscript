@@ -1,0 +1,16 @@
+{
+  "name": "자바 개발자 설정",
+  "description": "Java, Maven, Gradle 개발 환경",
+  "modules": [
+    { "id": "system.winget" },
+    { "id": "dev.git" },
+    { "id": "dev.vscode" },
+    { "id": "dev.java", "params": { "variant": "17" } },
+    { "id": "dev.docker" },
+    { "id": "gui.chrome" },
+    { "id": "tools.terminal" },
+    { "id": "tools.powershell" },
+    { "id": "tools.oh-my-posh" },
+    { "id": "tools.gsudo" }
+  ]
+}

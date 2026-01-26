@@ -1,0 +1,8 @@
+{
+  "id": "system.winget",
+  "name": "Winget 패키지 매니저",
+  "category": "system",
+  "description": "Windows 패키지 매니저",
+  "requires": [],
+  "installMethod": "builtin"
+}

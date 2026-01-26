@@ -1,0 +1,9 @@
+{
+  "id": "gui.dbeaver",
+  "name": "DBeaver",
+  "category": "gui",
+  "description": "데이터베이스 관리 도구",
+  "requires": ["system.winget"],
+  "installMethod": "winget",
+  "wingetId": "dbeaver.dbeaver"
+}

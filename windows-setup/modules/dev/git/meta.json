@@ -1,0 +1,9 @@
+{
+  "id": "dev.git",
+  "name": "Git",
+  "category": "dev",
+  "description": "분산 버전 관리 시스템",
+  "requires": ["system.winget"],
+  "installMethod": "winget",
+  "wingetId": "Git.Git"
+}

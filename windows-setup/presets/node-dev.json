@@ -1,0 +1,16 @@
+{
+  "name": "Node.js 개발자 설정",
+  "description": "Node.js, npm, 웹 개발 환경",
+  "modules": [
+    { "id": "system.winget" },
+    { "id": "dev.git" },
+    { "id": "dev.vscode" },
+    { "id": "dev.nodejs" },
+    { "id": "dev.docker" },
+    { "id": "gui.chrome" },
+    { "id": "tools.terminal" },
+    { "id": "tools.powershell" },
+    { "id": "tools.oh-my-posh" },
+    { "id": "tools.gsudo" }
+  ]
+}

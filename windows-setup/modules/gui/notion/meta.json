@@ -1,0 +1,9 @@
+{
+  "id": "gui.notion",
+  "name": "Notion",
+  "category": "gui",
+  "description": "노션 협업 도구",
+  "requires": ["system.winget"],
+  "installMethod": "winget",
+  "wingetId": "Notion.Notion"
+}

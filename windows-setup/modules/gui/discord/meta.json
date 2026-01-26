@@ -1,0 +1,9 @@
+{
+  "id": "gui.discord",
+  "name": "Discord",
+  "category": "gui",
+  "description": "디스코드 채팅",
+  "requires": ["system.winget"],
+  "installMethod": "winget",
+  "wingetId": "Discord.Discord"
+}

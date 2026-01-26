@@ -1,0 +1,9 @@
+{
+  "id": "dev.python",
+  "name": "Python",
+  "category": "dev",
+  "description": "Python 프로그래밍 언어",
+  "requires": ["system.winget"],
+  "installMethod": "winget",
+  "wingetId": "Python.Python.3.12"
+}

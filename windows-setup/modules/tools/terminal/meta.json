@@ -1,0 +1,9 @@
+{
+  "id": "tools.terminal",
+  "name": "Windows Terminal",
+  "category": "tools",
+  "description": "현대적인 터미널",
+  "requires": ["system.winget"],
+  "installMethod": "winget",
+  "wingetId": "Microsoft.WindowsTerminal"
+}

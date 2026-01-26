@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "description": "Windows 개발 환경 자동 설정",
+  "packageManager": "winget",
+  "features": {
+    "dryRun": true,
+    "autoBackup": true,
+    "moduleDependencies": true
+  },
+  "defaultInstallMethods": ["winget", "choco", "direct"],
+  "logLevel": "info"
+}

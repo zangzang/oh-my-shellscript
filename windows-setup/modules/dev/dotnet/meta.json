@@ -1,0 +1,9 @@
+{
+  "id": "dev.dotnet",
+  "name": ".NET SDK",
+  "category": "dev",
+  "description": "Microsoft .NET 개발 키트",
+  "requires": ["system.winget"],
+  "installMethod": "winget",
+  "wingetId": "Microsoft.DotNet.SDK.8"
+}
