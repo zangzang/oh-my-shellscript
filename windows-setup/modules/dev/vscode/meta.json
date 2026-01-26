@@ -1,0 +1,9 @@
+{
+  "id": "dev.vscode",
+  "name": "Visual Studio Code",
+  "category": "dev",
+  "description": "경량 코드 에디터",
+  "requires": ["system.winget"],
+  "installMethod": "winget",
+  "wingetId": "Microsoft.VisualStudioCode"
+}

@@ -1,0 +1,9 @@
+{
+  "id": "dev.docker",
+  "name": "Docker Desktop",
+  "category": "dev",
+  "description": "컨테이너 플랫폼",
+  "requires": ["system.winget"],
+  "installMethod": "winget",
+  "wingetId": "Docker.DockerDesktop"
+}

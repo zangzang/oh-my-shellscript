@@ -1,0 +1,9 @@
+{
+  "id": "gui.chrome",
+  "name": "Google Chrome",
+  "category": "gui",
+  "description": "구글 크롬 웹 브라우저",
+  "requires": ["system.winget"],
+  "installMethod": "winget",
+  "wingetId": "Google.Chrome"
+}

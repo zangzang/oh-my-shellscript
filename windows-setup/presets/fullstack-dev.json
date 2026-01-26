@@ -1,0 +1,22 @@
+{
+  "name": "풀스택 개발자 설정",
+  "description": "모든 개발 도구 설치",
+  "modules": [
+    { "id": "system.winget" },
+    { "id": "dev.git" },
+    { "id": "dev.vscode" },
+    { "id": "dev.nodejs" },
+    { "id": "dev.python" },
+    { "id": "dev.java" },
+    { "id": "dev.dotnet" },
+    { "id": "dev.rust" },
+    { "id": "dev.docker" },
+    { "id": "gui.chrome" },
+    { "id": "gui.notion" },
+    { "id": "gui.dbeaver" },
+    { "id": "tools.terminal" },
+    { "id": "tools.powershell" },
+    { "id": "tools.oh-my-posh" },
+    { "id": "tools.gsudo" }
+  ]
+}

@@ -1,42 +1,131 @@
-# OS generated
-.DS_Store
-Thumbs.db
-
 # Python
 __pycache__/
 *.py[cod]
+*$py.class
 *.so
+.Python
+env/
 venv/
-.venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# .NET / C#
+bin/
+obj/
+*.dll
+*.exe
+*.o
+*.so
+*.dylib
+*.su
+*.gch
+*.pcm
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.sln.docstates
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+.vscode/tasks.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# PowerShell
+*.ps1.bak
+*.psm1.bak
+$PSHOME/
+PSGet_modules/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.bak
+*.orig
+*~
+.~*
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Local environment
+.env
+.env.local
+.env.*.local
+
+# Test artifacts
+linux-setup/test/*/
+windows-setup/test/*/
 
 # Node
 node_modules/
 npm-debug.log
 yarn-error.log
 
-# Dotnet
-bin/
-obj/
-.vs/
+# Rust
+target/
+Cargo.lock
 
 # Java
 *.class
 *.jar
 *.war
-*.ear
-hs_err_pid*
+.gradle/
+build/
 
-# Rust
-target/
-Cargo.lock
+# Misc
+.cache/
+.tmp/
+temp/
+dist/
 
-# Editor/IDE
-.vscode/
-.idea/
-*.swp
-*.swo
+# Test build artifacts
+linux-setup/test/**/bin/
+linux-setup/test/**/obj/
+linux-setup/test/**/target/
+linux-setup/test/**/node_modules/
+linux-setup/test/**/.vscode/
+linux-setup/test/**/__pycache__/
+linux-setup/test/**/*.pyc
+windows-setup/test/**/bin/
+windows-setup/test/**/obj/
+windows-setup/test/**/target/
 
-# Project specific
-*.log
-.gemini/
-tmp/
+# Keep test source files but ignore build output
+!linux-setup/test/**/*.java
+!linux-setup/test/**/*.js
+!linux-setup/test/**/*.py
+!linux-setup/test/**/*.rs
+!linux-setup/test/**/*.csproj
+!linux-setup/test/**/*.toml
+!linux-setup/test/**/*.json

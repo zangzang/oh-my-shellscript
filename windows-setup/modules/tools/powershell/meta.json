@@ -1,0 +1,9 @@
+{
+  "id": "tools.powershell",
+  "name": "PowerShell 7",
+  "category": "tools",
+  "description": "최신 PowerShell 셸",
+  "requires": ["system.winget"],
+  "installMethod": "winget",
+  "wingetId": "Microsoft.PowerShell"
+}

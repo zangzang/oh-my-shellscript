@@ -1,0 +1,9 @@
+{
+  "id": "tools.oh-my-posh",
+  "name": "Oh My Posh",
+  "category": "tools",
+  "description": "PowerShell 터미널 프롬프트",
+  "requires": ["tools.powershell"],
+  "installMethod": "winget",
+  "wingetId": "JanDeDobbeleer.OhMyPosh"
+}

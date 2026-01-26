@@ -1,0 +1,10 @@
+{
+  "name": "기본 설정 (Base)",
+  "description": "필수 도구만 설치",
+  "modules": [
+    { "id": "system.winget" },
+    { "id": "dev.git" },
+    { "id": "tools.terminal" },
+    { "id": "tools.powershell" }
+  ]
+}

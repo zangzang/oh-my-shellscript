@@ -1,0 +1,13 @@
+{
+  "id": "dev.java",
+  "name": "Java (OpenJDK)",
+  "category": "dev",
+  "description": "Java Development Kit",
+  "requires": ["system.winget"],
+  "installMethod": "winget",
+  "wingetId": "Eclipse.Temurin.17",
+  "variants": {
+    "17": { "wingetId": "Eclipse.Temurin.17" },
+    "21": { "wingetId": "Eclipse.Temurin.21" }
+  }
+}

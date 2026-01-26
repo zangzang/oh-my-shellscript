@@ -1,0 +1,9 @@
+{
+  "id": "dev.nodejs",
+  "name": "Node.js",
+  "category": "dev",
+  "description": "JavaScript 런타임",
+  "requires": ["system.winget"],
+  "installMethod": "winget",
+  "wingetId": "OpenJS.NodeJS"
+}

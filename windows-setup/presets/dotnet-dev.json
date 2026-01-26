@@ -1,0 +1,17 @@
+{
+  "name": ".NET 개발자 설정 (Fullstack .NET)",
+  "description": "ASP.NET Core, C# 개발 환경",
+  "modules": [
+    { "id": "system.winget" },
+    { "id": "dev.git" },
+    { "id": "dev.vscode" },
+    { "id": "dev.nodejs" },
+    { "id": "dev.dotnet" },
+    { "id": "dev.docker" },
+    { "id": "gui.chrome" },
+    { "id": "tools.terminal" },
+    { "id": "tools.powershell" },
+    { "id": "tools.oh-my-posh" },
+    { "id": "tools.gsudo" }
+  ]
+}

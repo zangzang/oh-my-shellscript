@@ -1,0 +1,9 @@
+{
+  "id": "tools.gsudo",
+  "name": "gsudo",
+  "category": "tools",
+  "description": "Windows용 sudo",
+  "requires": ["system.winget"],
+  "installMethod": "winget",
+  "wingetId": "gerardog.gsudo"
+}
