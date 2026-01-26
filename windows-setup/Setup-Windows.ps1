@@ -39,41 +39,32 @@ param(
 $ErrorActionPreference = "Stop"
 $InformationPreference = "Continue"
 
-# 스크립트 디렉토리 설정 - 절대 경로 강제
-$scriptDir = ""
-
-# 1. PSScriptRoot 시도 (가장 안정적)
-if ($PSScriptRoot) {
-    $scriptDir = $PSScriptRoot
+# 스크립트 디렉토리 설정 - $PSCommandPath 사용 (PowerShell 7+에서 가장 안정적)
+$scriptPath = $PSCommandPath
+if (-not $scriptPath) {
+    $scriptPath = $MyInvocation.MyCommand.Definition
+}
+if (-not $scriptPath) {
+    $scriptPath = $MyInvocation.MyCommand.Path
 }
 
-# 2. MyCommand.Definition 시도
-if (-not $scriptDir -and $MyInvocation.MyCommand.Definition) {
-    $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
-}
-
-# 3. MyCommand.Path 시도
-if (-not $scriptDir -and $MyInvocation.MyCommand.Path) {
-    $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-}
-
-# 4. 마지막 수단: 현재 위치
-if (-not $scriptDir) {
+# 스크립트 경로에서 디렉토리 추출
+if ($scriptPath -and [System.IO.File]::Exists($scriptPath)) {
+    $scriptDir = [System.IO.Path]::GetDirectoryName($scriptPath)
+} else {
+    # 최후의 수단: 현재 위치
     $scriptDir = (Get-Location).Path
 }
 
-# 절대 경로로 강제 변환 (핵심!)
-$scriptDir = [System.IO.Path]::GetFullPath($scriptDir)
-
-# 라이브러리 경로 구성 - 절대 경로로
+# 라이브러리 경로 구성
 $libPath = [System.IO.Path]::Combine($scriptDir, "lib")
 $corePath = [System.IO.Path]::Combine($libPath, "core.psm1")
 $uiPath = [System.IO.Path]::Combine($libPath, "ui.psm1")
 $installerPath = [System.IO.Path]::Combine($libPath, "installer.psm1")
 
 # 디버그 정보
+Write-Host "스크립트 파일: $scriptPath" -ForegroundColor DarkGray
 Write-Host "스크립트 위치: $scriptDir" -ForegroundColor DarkGray
-Write-Host "라이브러리 경로: $libPath" -ForegroundColor DarkGray
 Write-Host "Core 파일 경로: $corePath" -ForegroundColor DarkGray
 
 # 파일 존재 여부 확인
@@ -86,10 +77,12 @@ if (-not $coreExists) {
     Write-Host "예상 경로: $corePath" -ForegroundColor Red
     Write-Host ""
     Write-Host "디버그 정보:" -ForegroundColor Yellow
+    Write-Host "  PSCommandPath: '$PSCommandPath'"
     Write-Host "  PSScriptRoot: '$PSScriptRoot'"
     Write-Host "  MyCommand.Definition: '$($MyInvocation.MyCommand.Definition)'"
     Write-Host "  MyCommand.Path: '$($MyInvocation.MyCommand.Path)'"
     Write-Host "  Current Location: '$(Get-Location)'"
+    Write-Host "  최종 scriptPath: '$scriptPath'"
     Write-Host "  최종 scriptDir: '$scriptDir'"
     Write-Host ""
     
@@ -106,7 +99,6 @@ if (-not $coreExists) {
         }
     } else {
         Write-Host "라이브러리 디렉토리가 없습니다: $libPath" -ForegroundColor Red
-        # scriptDir 내용 확인
         $scriptDirExists = [System.IO.Directory]::Exists($scriptDir)
         Write-Host "스크립트 디렉토리 존재: $scriptDirExists" -ForegroundColor Yellow
         
