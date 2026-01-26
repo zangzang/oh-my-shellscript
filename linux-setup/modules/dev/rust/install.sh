@@ -10,6 +10,17 @@ fi
 
 detect_os
 
+# ============================================
+# Check if Rust is already installed
+# ============================================
+if command -v rustc &>/dev/null && command -v cargo &>/dev/null; then
+    echo "🔍 Detected Rust version: $(rustc --version)"
+    echo "✅ Rust is already installed."
+    rustc --version
+    cargo --version
+    exit 0
+fi
+
 echo "📦 Attempting to install Rust via system package..."
 
 PKGS=()

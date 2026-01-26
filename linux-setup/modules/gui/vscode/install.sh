@@ -88,19 +88,28 @@ install_vscode_extensions() {
     echo "Attempting to install ${#unique_extensions[@]} extensions..."
     
     local installed=0
+    local failed=0
     for ext in "${unique_extensions[@]}"; do
-        echo "Installing: $ext"
-        if "$code_cmd" --install-extension "$ext" --force; then
+        echo -n "Installing: $ext ... "
+        # Use timeout to prevent hanging (60 seconds max per extension)
+        if timeout 60 "$code_cmd" --install-extension "$ext" --force </dev/null >/dev/null 2>&1; then
+            echo "OK"
             ((installed++)) || true
         else
-            echo "❌ Failed to install extension: $ext"
+            echo "FAILED"
+            ((failed++)) || true
         fi
     done
     
-    echo "✅ VSCode extensions installed: ${installed} count"
+    echo "✅ VSCode extensions installed: ${installed} count (failed: ${failed})"
 }
 
 # Handle profile arguments
 if [[ $# -gt 0 ]]; then
     install_vscode_extensions "$@"
+else
+    # Default: install base extensions only
+    install_vscode_extensions
 fi
+
+echo "✅ VSCode setup complete"

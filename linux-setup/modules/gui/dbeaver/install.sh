@@ -1,25 +1,42 @@
 #!/bin/bash
 set -e
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../../../lib/distro.sh"
+source "$SCRIPT_DIR/../../../lib/core.sh"
 
 detect_os
 
 if command -v dbeaver &>/dev/null; then
-    ui_log_info "DBeaver is already installed."
+    echo "✅ DBeaver is already installed."
     exit 0
 fi
 
-ui_log_info "Installing DBeaver Universal Database Tool..."
+echo "Installing DBeaver Universal Database Tool..."
 
 if [ "$OS_ID" == "fedora" ]; then
-    if command -v rpm &>/dev/null; then
-        sudo rpm --import https://dbeaver.io/debs/dbeaver.gpg.key
+    # Remove old broken DBeaver repo if exists
+    if [ -f /etc/yum.repos.d/dbeaver.repo ]; then
+        echo "Removing old DBeaver repo (no longer available)..."
+        sudo rm -f /etc/yum.repos.d/dbeaver.repo
     fi
-    if [ ! -f /etc/yum.repos.d/dbeaver.repo ]; then
-        echo -e "[dbeaver]\nname=DBeaver Corp\nbaseurl=https://dbeaver.io/rpm/\nenabled=1\ngpgcheck=1\ngpgkey=https://dbeaver.io/debs/dbeaver.gpg.key" | sudo tee /etc/yum.repos.d/dbeaver.repo > /dev/null
+    
+    # Fedora: Use Flatpak (official recommended method)
+    if ! command -v flatpak &>/dev/null; then
+        sudo dnf install -y flatpak
     fi
-    sudo dnf install -y dbeaver-ce
+    
+    # Try system-wide first, fall back to user install
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo 2>/dev/null || \
+        flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    
+    if flatpak install -y flathub io.dbeaver.DBeaverCommunity 2>/dev/null || \
+       flatpak install --user -y flathub io.dbeaver.DBeaverCommunity; then
+        echo "✅ DBeaver installed via Flatpak"
+        echo "   Run with: flatpak run io.dbeaver.DBeaverCommunity"
+    else
+        echo "❌ Failed to install DBeaver via Flatpak"
+        exit 1
+    fi
+    exit 0
 else
     # DBeaver Community Edition (Ubuntu/Debian)
     sudo mkdir -p /etc/apt/keyrings
@@ -28,4 +45,4 @@ else
     sudo apt update
     sudo apt install -y dbeaver-ce
 fi
-ui_log_success "DBeaver installation complete"
+echo "✅ DBeaver installation complete"

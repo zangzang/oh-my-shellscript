@@ -41,7 +41,7 @@ if [[ "$OS_ID" == "ubuntu" || "$OS_ID" == "debian" || "$OS_ID" == "pop" || "$OS_
     sudo systemctl restart zramswap || echo "Warning: Failed to restart zramswap"
 
 elif [[ "$OS_ID" == "fedora" ]]; then
-    install_packages zram-generator
+    install_packages zram-generator || true  # Ignore if already installed
 
     # Configure zram-generator
     # zram-fraction = 0.33

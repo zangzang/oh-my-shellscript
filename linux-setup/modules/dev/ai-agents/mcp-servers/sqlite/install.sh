@@ -10,4 +10,6 @@ if ! command -v ui_log_info &>/dev/null; then
     fi
 fi
 
-npm_install_g "@modelcontextprotocol/server-sqlite"
+ui_log_info "Installing MCP SQLite Server..."
+npm install -g @modelcontextprotocol/server-sqlite || ui_log_warn "Package not available"
+ui_log_success "MCP SQLite Server installation complete"

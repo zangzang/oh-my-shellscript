@@ -12,21 +12,50 @@ import time
 from pathlib import Path
 from typing import Optional
 
-# Check for textual installation
-try:
-    from textual.app import App, ComposeResult
-    from textual.widgets import Tree, Static, Footer, Header, Button, Label, ListView, ListItem, RichLog, Input
-    from textual.containers import Horizontal, Vertical, Container
-    from textual.binding import Binding
-    from textual import events
-except ImportError:
-    print("Library 'textual' is required. Installing...")
-    subprocess.run([sys.executable, "-m", "pip", "install", "textual", "-q"])
-    from textual.app import App, ComposeResult
-    from textual.widgets import Tree, Static, Footer, Header, Button, Label, ListView, ListItem, RichLog, Input
-    from textual.containers import Horizontal, Vertical, Container
-    from textual.binding import Binding
-    from textual import events
+
+def ensure_textual():
+    """Ensure textual library is installed"""
+    try:
+        import textual
+        return True
+    except ImportError:
+        pass
+    
+    print("📦 Library 'textual' is required. Installing...")
+    
+    # Check if pip is available
+    try:
+        subprocess.run([sys.executable, "-m", "pip", "--version"], 
+                      capture_output=True, check=True)
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        print("❌ pip is not available.")
+        print("   Please run: ./linux-setup/bootstrap.sh")
+        print("   Or install manually: sudo apt install python3-pip && pip install textual")
+        sys.exit(1)
+    
+    # Install textual
+    result = subprocess.run(
+        [sys.executable, "-m", "pip", "install", "--user", "textual"],
+        capture_output=True, text=True
+    )
+    
+    if result.returncode != 0:
+        print(f"❌ Failed to install textual: {result.stderr}")
+        print("   Please run: ./linux-setup/bootstrap.sh")
+        sys.exit(1)
+    
+    print("✅ textual installed successfully")
+    return True
+
+
+# Ensure textual is installed before importing
+ensure_textual()
+
+from textual.app import App, ComposeResult
+from textual.widgets import Tree, Static, Footer, Header, Button, Label, ListView, ListItem, RichLog, Input
+from textual.containers import Horizontal, Vertical, Container
+from textual.binding import Binding
+from textual import events
 
 
 SCRIPT_DIR = Path(__file__).parent.resolve()
@@ -173,14 +202,19 @@ class ModuleManager:
             del self.context_items[item_id]
 
     def resolve_dependencies(self) -> list[str]:
-        """Resolve dependencies and return installation order"""
+        """Resolve dependencies and return installation order (no duplicates)"""
         result = []
         visited = set()
         
         def resolve(item_id: str):
-            if item_id in visited:
+            # Extract base module id (without variant)
+            base_id = item_id.split(":")[0]
+            
+            # Skip if already processed (check both full id and base id)
+            if item_id in visited or base_id in visited:
                 return
             visited.add(item_id)
+            visited.add(base_id)
             
             mod = self.get_module(item_id)
             if mod:
@@ -403,7 +437,7 @@ class ModuleTree(Tree):
                 has_presets = True
         
         if not has_presets and self.filter_text:
-            presets_node.label = "[dim]📂 Presets (No matches)[/im]"
+            presets_node.label = "[dim]📂 Presets (No matches)[/dim]"
             presets_node.collapse()
 
     def _build_modules(self):
@@ -465,7 +499,7 @@ class ModuleTree(Tree):
                             self._add_node_to_tree(cat_node, m)
         
         if not has_modules and self.filter_text:
-            modules_root.label = "[dim]📦 Modules (No matches)[/im]"
+            modules_root.label = "[dim]📦 Modules (No matches)[/dim]"
             modules_root.collapse()
 
     def _create_module_node_data(self, mod_id: str, force_include: bool = False):
@@ -878,45 +912,54 @@ def load_session() -> list[str]:
 
 def run_installation(install_list: list[str], selected_items: list[str] = None, dry_run: bool = False):
     """Execute the installation sequence in the terminal"""
-    print("\n" + "=" * 50)
+    print("\n" + "=" * 60)
     print(f"📦 Installation Sequence ({'Simulation' if dry_run else 'Actual Installation'})")
-    print("=" * 50)
+    print("=" * 60)
+    
+    # Build module metadata cache for faster lookup
+    module_cache = {}
+    for meta_file in MODULES_DIR.rglob("meta.json"):
+        try:
+            meta = json.loads(meta_file.read_text(encoding='utf-8', errors='replace'))
+            mod_id = meta.get("id")
+            if mod_id:
+                module_cache[mod_id] = {
+                    "meta": meta,
+                    "path": meta_file.parent
+                }
+        except Exception:
+            continue
     
     # Detail installation plan
     for i, item in enumerate(install_list, 1):
         mod_id = item.split(":")[0]
         variant = item.split(":")[1] if ":" in item else ""
         
-        # Search for module metadata
-        meta_found = False
-        for meta_file in MODULES_DIR.rglob("meta.json"):
-            try:
-                meta = json.loads(meta_file.read_text(encoding='utf-8', errors='replace'))
-                if meta.get("id") == mod_id:
-                    name = meta.get("name", mod_id)
-                    install_script = meta_file.parent / "install.sh"
-                    
-                    if dry_run:
-                        print(f"  {i}. {name} ({mod_id})")
-                        if install_script.exists():
-                            cmd = f"bash {install_script}"
-                            if variant:
-                                cmd += f" {variant}"
-                            print(f"     ➜ Command: {cmd}")
-                            if variant:
-                                print(f"     ➜ Env: VERSION={variant}")
-                        else:
-                            print(f"     ⚠️  Warning: Installation script missing ({install_script})")
-                    else:
-                        print(f"  {i}. {name} ({mod_id})")
-                    
-                    meta_found = True
-                    break
-            except Exception:
-                continue
-        
-        if not meta_found:
-            print(f"  {i}. {item} (⚠️ Metadata not found)")
+        if mod_id in module_cache:
+            meta = module_cache[mod_id]["meta"]
+            name = meta.get("name", mod_id)
+            install_script = module_cache[mod_id]["path"] / "install.sh"
+            
+            # Display with variant info
+            if variant:
+                display_name = f"{name} [v{variant}]"
+            else:
+                display_name = name
+            
+            if dry_run:
+                print(f"  {i:2d}. {display_name}")
+                print(f"      └─ ID: {mod_id}")
+                if install_script.exists():
+                    cmd = f"bash {install_script}"
+                    if variant:
+                        cmd += f" {variant}"
+                    print(f"      └─ Command: {cmd}")
+                else:
+                    print(f"      └─ ⚠️  install.sh missing")
+            else:
+                print(f"  {i:2d}. {display_name} ({mod_id})")
+        else:
+            print(f"  {i:2d}. {item} (⚠️ Metadata not found)")
 
     print()
     
@@ -956,11 +999,17 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
                     if meta.get("id") == mod_id:
                         install_script = meta_file.parent / "install.sh"
                         if install_script.exists():
-                            print(f"\n{'='*50}")
-                            print(f">>> Installing [{meta.get('name', mod_id)}]...")
+                            # Create display name
+                            display_name = meta.get('name', mod_id)
                             if variant:
-                                print(f"    variant: {variant}")
-                            print("=" * 50)
+                                display_name = f"{display_name} [v{variant}]"
+                            
+                            print(f"\n{'='*60}")
+                            print(f">>> Installing: {display_name}")
+                            print(f"    Module ID: {mod_id}")
+                            if variant:
+                                print(f"    Version: {variant}")
+                            print("=" * 60)
                             
                             # Pass variant as environment variable
                             env = dict(os.environ)
@@ -1006,20 +1055,27 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
                                 status = "SUCCESS"
                             else:
                                 status = "FAILED"
+                            
+                            # Create display name with variant
+                            display_name = meta.get("name", mod_id)
+                            if variant:
+                                display_name = f"{display_name} [v{variant}]"
                                 
                             results.append({
                                 "id": mod_id,
                                 "name": meta.get("name", mod_id),
+                                "display_name": display_name,
+                                "variant": variant,
                                 "status": status,
                                 "duration": duration
                             })
 
                             if result_code != 0:
-                                print(f"❌ Failed: {mod_id}")
+                                print(f"❌ Failed: {display_name}")
                             elif is_skipped:
-                                print(f"⏭️  Skipped: {mod_id} (Already installed)")
+                                print(f"⏭️  Skipped: {display_name} (Already installed)")
                             else:
-                                print(f"✅ Completed: {mod_id}")
+                                print(f"✅ Completed: {display_name}")
                             found = True
                         break
                 except Exception as e:
@@ -1045,11 +1101,11 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
     
     # Summary Report
     print("\n\n")
-    print("=" * 60)
+    print("=" * 70)
     print(f"📊 Installation Summary Report (Total Duration: {total_duration:.1f}s)")
-    print("=" * 60)
-    print(f"{ 'Module ID':<20} | {'Status':<10} | {'Duration':<10}")
-    print("-" * 60)
+    print("=" * 70)
+    print(f"{'Module':<35} | {'Status':<12} | {'Time':<8}")
+    print("-" * 70)
     
     success_count = 0
     fail_count = 0
@@ -1058,10 +1114,15 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
     for res in results:
         status_icon = "✅ SUCCESS"
         if res["status"] == "FAILED": status_icon = "❌ FAILED"
-        elif res["status"] == "SKIPPED": status_icon = "⏭️  SKIPPED"
+        elif res["status"] == "SKIPPED": status_icon = "⏭️ SKIP"
         elif res["status"] == "NOT_FOUND": status_icon = "⚠️ MISSING"
         
-        print(f"{res['id']:<20} | {status_icon:<10} | {res['duration']:.1f}s")
+        # Display name with variant if available
+        display = res.get("display_name", res["name"])
+        if len(display) > 33:
+            display = display[:30] + "..."
+        
+        print(f"{display:<35} | {status_icon:<12} | {res['duration']:.1f}s")
         
         if res["status"] == "SUCCESS":
             success_count += 1
@@ -1070,12 +1131,12 @@ def run_installation(install_list: list[str], selected_items: list[str] = None, 
         else:
             fail_count += 1
             
-    print("-" * 60)
+    print("-" * 70)
     if cancelled:
         print("⚠️  Installation Aborted.")
     else:
         print(f"✨ Overall Results: Success {success_count} / Skipped {skip_count} / Failed {fail_count}")
-    print("=" * 60)
+    print("=" * 70)
     print()
     
     if dry_run:

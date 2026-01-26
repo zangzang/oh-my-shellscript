@@ -11,6 +11,52 @@ fi
 
 detect_os
 
+# Validate version format (should be like 3, 3.12, 3.12.1)
+if [[ ! "$VERSION" =~ ^3(\.[0-9]+){0,2}$ ]]; then
+    ui_log_error "Invalid Python version format: $VERSION"
+    ui_log_info "Valid formats: 3, 3.12, 3.12.1"
+    exit 1
+fi
+
+# ============================================
+# Check if Python is already installed
+# ============================================
+check_python_installed() {
+    local required_ver="$1"
+    
+    # Extract major.minor from required version
+    local req_short
+    req_short=$(echo "$required_ver" | grep -oE '^3\.[0-9]+')
+    [[ -z "$req_short" ]] && req_short="3"
+    
+    # Check python3 or python$VERSION
+    local py_cmd=""
+    if command -v "python$req_short" &>/dev/null; then
+        py_cmd="python$req_short"
+    elif command -v python3 &>/dev/null; then
+        py_cmd="python3"
+    else
+        return 1
+    fi
+    
+    local installed_ver
+    installed_ver=$($py_cmd --version 2>&1 | grep -oE '[0-9]+\.[0-9]+' | head -1)
+    
+    echo "🔍 Detected Python version: $installed_ver (requested: $required_ver)"
+    
+    if [[ "$installed_ver" == "$req_short" ]]; then
+        return 0
+    fi
+    
+    return 1
+}
+
+if check_python_installed "$VERSION"; then
+    echo "✅ Python $VERSION is already installed."
+    python3 --version
+    exit 0
+fi
+
 echo "📦 Attempting to install Python $VERSION via system package..."
 
 # Determine package name
@@ -59,6 +105,17 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 
 if [ ! -d "$PYENV_ROOT" ]; then
     ui_log_info "Installing Pyenv..."
+    
+    # Pyenv requires build dependencies (including gawk for pyenv scripts)
+    if [[ "$OS_ID" == "ubuntu" || "$OS_ID" == "debian" || "$OS_ID" == "pop" || "$OS_ID" == "linuxmint" ]]; then
+        install_packages build-essential libssl-dev zlib1g-dev libbz2-dev \
+            libreadline-dev libsqlite3-dev wget curl llvm libncursesw5-dev \
+            xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev gawk
+    elif [[ "$OS_ID" == "fedora" ]]; then
+        install_packages gcc zlib-devel bzip2 bzip2-devel readline-devel \
+            sqlite sqlite-devel openssl-devel tk-devel libffi-devel xz-devel gawk
+    fi
+    
     if curl https://pyenv.run | bash; then
         ui_log_success "Pyenv installed"
     else

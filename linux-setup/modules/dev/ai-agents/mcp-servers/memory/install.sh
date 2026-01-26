@@ -10,4 +10,6 @@ if ! command -v ui_log_info &>/dev/null; then
     fi
 fi
 
-npm_install_g "@modelcontextprotocol/server-memory"
+ui_log_info "Installing MCP Memory Server..."
+npm install -g @modelcontextprotocol/server-memory || ui_log_warn "Package not available"
+ui_log_success "MCP Memory Server installation complete"

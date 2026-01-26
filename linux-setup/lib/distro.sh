@@ -3,7 +3,8 @@
 # OS Detection
 detect_os() {
     if [ -f /etc/os-release ]; then
-        . /etc/os-release
+        # Source in subshell to avoid polluting global namespace (especially VERSION)
+        eval "$(grep -E '^(ID|VERSION_ID)=' /etc/os-release)"
         OS_ID="$ID"
         OS_VERSION="$VERSION_ID"
     else
@@ -34,8 +35,8 @@ install_packages() {
                 mapped="$(map_package_name_fedora "$pkg")"
                 if [[ -n "$mapped" ]]; then
                     fedora_pkgs+=("$mapped")
-                done
-            fi
+                fi
+            done
             if [ ${#fedora_pkgs[@]} -gt 0 ]; then
                 # Use --skip-broken to ignore unavailable packages in a bulk install
                 sudo dnf install -y --refresh --skip-broken "${fedora_pkgs[@]}"
@@ -111,6 +112,18 @@ map_package_name_fedora() {
         libglu1-mesa)    echo "mesa-libGLU" ;;
         software-properties-common) echo "dnf-plugins-core" ;;
         apt-transport-https) echo "" ;; # Not needed for dnf
+        gnupg)           echo "gnupg2" ;;
+        fd-find)         echo "fd-find" ;;
+        ripgrep)         echo "ripgrep" ;;
+        bat)             echo "bat" ;;
+        eza)             echo "eza" ;;
+        btop)            echo "btop" ;;
+        ncdu)            echo "ncdu" ;;
+        mc)              echo "mc" ;;
+        tree)            echo "tree" ;;
+        htop)            echo "htop" ;;
+        vim)             echo "vim-enhanced" ;;
+        nano)            echo "nano" ;;
         # Add more mappings as needed
         *)               echo "$pkg" ;;
     esac

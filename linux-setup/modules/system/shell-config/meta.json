@@ -3,5 +3,5 @@
   "name": "Shell Configuration (.zshrc)",
   "description": "Complete .zshrc with dev tools PATH, FZF, aliases, and Oh My Posh",
   "category": "system",
-  "requires": ["system.zsh", "system.cli-tools"]
+  "requires": ["system.zsh", "system.cli-tools", "system.oh-my-posh", "system.nerd-fonts"]
 }

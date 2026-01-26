@@ -1,7 +1,7 @@
 {
   "id": "system.zsh",
-  "name": "Zsh + Yakuake",
-  "description": "Zsh shell and Yakuake terminal emulator",
+  "name": "Zsh Shell",
+  "description": "Zsh shell with improved features",
   "category": "system",
   "requires": ["system.update"]
 }

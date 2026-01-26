@@ -15,6 +15,18 @@ if [ -z "${OS_ID:-}" ]; then
     detect_os
 fi
 
+# ============================================
+# Check if Node.js is already installed
+# ============================================
+if command -v node &>/dev/null; then
+    installed_ver=$(node --version 2>/dev/null | tr -d 'v')
+    echo "🔍 Detected Node.js version: $installed_ver"
+    echo "✅ Node.js is already installed."
+    node --version
+    npm --version 2>/dev/null && echo "npm: $(npm --version)"
+    exit 0
+fi
+
 # Attempt System Package Installation
 echo "📦 Attempting to install Node.js via system package..."
 
@@ -65,3 +77,7 @@ echo "Installing Node.js via NVM: $TARGET"
 nvm install "$TARGET"
 nvm use "$TARGET"
 nvm alias default "$TARGET"
+
+echo "✅ Node.js installation complete (NVM)"
+node -v
+npm -v

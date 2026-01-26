@@ -16,11 +16,16 @@ fi
 
 if command -v docker &>/dev/null; then
     ui_log_info "Docker is already installed."
-    # Ensure user is in group
-    if ! groups $USER | grep -q "\bdocker\b"; then
-        ui_log_info "Adding $USER to docker group..."
-        sudo usermod -aG docker $USER
+    # Ensure user is in group (only if docker group exists - not in WSL with Docker Desktop)
+    if getent group docker &>/dev/null; then
+        if ! groups $USER | grep -q "\bdocker\b"; then
+            ui_log_info "Adding $USER to docker group..."
+            sudo usermod -aG docker $USER
+        fi
+    else
+        ui_log_info "Docker group does not exist (possibly using Docker Desktop in WSL)"
     fi
+    ui_log_success "Docker is ready."
     exit 0
 fi
 
@@ -69,8 +74,10 @@ while ! sudo docker ps &>/dev/null; do
 done
 echo ""
 
-# Add current user to docker group
-ui_log_info "Adding $USER to docker group..."
-sudo usermod -aG docker $USER
+# Add current user to docker group (if group exists)
+if getent group docker &>/dev/null; then
+    ui_log_info "Adding $USER to docker group..."
+    sudo usermod -aG docker $USER
+fi
 
 ui_log_success "Docker installation complete and daemon is ready."

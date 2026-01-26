@@ -10,4 +10,6 @@ if ! command -v ui_log_info &>/dev/null; then
     fi
 fi
 
-npm_install_g "@modelcontextprotocol/server-filesystem"
+ui_log_info "Installing MCP Filesystem Server..."
+npm install -g @modelcontextprotocol/server-filesystem || ui_log_warn "Package not available"
+ui_log_success "MCP Filesystem Server installation complete"

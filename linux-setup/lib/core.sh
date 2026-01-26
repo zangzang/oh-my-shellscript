@@ -11,7 +11,10 @@ ensure_utils() {
     command -v jq >/dev/null || needed+=("jq")
     command -v fzf >/dev/null || needed+=("fzf")
     command -v gum >/dev/null || needed+=("gum")
-    command -v awk >/dev/null || needed+=("gawk")
+    # Check for awk (gawk or mawk)
+    if ! command -v awk >/dev/null && ! command -v gawk >/dev/null; then
+        needed+=("gawk")
+    fi
 
     if [ ${#needed[@]} -gt 0 ]; then
         ui_log_info "Installing essential utilities: ${needed[*]}"
@@ -19,7 +22,7 @@ ensure_utils() {
         if [ "$OS_ID" == "ubuntu" ] || [ "$OS_ID" == "debian" ] || [ "$OS_ID" == "pop" ] || [ "$OS_ID" == "linuxmint" ]; then
             sudo mkdir -p /etc/apt/keyrings
             if [ ! -f /etc/apt/keyrings/charm.gpg ]; then
-                curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
+                curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg --batch --yes
             fi
             if [ ! -f /etc/apt/sources.list.d/charm.list ]; then
                 echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list > /dev/null
@@ -40,7 +43,7 @@ gpgkey=https://repo.charm.sh/yum/gpg.key' | sudo tee /etc/yum.repos.d/charm.repo
         else
             echo "Auto-installation not supported for OS: $OS_ID"
             echo "Please manually install: ${needed[*]}"
-            exit 1
+            return 1
         fi
         
         # Update gum status
