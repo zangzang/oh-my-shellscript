@@ -90,7 +90,7 @@ if (-not (Test-Path $corePath)) {
         }
     }
     exit 1
-}}
+}
 
 Import-Module $corePath -Global
 Import-Module $uiPath -Global
