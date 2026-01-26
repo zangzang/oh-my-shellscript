@@ -39,26 +39,42 @@ param(
 $ErrorActionPreference = "Stop"
 $InformationPreference = "Continue"
 
-# 스크립트 디렉토리 설정
-$scriptDir = $PSScriptRoot
-if (-not $scriptDir -or $scriptDir -eq "") {
-    $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
-}
-if (-not $scriptDir -or $scriptDir -eq "") {
-    $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-}
-if (-not $scriptDir -or $scriptDir -eq "") {
-    $scriptDir = Get-Location
+# 스크립트 디렉토리 설정 - 더 견고한 방식
+$scriptDir = ""
+
+# 1. PSScriptRoot 시도 (가장 안정적)
+if ($PSScriptRoot) {
+    $scriptDir = $PSScriptRoot
 }
 
-# 절대 경로로 변환
-$scriptDir = Resolve-Path -LiteralPath $scriptDir -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Path
+# 2. MyCommand.Definition 시도
+if (-not $scriptDir -and $MyInvocation.MyCommand.Definition) {
+    $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
+}
+
+# 3. MyCommand.Path 시도
+if (-not $scriptDir -and $MyInvocation.MyCommand.Path) {
+    $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+}
+
+# 4. 마지막 수단: 현재 위치
+if (-not $scriptDir) {
+    $scriptDir = (Get-Location).Path
+}
+
+# 경로 검증 및 정규화
+if ($scriptDir) {
+    $scriptDir = $scriptDir.Trim()
+    # 슬래시 정규화
+    $scriptDir = $scriptDir -replace '\\+', '\'
+}
+
 if (-not $scriptDir) {
     Write-Error "스크립트 디렉토리를 결정할 수 없습니다"
     exit 1
 }
 
-# 라이브러리 로드
+# 라이브러리 경로 구성
 $libPath = Join-Path $scriptDir "lib"
 $corePath = Join-Path $libPath "core.psm1"
 $uiPath = Join-Path $libPath "ui.psm1"
@@ -67,8 +83,13 @@ $installerPath = Join-Path $libPath "installer.psm1"
 # 디버그 정보
 Write-Host "스크립트 위치: $scriptDir" -ForegroundColor DarkGray
 Write-Host "라이브러리 경로: $libPath" -ForegroundColor DarkGray
+Write-Host "Core 파일: $corePath" -ForegroundColor DarkGray
 
-if (-not (Test-Path $corePath)) {
+# 파일 존재 여부 확인
+$coreExists = [System.IO.File]::Exists($corePath)
+Write-Host "Core.psm1 존재: $coreExists" -ForegroundColor DarkGray
+
+if (-not $coreExists) {
     Write-Error "필수 라이브러리를 찾을 수 없습니다: $corePath"
     Write-Host ""
     Write-Host "디버그 정보:" -ForegroundColor Yellow
@@ -78,15 +99,32 @@ if (-not (Test-Path $corePath)) {
     Write-Host "  Current Location: $(Get-Location)"
     Write-Host ""
     
-    if (Test-Path $libPath) {
+    # lib 폴더 확인
+    $libDirExists = [System.IO.Directory]::Exists($libPath)
+    if ($libDirExists) {
         Write-Host "라이브러리 디렉토리 내용:" -ForegroundColor Yellow
-        Get-ChildItem $libPath | ForEach-Object { Write-Host "  - $($_.Name)" }
+        $files = [System.IO.Directory]::GetFiles($libPath)
+        foreach ($file in $files) {
+            $fileName = [System.IO.Path]::GetFileName($file)
+            Write-Host "  - $fileName"
+        }
     } else {
-        Write-Host "라이브러리 디렉토리 자체가 없습니다: $libPath" -ForegroundColor Red
-        if (Test-Path $scriptDir) {
+        Write-Host "라이브러리 디렉토리가 없습니다: $libPath" -ForegroundColor Red
+        # scriptDir 내용 확인
+        $scriptDirExists = [System.IO.Directory]::Exists($scriptDir)
+        if ($scriptDirExists) {
             Write-Host ""
             Write-Host "스크립트 디렉토리 내용:" -ForegroundColor Yellow
-            Get-ChildItem $scriptDir | ForEach-Object { Write-Host "  - $($_.Name)" }
+            $dirs = [System.IO.Directory]::GetDirectories($scriptDir)
+            foreach ($dir in $dirs) {
+                $dirName = [System.IO.Path]::GetFileName($dir)
+                Write-Host "  [DIR] $dirName"
+            }
+            $files = [System.IO.Directory]::GetFiles($scriptDir)
+            foreach ($file in $files) {
+                $fileName = [System.IO.Path]::GetFileName($file)
+                Write-Host "  [FILE] $fileName"
+            }
         }
     }
     exit 1
