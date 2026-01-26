@@ -40,9 +40,22 @@ $ErrorActionPreference = "Stop"
 $InformationPreference = "Continue"
 
 # 스크립트 디렉토리 설정
-$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
-if (-not $scriptDir) {
+$scriptDir = $PSScriptRoot
+if (-not $scriptDir -or $scriptDir -eq "") {
+    $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
+}
+if (-not $scriptDir -or $scriptDir -eq "") {
+    $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+}
+if (-not $scriptDir -or $scriptDir -eq "") {
     $scriptDir = Get-Location
+}
+
+# 절대 경로로 변환
+$scriptDir = Resolve-Path -LiteralPath $scriptDir -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Path
+if (-not $scriptDir) {
+    Write-Error "스크립트 디렉토리를 결정할 수 없습니다"
+    exit 1
 }
 
 # 라이브러리 로드
@@ -51,10 +64,33 @@ $corePath = Join-Path $libPath "core.psm1"
 $uiPath = Join-Path $libPath "ui.psm1"
 $installerPath = Join-Path $libPath "installer.psm1"
 
+# 디버그 정보
+Write-Host "스크립트 위치: $scriptDir" -ForegroundColor DarkGray
+Write-Host "라이브러리 경로: $libPath" -ForegroundColor DarkGray
+
 if (-not (Test-Path $corePath)) {
     Write-Error "필수 라이브러리를 찾을 수 없습니다: $corePath"
+    Write-Host ""
+    Write-Host "디버그 정보:" -ForegroundColor Yellow
+    Write-Host "  PSScriptRoot: $PSScriptRoot"
+    Write-Host "  MyCommand.Definition: $($MyInvocation.MyCommand.Definition)"
+    Write-Host "  MyCommand.Path: $($MyInvocation.MyCommand.Path)"
+    Write-Host "  Current Location: $(Get-Location)"
+    Write-Host ""
+    
+    if (Test-Path $libPath) {
+        Write-Host "라이브러리 디렉토리 내용:" -ForegroundColor Yellow
+        Get-ChildItem $libPath | ForEach-Object { Write-Host "  - $($_.Name)" }
+    } else {
+        Write-Host "라이브러리 디렉토리 자체가 없습니다: $libPath" -ForegroundColor Red
+        if (Test-Path $scriptDir) {
+            Write-Host ""
+            Write-Host "스크립트 디렉토리 내용:" -ForegroundColor Yellow
+            Get-ChildItem $scriptDir | ForEach-Object { Write-Host "  - $($_.Name)" }
+        }
+    }
     exit 1
-}
+}}
 
 Import-Module $corePath -Global
 Import-Module $uiPath -Global
