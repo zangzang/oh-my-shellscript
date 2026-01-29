@@ -3,7 +3,7 @@
   "name": "zoxide",
   "category": "tools",
   "description": "더 똑똑한 디렉토리 이동 도구 (cd 대체)",
-  "requires": ["system.winget"],
+  "requires": ["system.winget", "tools.shell-config"],
   "installMethod": "winget",
   "wingetId": "ajeetdsouza.zoxide"
 }
