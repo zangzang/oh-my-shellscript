@@ -1,0 +1,11 @@
+{
+  "name": "Playwright",
+  "description": "Microsoft Playwright CLI and Browsers",
+  "category": "dev-tools",
+  "dependencies": [
+    "dotnet"
+  ],
+  "configuration": {
+    "BROWSERS_PATH": "C:\\Shared\\PlaywrightBrowsers"
+  }
+}
