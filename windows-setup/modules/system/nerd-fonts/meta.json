@@ -1,0 +1,9 @@
+{
+  "id": "system.nerd-fonts",
+  "name": "Nerd Fonts",
+  "category": "system",
+  "description": "개발용 Nerd Fonts 설치 (Cascadia Code)",
+  "requires": ["system.winget"],
+  "installMethod": "winget",
+  "wingetId": "Microsoft.CascadiaCode"
+}

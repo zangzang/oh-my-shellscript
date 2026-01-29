@@ -1,0 +1,8 @@
+{
+  "id": "tools.terminal-icons",
+  "name": "Terminal Icons",
+  "category": "tools",
+  "description": "PowerShell 터미널에 아이콘을 추가합니다 (ls, dir 등)",
+  "requires": [],
+  "installMethod": "psmodule"
+}

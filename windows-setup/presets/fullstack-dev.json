@@ -1,8 +1,9 @@
 {
   "name": "풀스택 개발자 설정",
-  "description": "모든 개발 도구 설치",
+  "description": "모든 개발 도구 및 터미널 환경 설치",
   "modules": [
     { "id": "system.winget" },
+    { "id": "system.nerd-fonts" },
     { "id": "dev.git" },
     { "id": "dev.vscode" },
     { "id": "dev.nodejs" },
@@ -17,6 +18,9 @@
     { "id": "tools.terminal" },
     { "id": "tools.powershell" },
     { "id": "tools.oh-my-posh" },
-    { "id": "tools.gsudo" }
+    { "id": "tools.terminal-icons" },
+    { "id": "tools.zoxide" },
+    { "id": "tools.gsudo" },
+    { "id": "tools.shell-config" }
   ]
 }

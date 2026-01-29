@@ -21,6 +21,10 @@ function Test-DryRun {
     return $Script:IsDryRun
 }
 
+function Test-DryRunMode {
+    return Test-DryRun
+}
+
 function Write-DryRun {
     <#
     .SYNOPSIS
@@ -29,6 +33,40 @@ function Write-DryRun {
     param([string]$Message)
     
     Write-Host "🔍 [DRY RUN] $Message" -ForegroundColor Magenta
+}
+
+# ============================================================================
+# 로깅 함수
+# ============================================================================
+
+function Write-LogInfo {
+    param([string]$Message)
+    Write-Host "INFO: $Message" -ForegroundColor Cyan
+}
+
+function Write-LogSuccess {
+    param([string]$Message)
+    Write-Host "SUCCESS: $Message" -ForegroundColor Green
+}
+
+function Write-LogWarn {
+    param([string]$Message)
+    Write-Host "WARN: $Message" -ForegroundColor Yellow
+}
+
+function Write-LogError {
+    param([string]$Message)
+    Write-Host "ERROR: $Message" -ForegroundColor Red
+}
+
+function Write-Section {
+    param([string]$Message)
+    $line = "=" * 60
+    Write-Host ""
+    Write-Host $line -ForegroundColor Cyan
+    Write-Host " $Message" -ForegroundColor Cyan
+    Write-Host $line -ForegroundColor Cyan
+    Write-Host ""
 }
 
 # ============================================================================
@@ -508,5 +546,11 @@ Export-ModuleMember -Function @(
     'Get-DevDriveConfig',
     'Set-DryRunMode',
     'Test-DryRun',
-    'Write-DryRun'
+    'Test-DryRunMode',
+    'Write-DryRun',
+    'Write-LogInfo',
+    'Write-LogSuccess',
+    'Write-LogWarn',
+    'Write-LogError',
+    'Write-Section'
 )

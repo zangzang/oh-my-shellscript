@@ -1,0 +1,8 @@
+{
+  "id": "tools.shell-config",
+  "name": "Shell Configuration",
+  "category": "tools",
+  "description": "PowerShell 프로필($PROFILE) 설정 (Oh My Posh, Terminal-Icons 등)",
+  "requires": ["tools.powershell", "tools.oh-my-posh", "tools.terminal-icons", "tools.zoxide"],
+  "installMethod": "custom"
+}

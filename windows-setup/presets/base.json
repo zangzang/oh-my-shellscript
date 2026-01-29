@@ -1,10 +1,16 @@
 {
   "name": "기본 설정 (Base)",
-  "description": "필수 도구만 설치",
+  "description": "필수 도구 및 터미널 환경 설정",
   "modules": [
     { "id": "system.winget" },
+    { "id": "system.nerd-fonts" },
     { "id": "dev.git" },
     { "id": "tools.terminal" },
-    { "id": "tools.powershell" }
+    { "id": "tools.powershell" },
+    { "id": "tools.oh-my-posh" },
+    { "id": "tools.terminal-icons" },
+    { "id": "tools.zoxide" },
+    { "id": "tools.gsudo" },
+    { "id": "tools.shell-config" }
   ]
 }

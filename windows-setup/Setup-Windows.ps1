@@ -28,7 +28,6 @@ Git, VSCode, Node.js, Python, Java, .NET, Docker 등
 #>
 
 #Requires -Version 7.0
-#Requires -RunAsAdministrator
 
 param(
     [string]$Preset,
@@ -38,6 +37,9 @@ param(
 
 $ErrorActionPreference = "Stop"
 $InformationPreference = "Continue"
+
+# 인코딩 설정
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 # 스크립트 디렉토리 설정 - $PSCommandPath 사용 (PowerShell 7+에서 가장 안정적)
 $scriptPath = $PSCommandPath
@@ -56,83 +58,31 @@ if ($scriptPath -and [System.IO.File]::Exists($scriptPath)) {
     $scriptDir = (Get-Location).Path
 }
 
-# 라이브러리 경로 구성
-$libPath = [System.IO.Path]::Combine($scriptDir, "lib")
-$corePath = [System.IO.Path]::Combine($libPath, "core.psm1")
-$uiPath = [System.IO.Path]::Combine($libPath, "ui.psm1")
-$installerPath = [System.IO.Path]::Combine($libPath, "installer.psm1")
+# 모듈 경로 구성
+$modulesDir = [System.IO.Path]::Combine($scriptDir, "modules")
+$commonPath = [System.IO.Path]::Combine($modulesDir, "Common.psm1")
+$installerPath = [System.IO.Path]::Combine($modulesDir, "Installer.psm1")
 
 # 디버그 정보
 Write-Host "스크립트 파일: $scriptPath" -ForegroundColor DarkGray
 Write-Host "스크립트 위치: $scriptDir" -ForegroundColor DarkGray
-Write-Host "Core 파일 경로: $corePath" -ForegroundColor DarkGray
+Write-Host "모듈 위치: $modulesDir" -ForegroundColor DarkGray
 
 # 파일 존재 여부 확인
-$coreExists = [System.IO.File]::Exists($corePath)
-Write-Host "Core.psm1 존재: $coreExists" -ForegroundColor DarkGray
-
-if (-not $coreExists) {
-    Write-Host ""
-    Write-Host "========== 오류: 필수 라이브러리를 찾을 수 없습니다 ==========" -ForegroundColor Red
-    Write-Host "예상 경로: $corePath" -ForegroundColor Red
-    Write-Host ""
-    Write-Host "디버그 정보:" -ForegroundColor Yellow
-    Write-Host "  PSCommandPath: '$PSCommandPath'"
-    Write-Host "  PSScriptRoot: '$PSScriptRoot'"
-    Write-Host "  MyCommand.Definition: '$($MyInvocation.MyCommand.Definition)'"
-    Write-Host "  MyCommand.Path: '$($MyInvocation.MyCommand.Path)'"
-    Write-Host "  Current Location: '$(Get-Location)'"
-    Write-Host "  최종 scriptPath: '$scriptPath'"
-    Write-Host "  최종 scriptDir: '$scriptDir'"
-    Write-Host ""
-    
-    # lib 폴더 확인
-    $libDirExists = [System.IO.Directory]::Exists($libPath)
-    Write-Host "lib 폴더 존재: $libDirExists" -ForegroundColor Yellow
-    
-    if ($libDirExists) {
-        Write-Host "라이브러리 디렉토리 내용:" -ForegroundColor Yellow
-        $files = [System.IO.Directory]::GetFiles($libPath)
-        foreach ($file in $files) {
-            $fileName = [System.IO.Path]::GetFileName($file)
-            Write-Host "  - $fileName"
-        }
-    } else {
-        Write-Host "라이브러리 디렉토리가 없습니다: $libPath" -ForegroundColor Red
-        $scriptDirExists = [System.IO.Directory]::Exists($scriptDir)
-        Write-Host "스크립트 디렉토리 존재: $scriptDirExists" -ForegroundColor Yellow
-        
-        if ($scriptDirExists) {
-            Write-Host ""
-            Write-Host "스크립트 디렉토리 내용:" -ForegroundColor Yellow
-            $dirs = [System.IO.Directory]::GetDirectories($scriptDir)
-            foreach ($dir in $dirs) {
-                $dirName = [System.IO.Path]::GetFileName($dir)
-                Write-Host "  [DIR] $dirName"
-            }
-            $files = [System.IO.Directory]::GetFiles($scriptDir)
-            foreach ($file in $files) {
-                $fileName = [System.IO.Path]::GetFileName($file)
-                Write-Host "  [FILE] $fileName"
-            }
-        }
-    }
-    
-    Write-Host ""
-    Write-Host "해결 방법: windows-setup 폴더에서 직접 실행하세요:" -ForegroundColor Cyan
-    Write-Host "  cd D:\ws\zangzang\my-shell-script\windows-setup" -ForegroundColor Cyan
-    Write-Host "  .\Setup-Windows.ps1" -ForegroundColor Cyan
-    
+if (-not (Test-Path $commonPath)) {
+    Write-Host "필수 모듈을 찾을 수 없습니다: $commonPath" -ForegroundColor Red
     exit 1
 }
 
-Import-Module $corePath -Global
-Import-Module $uiPath -Global
-Import-Module $installerPath -Global
+Import-Module $commonPath -Global -Force
+Import-Module $installerPath -Global -Force
 
 # Dry Run 모드 설정
 if ($DryRun) {
-    Set-DryRunMode -Enabled
+    Set-DryRunMode -Enabled $true
+} elseif (-not (Test-Administrator)) {
+    Write-LogError "관리자 권한이 필요합니다. PowerShell을 관리자 권한으로 실행하세요."
+    exit 1
 }
 
 function Get-ModuleMetadata {
@@ -229,13 +179,13 @@ function Install-Modules {
 }
 
 function Show-MainMenu {
-    Show-Banner
+    Show-Banner -Title "Windows Setup"
     
     Write-Host ""
     Write-LogInfo "설치 옵션을 선택하세요:"
     Write-Host ""
     
-    $choice = Show-Menu @(
+    $choice = Show-Menu -Title "메인 메뉴" -Options @(
         "인터랙티브 모듈 선택",
         "프리셋 선택",
         "종료"
