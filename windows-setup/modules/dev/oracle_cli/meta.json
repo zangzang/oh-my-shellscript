@@ -1,0 +1,19 @@
+{
+  "id": "dev.oracle_cli",
+  "name": "Oracle InstantClient",
+  "category": "dev",
+  "description": "Oracle InstantClient for Windows - Basic + SQL*Plus",
+  "app_folder_name": "oic",
+  "requires": [],
+  "installMethod": "direct",
+  "variants": {
+    "23.6": {
+      "basic_url": "https://download.oracle.com/otn_software/nt/instantclient/2326000/instantclient-basic-windows.x64-23.26.0.0.0.zip",
+      "sqlplus_url": "https://download.oracle.com/otn_software/nt/instantclient/2326000/instantclient-sqlplus-windows.x64-23.26.0.0.0.zip"
+    },
+    "21.13": {
+      "basic_url": "https://download.oracle.com/otn_software/nt/instantclient/2113000/instantclient-basic-windows.x64-21.13.0.0.0.zip",
+      "sqlplus_url": "https://download.oracle.com/otn_software/nt/instantclient/2113000/instantclient-sqlplus-windows.x64-21.13.0.0.0.zip"
+    }
+  }
+}

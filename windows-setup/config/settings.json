@@ -7,6 +7,16 @@
     "autoBackup": true,
     "moduleDependencies": true
   },
-  "defaultInstallMethods": ["winget", "choco", "direct"],
-  "logLevel": "info"
+  "defaultInstallMethods": [
+    "winget",
+    "choco",
+    "direct"
+  ],
+  "logLevel": "info",
+  "installPaths": {
+    "dev": "d:/app/dev",
+    "gui": "d:/app/gui",
+    "system": "C:/Program Files",
+    "tools": "d:/app/tools"
+  }
 }

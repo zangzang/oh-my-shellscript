@@ -95,4 +95,4 @@ echo ""
 
 # Execute setup assistant directly
 cd "$SCRIPT_DIR"
-exec python3 setup.py "$@"
+cd .. && exec python3 linux-setup.py "$@"

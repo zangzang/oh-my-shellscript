@@ -1,42 +1,113 @@
 # My Shell Script
 
-Automated environment setup scripts for Linux and Windows.
+Automated development environment setup system for Linux and Windows.
 
-To install **Oh My Shell Script**, run the following command in your terminal:
+## 🚀 Quick Start
 
+### Linux
 ```bash
-curl -fsSL https://raw.githubusercontent.com/zangzang/oh-my-shellscript/main/install.sh | bash
+# Clone repository
+git clone https://github.com/zangzang/my-shell-script.git
+cd my-shell-script
+
+# Run setup
+./setup-linux.sh
+
+# With preset
+./setup-linux.sh --preset fullstack-dev --execute
+
+# Or use Python directly
+python3 linux-setup.py --preset java-dev --dry-run
 ```
 
-### Manual Installation (Without Git)
+### Windows
+```powershell
+# Clone repository
+git clone https://github.com/zangzang/my-shell-script.git
+cd my-shell-script
 
-If you don't have `git` installed yet, you can download and run the installer directly:
+# Run setup (PowerShell launcher)
+.\setup-windows.ps1
 
-1. Download the installer:
-   ```bash
-   curl -O https://raw.githubusercontent.com/zangzang/oh-my-shellscript/main/install.sh
-   # or using wget
-   # wget https://raw.githubusercontent.com/zangzang/oh-my-shellscript/main/install.sh
-   ```
-2. Run the installer:
-   ```bash
-   chmod +x install.sh
-   ./install.sh
-   ```
-3. Once the installation is complete, you can run the setup assistant from anywhere:
-   ```bash
-   omss
-   ```
+# With preset
+.\setup-windows.ps1 -Preset fullstack-dev -Execute
 
-## 🐧 Supported Linux Distros
+# Or use Python directly
+python windows-setup.py --preset node-dev --dry-run
+```
 
-- **Debian/Ubuntu Based**: Ubuntu, Debian, Pop!_OS, Linux Mint, etc.
-- **Fedora**: Fedora 39, 40, 41.
-- *Note: Other distributions will show a compatibility error message upon execution.*
+## 🐧 Supported Platforms
+
+### Linux
+- **Debian/Ubuntu Based**: Ubuntu, Debian, Pop!_OS, Linux Mint
+- **Fedora**: Fedora 39, 40, 41
+- **Arch** (partial support)
+
+### Windows
+- **Windows 11** or later
+- **PowerShell 7.0+** recommended
 
 ## 📂 Project Structure
 
-- **linux-setup/**: Python-based TUI setup assistant for Linux.
-- **windows-setup/**: (Planned) Setup scripts for Windows.
-- **bash/**: (Planned) Useful bash aliases and utilities.
-- **pwsh/**: (Planned) PowerShell scripts.
+```
+.
+├── setup-linux.sh          # Linux entry point (shell)
+├── setup-windows.ps1       # Windows entry point (PowerShell)
+├── linux-setup.py          # Linux setup launcher
+├── windows-setup.py        # Windows setup launcher
+├── linux-setup/            # Linux setup system
+│   ├── setup.py           # Main TUI application
+│   ├── modules/           # Installation modules
+│   ├── presets/           # Preset configurations
+│   └── config/            # Settings and categories
+└── windows-setup/          # Windows setup system
+    ├── modules/           # Installation modules
+    ├── presets/           # Preset configurations
+    ├── config/            # Settings
+    └── core/              # Core libraries
+```
+
+## 📖 Usage Examples
+
+### Interactive TUI Mode
+```bash
+# Linux
+./setup-linux.sh
+
+# Windows
+.\setup-windows.ps1
+```
+
+### Preset Installation
+```bash
+# Linux
+python3 linux-setup.py --preset fullstack-dev --execute
+
+# Windows
+python windows-setup.py --preset dotnet-dev --execute
+```
+
+### Module Selection
+```bash
+# Linux
+python3 linux-setup.py --modules dev.docker,dev.nodejs --execute
+
+# Windows
+python windows-setup.py --modules dev.git,dev.vscode --dry-run
+```
+
+## 🎯 Available Presets
+
+### Linux
+- `base` - Essential system tools
+- `java-dev` - Java development environment
+- `node-dev` - Node.js development
+- `python-dev` - Python development
+- `fullstack-dev` - Complete development stack
+
+### Windows
+- `base` - Essential development tools
+- `dotnet-dev` - .NET development
+- `java-dev` - Java development
+- `node-dev` - Node.js development
+- `fullstack-dev` - Complete development stack
