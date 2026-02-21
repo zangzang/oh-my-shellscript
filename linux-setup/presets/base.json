@@ -12,7 +12,6 @@
     { "id": "system.zsh" },
     { "id": "system.nerd-fonts" },
     { "id": "system.oh-my-posh" },
-    { "id": "system.shell-config" },
     { "id": "system.ssh-server" }
   ]
 }

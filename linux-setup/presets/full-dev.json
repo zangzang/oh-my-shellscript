@@ -11,7 +11,6 @@
     { "id": "system.zsh" },
     { "id": "system.nerd-fonts" },
     { "id": "system.oh-my-posh" },
-    { "id": "system.shell-config" },
     { "id": "system.ssh-server" },
     { "id": "dev.docker" },
     { "id": "dev.docker-stack", "params": { "version": "all", "selected": false } },
