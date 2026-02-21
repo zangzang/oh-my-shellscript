@@ -1,7 +1,7 @@
 {
   "id": "system.cli-tools",
-  "name": "CLI Utilities",
-  "description": "Useful CLI tools (btop, fzf, ripgrep, etc.)",
+  "name": "CLI Utilities & Configuration",
+  "description": "Essential CLI tools (fzf, ripgrep, eza, etc.), FZF setup, and PATH/alias configuration",
   "category": "system",
   "requires": ["system.build-tools"]
 }

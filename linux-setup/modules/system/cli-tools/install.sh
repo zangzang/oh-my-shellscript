@@ -69,6 +69,17 @@ if command -v fzf &>/dev/null; then
 # =============================================================================
 
 if command -v fzf &> /dev/null; then
+    # FZF keybindings 로드 (여러 경로 시도)
+    if [ -f ~/.fzf.bash ]; then
+        source ~/.fzf.bash
+    elif [ -f /usr/share/doc/fzf/examples/key-bindings.bash ]; then
+        source /usr/share/doc/fzf/examples/key-bindings.bash
+    elif [ -f /usr/share/fzf/shell/key-bindings.bash ]; then
+        source /usr/share/fzf/shell/key-bindings.bash
+    else
+        eval "$(fzf --bash)"
+    fi
+    
     # FZF 색상 및 레이아웃
     export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
     
@@ -95,9 +106,16 @@ BASHRC_FZF
 # =============================================================================
 
 if command -v fzf &> /dev/null; then
-    # FZF 기본 설정 파일 로드
-    [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && source /usr/share/doc/fzf/examples/key-bindings.zsh
-    [ -f /usr/share/doc/fzf/examples/completion.zsh ] && source /usr/share/doc/fzf/examples/completion.zsh
+    # FZF keybindings 로드 (여러 경로 시도)
+    if [ -f ~/.fzf.zsh ]; then
+        source ~/.fzf.zsh
+    elif [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]; then
+        source /usr/share/doc/fzf/examples/key-bindings.zsh
+    elif [ -f /usr/share/fzf/shell/key-bindings.zsh ]; then
+        source /usr/share/fzf/shell/key-bindings.zsh
+    else
+        eval "$(fzf --zsh)"
+    fi
     
     # FZF 색상 및 레이아웃
     export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
@@ -114,5 +132,67 @@ fi
 ZSHRC_FZF
             ui_log_success ".zshrc FZF configured"
         fi
+    fi
+fi
+
+# Configure PATH and Aliases in .bashrc
+if [ -f "$HOME/.bashrc" ]; then
+    if ! grep -q "CLI Tools - PATH and Aliases" "$HOME/.bashrc"; then
+        cat <<'BASHRC_ALIASES' >> ~/.bashrc
+
+# =============================================================================
+# CLI Tools - PATH and Aliases
+# =============================================================================
+
+# --- PATH ---
+export PATH=$HOME/.local/bin:/usr/local/bin:$PATH
+
+# --- Basic Aliases ---
+alias ll='ls -lah'
+alias update='sudo apt update && sudo apt upgrade -y'
+
+# --- Modern CLI alternatives (if installed) ---
+command -v batcat &> /dev/null && alias cat='batcat'
+command -v fdfind &> /dev/null && alias fd='fdfind'
+command -v rg &> /dev/null && alias grep='rg'
+command -v eza &> /dev/null && {
+    alias ls='eza --icons'
+    alias la='eza -la --icons'
+    alias lt='eza --tree --level=2 --icons'
+}
+command -v ncdu &> /dev/null && alias du='ncdu'
+BASHRC_ALIASES
+        ui_log_success ".bashrc PATH and aliases configured"
+    fi
+fi
+
+# Configure PATH and Aliases in .zshrc
+if [ -f "$HOME/.zshrc" ]; then
+    if ! grep -q "CLI Tools - PATH and Aliases" "$HOME/.zshrc"; then
+        cat <<'ZSHRC_ALIASES' >> ~/.zshrc
+
+# =============================================================================
+# CLI Tools - PATH and Aliases
+# =============================================================================
+
+# --- PATH ---
+export PATH=$HOME/.local/bin:/usr/local/bin:$PATH
+
+# --- Basic Aliases ---
+alias ll='ls -lah'
+alias update='sudo apt update && sudo apt upgrade -y'
+
+# --- Modern CLI alternatives (if installed) ---
+command -v batcat &> /dev/null && alias cat='batcat'
+command -v fdfind &> /dev/null && alias fd='fdfind'
+command -v rg &> /dev/null && alias grep='rg'
+command -v eza &> /dev/null && {
+    alias ls='eza --icons'
+    alias la='eza -la --icons'
+    alias lt='eza --tree --level=2 --icons'
+}
+command -v ncdu &> /dev/null && alias du='ncdu'
+ZSHRC_ALIASES
+        ui_log_success ".zshrc PATH and aliases configured"
     fi
 fi
