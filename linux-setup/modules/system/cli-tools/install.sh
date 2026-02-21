@@ -206,9 +206,42 @@ if [ -f "$HOME/.zshrc" ]; then
 # Zsh SHARE_HISTORY (Essential for FZF CTRL+R after SSH reconnect)
 # =============================================================================
 
+# History file settings (must be before setopt)
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+
+setopt EXTENDED_HISTORY      # Add timestamps
 setopt SHARE_HISTORY         # Share history between sessions
 setopt INC_APPEND_HISTORY    # Append to history immediately
+setopt HIST_IGNORE_ALL_DUPS  # Remove duplicates
 ZSHRC_HISTORY
         ui_log_success ".zshrc SHARE_HISTORY configured"
+    fi
+fi
+
+# Re-load FZF keybindings AFTER oh-my-posh init (because oh-my-posh resets keybindings)
+if [ -f "$HOME/.zshrc" ]; then
+    if ! grep -q "FZF Keybindings.*After.*Oh My Posh" "$HOME/.zshrc"; then
+        cat <<'ZSHRC_FZF_POST' >> ~/.zshrc
+
+# =============================================================================
+# FZF Keybindings (loaded AFTER Oh My Posh to maintain keybindings)
+# =============================================================================
+
+if command -v fzf &> /dev/null; then
+    # Load FZF keybindings (oh-my-posh might have reset them)
+    if [ -f ~/.fzf.zsh ]; then
+        source ~/.fzf.zsh
+    elif [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]; then
+        source /usr/share/doc/fzf/examples/key-bindings.zsh
+    elif [ -f /usr/share/fzf/shell/key-bindings.zsh ]; then
+        source /usr/share/fzf/shell/key-bindings.zsh
+    else
+        eval "$(fzf --zsh)"
+    fi
+fi
+ZSHRC_FZF_POST
+        ui_log_success ".zshrc FZF keybindings re-loaded after oh-my-posh"
     fi
 fi
