@@ -48,8 +48,8 @@ if [ -f "$HOME/.bashrc" ]; then
 # =============================================================================
 
 if command -v oh-my-posh &> /dev/null; then
-    if [ -f "$HOME/.config/oh-my-posh/catppuccin_mocha.omp.json" ]; then
-        eval "$(oh-my-posh init bash --config $HOME/.config/oh-my-posh/catppuccin_mocha.omp.json)"
+    if [ -f "$HOME/.config/oh-my-posh/selected.omp.json" ]; then
+        eval "$(oh-my-posh init bash --config $HOME/.config/oh-my-posh/selected.omp.json)"
     fi
 fi
 BASHRC_OMP
