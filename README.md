@@ -4,7 +4,18 @@ Automated development environment setup system for Linux and Windows.
 
 ## 🚀 Quick Start
 
-### Linux
+### Linux - From Release (Recommended)
+```bash
+# Download and extract the latest release
+curl -fsSL https://github.com/zangzang/my-shell-script/releases/download/latest/oh-my-shellscript-linux.tar.gz -o oh-my-shellscript.tar.gz && tar -xzf oh-my-shellscript.tar.gz && cd oh-my-shellscript && ./omss.sh
+
+# Or with a specific version
+REPO="zangzang/my-shell-script"
+VERSION="v1.0.0"  # Replace with desired version
+curl -fsSL https://github.com/$REPO/releases/download/$VERSION/oh-my-shellscript-linux.tar.gz -o oh-my-shellscript.tar.gz && tar -xzf oh-my-shellscript.tar.gz && cd oh-my-shellscript && ./omss.sh
+```
+
+### Linux - From Source (Development)
 ```bash
 # Clone repository
 git clone https://github.com/zangzang/my-shell-script.git
