@@ -1,0 +1,57 @@
+name: Release Linux Setup
+
+on:
+  push:
+    tags:
+      - "v*" # v1.0.0 같은 태그가 푸시되면 실행
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          cache-dependency-path: linux-setup/omss/go.sum
+
+      - name: Build Binary
+        working-directory: linux-setup/omss
+        run: |
+          go mod tidy
+          # 바이너리 이름을 omss로 빌드
+          go build -o omss ./cmd/setup
+
+      - name: Prepare Release Bundle
+        run: |
+          # 릴리즈용 디렉토리 생성
+          mkdir -p dist/linux-setup
+          
+          # 1. 빌드된 바이너리 복사
+          cp linux-setup/omss/omss dist/linux-setup/
+          
+          # 2. 런타임 의존성 폴더 복사 (Go 코드가 상대 경로로 참조함)
+          cp -r linux-setup/modules dist/linux-setup/
+          cp -r linux-setup/presets dist/linux-setup/
+          cp -r linux-setup/lib dist/linux-setup/
+          
+          # 3. 래퍼 스크립트 복사 (선택 사항)
+          cp linux-setup/omss/omss.sh dist/linux-setup/
+
+      - name: Create Archive
+        run: |
+          cd dist
+          tar -czvf linux-setup.tar.gz linux-setup
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/linux-setup.tar.gz
+          draft: false
+          prerelease: false
