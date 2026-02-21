@@ -43,3 +43,33 @@ else
 fi
 
 ui_log_success "Fastfetch installation complete."
+
+# Configure .bashrc (optional - can add fastfetch to .bashrc for non-login shells)
+if [ -f "$HOME/.bashrc" ]; then
+    # Don't auto-run in .bashrc as it can be verbose
+    if ! grep -q "Fastfetch" "$HOME/.bashrc"; then
+        cat <<'BASHRC_FASTFETCH' >> ~/.bashrc
+
+# Fastfetch - system info display (commented out to avoid spam in non-login shells)
+# Uncomment if you want to see system info on every bash shell
+# if command -v fastfetch &> /dev/null; then
+#     fastfetch
+# fi
+BASHRC_FASTFETCH
+        ui_log_success ".bashrc comment added"
+    fi
+fi
+
+# Configure .zshrc - auto-run on login
+if [ -f "$HOME/.zshrc" ]; then
+    if ! grep -q "Fastfetch" "$HOME/.zshrc"; then
+        cat <<'ZSHRC_FASTFETCH' >> ~/.zshrc
+
+# Fastfetch - system info display
+if command -v fastfetch &> /dev/null; then
+    fastfetch
+fi
+ZSHRC_FASTFETCH
+        ui_log_success ".zshrc configured for auto-run"
+    fi
+fi

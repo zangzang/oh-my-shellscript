@@ -139,8 +139,40 @@ pyenv global "$LATEST_VERSION"
 # Final Verification
 if command -v python3 &>/dev/null || command -v python &>/dev/null; then
     ui_log_success "Python $LATEST_VERSION (Pyenv) installation complete"
-    exit 0
 else
     ui_log_error "Python installation failed via both Native and Pyenv."
     exit 1
 fi
+
+# Configure .bashrc
+if [ -f "$HOME/.bashrc" ]; then
+    if ! grep -q "PYENV_ROOT" "$HOME/.bashrc"; then
+        cat <<'BASHRC_PYENV' >> ~/.bashrc
+
+# Pyenv (Python)
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+if command -v pyenv &> /dev/null; then
+    eval "$(pyenv init -)"
+fi
+BASHRC_PYENV
+        ui_log_success ".bashrc configured"
+    fi
+fi
+
+# Configure .zshrc if it exists
+if [ -f "$HOME/.zshrc" ]; then
+    if ! grep -q "PYENV_ROOT" "$HOME/.zshrc"; then
+        cat <<'ZSHRC_PYENV' >> ~/.zshrc
+
+# Pyenv (Python)
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+if command -v pyenv &> /dev/null; then
+    eval "$(pyenv init -)"
+fi
+ZSHRC_PYENV
+        ui_log_success ".zshrc configured"
+    fi
+fi
+

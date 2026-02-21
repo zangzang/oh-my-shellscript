@@ -28,6 +28,32 @@ fix_tmp_dir() {
 
 fix_tmp_dir
 
+# =============================================================================
+# Check if update was run in the last 24 hours
+# =============================================================================
+
+UPDATE_TIMESTAMP_FILE="$HOME/.update_timestamp"
+CURRENT_TIME=$(date +%s)
+SKIP_UPDATE=false
+
+if [[ -f "$UPDATE_TIMESTAMP_FILE" ]]; then
+    LAST_UPDATE_TIME=$(cat "$UPDATE_TIMESTAMP_FILE")
+    TIME_DIFF=$((CURRENT_TIME - LAST_UPDATE_TIME))
+    ONE_DAY_SECONDS=86400
+    
+    if [[ $TIME_DIFF -lt $ONE_DAY_SECONDS ]]; then
+        HOURS=$((TIME_DIFF / 3600))
+        MINUTES=$(((TIME_DIFF % 3600) / 60))
+        ui_log_info "⏭️  Last update was ${HOURS}h ${MINUTES}m ago. Skipping (24h interval)"
+        SKIP_UPDATE=true
+    fi
+fi
+
+if [[ "$SKIP_UPDATE" == "true" ]]; then
+    ui_log_success "System update skipped (update within 24h)."
+    exit 0
+fi
+
 ui_log_info "🔄 Running system update..."
 
 if [[ "$OS_ID" == "fedora" ]]; then
@@ -63,5 +89,8 @@ elif [[ "$OS_ID" == "ubuntu" || "$OS_ID" == "debian" || "$OS_ID" == "pop" || "$O
 else
     ui_log_warn "⚠️  OS not supported for auto-update: $OS_ID"
 fi
+
+# Record update completion time
+date +%s > "$UPDATE_TIMESTAMP_FILE"
 
 ui_log_success "System update complete."

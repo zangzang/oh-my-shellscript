@@ -103,3 +103,31 @@ fi
 
 echo "🎉 Android development environment setup complete."
 echo "   Re-login might be required for KVM group changes to take effect."
+
+# Configure .bashrc
+echo "🔧 Configuring .bashrc for Android..."
+if [ -f "$HOME/.bashrc" ]; then
+    if ! grep -q "ANDROID_HOME" "$HOME/.bashrc"; then
+        cat <<'BASHRC_ANDROID' >> ~/.bashrc
+
+# Android SDK
+export ANDROID_HOME="$HOME/Android/Sdk"
+export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator
+BASHRC_ANDROID
+        echo "✓ .bashrc configured"
+    fi
+fi
+
+# Configure .zshrc if it exists
+if [ -f "$HOME/.zshrc" ]; then
+    echo "🔧 Configuring .zshrc for Android..."
+    if ! grep -q "ANDROID_HOME" "$HOME/.zshrc"; then
+        cat <<'ZSHRC_ANDROID' >> ~/.zshrc
+
+# Android SDK
+export ANDROID_HOME="$HOME/Android/Sdk"
+export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator
+ZSHRC_ANDROID
+        echo "✓ .zshrc configured"
+    fi
+fi

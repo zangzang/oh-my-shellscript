@@ -57,3 +57,62 @@ else
     ui_log_error "Critical CLI tools (jq, vim) not found. Installation may have failed."
     exit 1
 fi
+
+# Configure FZF in .bashrc
+if command -v fzf &>/dev/null; then
+    if [ -f "$HOME/.bashrc" ]; then
+        if ! grep -q "FZF.*Configuration" "$HOME/.bashrc"; then
+            cat <<'BASHRC_FZF' >> ~/.bashrc
+
+# =============================================================================
+# FZF Configuration
+# =============================================================================
+
+if command -v fzf &> /dev/null; then
+    # FZF 색상 및 레이아웃
+    export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
+    
+    # FZF 명령어 설정
+    if command -v fdfind &> /dev/null; then
+        export FZF_DEFAULT_COMMAND="fdfind --type file --hidden --follow --exclude .git"
+        export FZF_CTRL_T_COMMAND="fdfind --type file --hidden --follow --exclude .git"
+        export FZF_ALT_C_COMMAND="fdfind --type directory --hidden --follow --exclude .git"
+        export FZF_CTRL_T_OPTS="--preview 'batcat --style=numbers --color=always --line-range :500 {}' --bind 'ctrl-/:change-preview-window(down|hidden|)' 2>/dev/null || echo {}"
+    fi
+fi
+BASHRC_FZF
+            ui_log_success ".bashrc FZF configured"
+        fi
+    fi
+
+    #Configure FZF in .zshrc
+    if [ -f "$HOME/.zshrc" ]; then
+        if ! grep -q "FZF.*Configuration" "$HOME/.zshrc"; then
+            cat <<'ZSHRC_FZF' >> ~/.zshrc
+
+# =============================================================================
+# FZF Configuration
+# =============================================================================
+
+if command -v fzf &> /dev/null; then
+    # FZF 기본 설정 파일 로드
+    [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && source /usr/share/doc/fzf/examples/key-bindings.zsh
+    [ -f /usr/share/doc/fzf/examples/completion.zsh ] && source /usr/share/doc/fzf/examples/completion.zsh
+    
+    # FZF 색상 및 레이아웃
+    export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
+    
+    # FZF 명령어 설정
+    if command -v fdfind &> /dev/null; then
+        export FZF_DEFAULT_COMMAND="fdfind --type file --hidden --follow --exclude .git"
+        export FZF_CTRL_T_COMMAND="fdfind --type file --hidden --follow --exclude .git"
+        export FZF_ALT_C_COMMAND="fdfind --type directory --hidden --follow --exclude .git"
+        export FZF_CTRL_T_OPTS="--preview 'batcat --style=numbers --color=always --line-range :500 {}' --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+        export FZF_ALT_C_OPTS="--preview 'eza --tree --level=1 --icons {}' 2>/dev/null || echo {}"
+    fi
+fi
+ZSHRC_FZF
+            ui_log_success ".zshrc FZF configured"
+        fi
+    fi
+fi

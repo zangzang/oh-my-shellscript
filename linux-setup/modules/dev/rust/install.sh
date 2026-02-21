@@ -59,3 +59,28 @@ else
     echo "❌ Rust installation failed"
     exit 1
 fi
+# Configure .bashrc
+echo "🔧 Configuring .bashrc for Rust..."
+if [ -f "$HOME/.bashrc" ]; then
+    if ! grep -q "cargo/env" "$HOME/.bashrc"; then
+        cat <<'BASHRC_RUST' >> ~/.bashrc
+
+# Rust
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+BASHRC_RUST
+        echo "✓ .bashrc configured"
+    fi
+fi
+
+# Configure .zshrc if it exists
+if [ -f "$HOME/.zshrc" ]; then
+    echo "🔧 Configuring .zshrc for Rust..."
+    if ! grep -q "cargo/env" "$HOME/.zshrc"; then
+        cat <<'ZSHRC_RUST' >> ~/.zshrc
+
+# Rust
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+ZSHRC_RUST
+        echo "✓ .zshrc configured"
+    fi
+fi

@@ -20,4 +20,44 @@ if [ ! -f "$OMP_THEME_DIR/catppuccin_mocha.omp.json" ]; then
         -O "$OMP_THEME_DIR/catppuccin_mocha.omp.json"
 fi
 
+# Configure .bashrc
+echo "Configuring .bashrc..."
+if [ -f "$HOME/.bashrc" ]; then
+    if ! grep -q "oh-my-posh init bash" "$HOME/.bashrc"; then
+        cat <<'BASHRC_OMP' >> ~/.bashrc
+
+# =============================================================================
+# Oh My Posh
+# =============================================================================
+
+if command -v oh-my-posh &> /dev/null; then
+    if [ -f "$HOME/.config/oh-my-posh/catppuccin_mocha.omp.json" ]; then
+        eval "$(oh-my-posh init bash --config $HOME/.config/oh-my-posh/catppuccin_mocha.omp.json)"
+    fi
+fi
+BASHRC_OMP
+        echo ".bashrc configuration added"
+    fi
+fi
+
+# Configure .zshrc if it exists
+if [ -f "$HOME/.zshrc" ]; then
+    echo "Configuring .zshrc..."
+    if ! grep -q "oh-my-posh init zsh" "$HOME/.zshrc"; then
+        cat <<'ZSHRC_OMP' >> ~/.zshrc
+
+# =============================================================================
+# Oh My Posh
+# =============================================================================
+
+if command -v oh-my-posh &> /dev/null; then
+    if [ -f "$HOME/.config/oh-my-posh/catppuccin_mocha.omp.json" ]; then
+        eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/catppuccin_mocha.omp.json)"
+    fi
+fi
+ZSHRC_OMP
+        echo ".zshrc configuration added"
+    fi
+fi
+
 echo "Oh My Posh installation complete"

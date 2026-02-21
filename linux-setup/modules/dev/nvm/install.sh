@@ -52,3 +52,31 @@ else
 fi
 
 ui_log_info "Note: You may need to restart your shell or run 'source ~/.bashrc' (or equivalent) to use nvm."
+
+# Configure .bashrc
+if [ -f "$HOME/.bashrc" ]; then
+    if ! grep -q "NVM_DIR" "$HOME/.bashrc"; then
+        cat <<'BASHRC_NVM' >> ~/.bashrc
+
+# NVM (Node.js)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+BASHRC_NVM
+        ui_log_success ".bashrc configured"
+    fi
+fi
+
+# Configure .zshrc if it exists
+if [ -f "$HOME/.zshrc" ]; then
+    if ! grep -q "NVM_DIR" "$HOME/.zshrc"; then
+        cat <<'ZSHRC_NVM' >> ~/.zshrc
+
+# NVM (Node.js)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+ZSHRC_NVM
+        ui_log_success ".zshrc configured"
+    fi
+fi

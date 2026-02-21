@@ -52,3 +52,29 @@ echo "🏥 Running Flutter Doctor..."
 flutter doctor || echo "⚠️  Some warnings found in Flutter Doctor. Please check above."
 
 echo "🎉 Flutter installation complete."
+
+# Configure .bashrc
+echo "🔧 Configuring .bashrc for Flutter..."
+if [ -f "$HOME/.bashrc" ]; then
+    if ! grep -q "flutter/bin" "$HOME/.bashrc"; then
+        cat <<'BASHRC_FLUTTER' >> ~/.bashrc
+
+# Flutter SDK
+export PATH=$PATH:$HOME/flutter/bin
+BASHRC_FLUTTER
+        echo "✓ .bashrc configured"
+    fi
+fi
+
+# Configure .zshrc if it exists
+if [ -f "$HOME/.zshrc" ]; then
+    echo "🔧 Configuring .zshrc for Flutter..."
+    if ! grep -q "flutter/bin" "$HOME/.zshrc"; then
+        cat <<'ZSHRC_FLUTTER' >> ~/.zshrc
+
+# Flutter SDK
+export PATH=$PATH:$HOME/flutter/bin
+ZSHRC_FLUTTER
+        echo "✓ .zshrc configured"
+    fi
+fi
