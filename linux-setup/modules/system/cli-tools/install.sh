@@ -166,36 +166,6 @@ BASHRC_ALIASES
     fi
 fi
 
-# Configure Bash History in .bashrc (for FZF CTRL+R to work properly)
-if [ -f "$HOME/.bashrc" ]; then
-    if ! grep -q "Bash History Configuration" "$HOME/.bashrc"; then
-        cat <<'BASHRC_HISTORY' >> ~/.bashrc
-
-# =============================================================================
-# Bash History Configuration (Required for FZF CTRL+R)
-# =============================================================================
-
-# History file location
-export HISTFILE="$HOME/.bash_history"
-
-# Number of history lines to keep in memory
-export HISTSIZE=10000
-
-# Number of history lines to save to the history file
-export HISTFILESIZE=10000
-
-# Bash history options
-shopt -s histappend          # Append to history, don't overwrite
-shopt -s cmdhist             # Save multi-line commands as one history entry
-export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S  "  # Add timestamps
-
-# Immediately write history (no need to wait for shell exit)
-PROMPT_COMMAND="history -a; history -c; $PROMPT_COMMAND"
-BASHRC_HISTORY
-        ui_log_success ".bashrc Bash history configured"
-    fi
-fi
-
 # Configure PATH and Aliases in .zshrc
 if [ -f "$HOME/.zshrc" ]; then
     if ! grep -q "CLI Tools - PATH and Aliases" "$HOME/.zshrc"; then
@@ -227,32 +197,18 @@ ZSHRC_ALIASES
     fi
 fi
 
-# Configure Zsh History in .zshrc (for FZF CTRL+R to work properly)
+# Enable Zsh SHARE_HISTORY for SSH reconnect sessions
 if [ -f "$HOME/.zshrc" ]; then
-    if ! grep -q "Zsh History Configuration" "$HOME/.zshrc"; then
+    if ! grep -q "SHARE_HISTORY" "$HOME/.zshrc"; then
         cat <<'ZSHRC_HISTORY' >> ~/.zshrc
 
 # =============================================================================
-# Zsh History Configuration (Required for FZF CTRL+R)
+# Zsh SHARE_HISTORY (Essential for FZF CTRL+R after SSH reconnect)
 # =============================================================================
 
-# History file location
-HISTFILE="$HOME/.zsh_history"
-
-# Number of history entries to keep in memory
-HISTSIZE=10000
-
-# Number of history entries to keep in the history file
-SAVEHIST=10000
-
-# Zsh history options
-setopt EXTENDED_HISTORY      # Add timestamps to history
-setopt SHARE_HISTORY         # Share history between sessions (SSH 재접속 후 히스토리 표시)
-setopt HIST_FIND_NO_DUPS     # Don't duplicate history during search
-setopt HIST_IGNORE_ALL_DUPS  # Remove duplicates
-setopt HIST_SAVE_NO_DUPS     # Don't save duplicate entries
-setopt INC_APPEND_HISTORY    # Append to history immediately (not just on shell exit)
+setopt SHARE_HISTORY         # Share history between sessions
+setopt INC_APPEND_HISTORY    # Append to history immediately
 ZSHRC_HISTORY
-        ui_log_success ".zshrc Zsh history configured"
+        ui_log_success ".zshrc SHARE_HISTORY configured"
     fi
 fi
