@@ -1,0 +1,12 @@
+{
+  "id": "dev.ai-agents.ai-cli",
+  "name": "AI CLI Tools",
+  "description": "Unified AI CLI tools (Gemini, Claude Code, OpenCode)",
+  "category": "ai/agents",
+  "requires": ["dev.node"],
+  "variants": [
+    { "value": "gemini-cli", "selected": true },
+    { "value": "claude-code", "selected": false },
+    { "value": "opencode", "selected": false }
+  ]
+}

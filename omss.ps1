@@ -15,11 +15,11 @@
 .PARAMETER NoGui
     Run in CLI mode
 .EXAMPLE
-    .\setup-windows.ps1
+    .\omss.ps1
 .EXAMPLE
-    .\setup-windows.ps1 -Preset fullstack-dev -Execute
+    .\omss.ps1 -Preset fullstack-dev -Execute
 .EXAMPLE
-    .\setup-windows.ps1 -Modules dev.git,dev.nodejs -DryRun
+    .\omss.ps1 -Modules dev.git,dev.nodejs -DryRun
 #>
 
 param(
@@ -31,7 +31,7 @@ param(
 )
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$SetupScript = Join-Path $ScriptDir "windows-setup.py"
+$SetupScript = Join-Path $ScriptDir "windows-setup/omss/windows-setup.py"
 
 # Check Python
 if (-not (Get-Command python -ErrorAction SilentlyContinue)) {

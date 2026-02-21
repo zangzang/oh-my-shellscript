@@ -11,10 +11,23 @@ detect_os
 echo "Installing build tools..."
 
 if [[ "$OS_ID" == "ubuntu" || "$OS_ID" == "debian" || "$OS_ID" == "pop" || "$OS_ID" == "linuxmint" ]]; then
+    # Debian/Ubuntu 계열은 배포판 버전/미러 상태에 따라 일부 패키지가 없을 수 있음
+    # 필수 패키지는 엄격 설치, 선택 패키지는 실패해도 계속 진행
+    sudo apt update -y || true
+
     install_packages \
         curl wget git unzip zip build-essential \
-        software-properties-common apt-transport-https ca-certificates gnupg \
+        ca-certificates gnupg \
         cmake pkg-config autoconf automake libtool
+
+    optional_pkgs=(software-properties-common apt-transport-https)
+    for pkg in "${optional_pkgs[@]}"; do
+        if apt-cache show "$pkg" >/dev/null 2>&1; then
+            sudo apt install -y "$pkg" || echo "⚠️ Optional package install failed: $pkg"
+        else
+            echo "ℹ️ Optional package not available on this distro: $pkg"
+        fi
+    done
 elif [[ "$OS_ID" == "fedora" ]]; then
     # Fedora uses different package names
     install_packages \

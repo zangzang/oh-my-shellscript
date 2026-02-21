@@ -1,7 +1,17 @@
 {
   "id": "dev.ollama",
   "name": "Ollama",
-  "description": "Local LLM runner (No Python required)",
+  "description": "Local LLM runner and model packs",
   "category": "ai/engine",
-  "requires": ["system.cli-tools"]
+  "requires": ["system.cli-tools", "system.fetch-tools"],
+  "variants": [
+    { "value": "engine", "selected": true },
+    { "value": "llama3.3", "selected": false },
+    { "value": "deepseek-r1:32b", "selected": false },
+    { "value": "qwen2.5-coder:32b", "selected": false },
+    { "value": "phi4", "selected": false },
+    { "value": "llama3.2:3b", "selected": false },
+    { "value": "gemma2:2b", "selected": false },
+    { "value": "phi3:mini", "selected": false }
+  ]
 }

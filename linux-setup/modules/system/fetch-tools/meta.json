@@ -1,0 +1,7 @@
+{
+  "id": "system.fetch-tools",
+  "name": "Fetch Tools",
+  "description": "Common download helpers (curl, gawk, zstd)",
+  "category": "system",
+  "requires": ["system.update"]
+}

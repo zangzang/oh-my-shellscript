@@ -1,7 +1,0 @@
-{
-  "id": "dev.ai-agents.mcp-servers.filesystem",
-  "name": "MCP Filesystem Server",
-  "description": "File access for AI models (Node.js)",
-  "category": "ai/agents",
-  "requires": ["dev.node"]
-}

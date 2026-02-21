@@ -20,55 +20,59 @@ Windows 개발 환경을 한방에 세팅하는 모듈식 자동화 도구입니
 
 ## 🚀 빠른 시작
 
+Windows 실행 진입점은 루트의 `omss.ps1` 하나만 사용합니다.
+
 ### 1. 인터랙티브 모드 (추천)
 
 ```powershell
-cd windows-setup
+cd ..
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-.\Setup-Windows.ps1
+.\omss.ps1
 ```
 
 ### 2. 프리셋 사용
 
 ```powershell
 # .NET 개발자 설정
-.\Setup-Windows.ps1 -Preset dotnet-dev
+.\omss.ps1 -Preset dotnet-dev
 
 # 자바 개발자 설정
-.\Setup-Windows.ps1 -Preset java-dev
+.\omss.ps1 -Preset java-dev
 
 # 파이썬 개발자 설정
-.\Setup-Windows.ps1 -Preset python-dev
+.\omss.ps1 -Preset python-dev
 
 # Node.js 개발자 설정
-.\Setup-Windows.ps1 -Preset node-dev
+.\omss.ps1 -Preset node-dev
 
 # Rust 개발자 설정
-.\Setup-Windows.ps1 -Preset rust-dev
+.\omss.ps1 -Preset rust-dev
 
 # 풀스택 개발자 설정 (모든 도구)
-.\Setup-Windows.ps1 -Preset fullstack-dev
+.\omss.ps1 -Preset fullstack-dev
 ```
 
 ### 3. 특정 모듈만 설치
 
 ```powershell
 # Git, VSCode, Node.js 설치
-.\Setup-Windows.ps1 -Module "dev.git", "dev.vscode", "dev.nodejs"
+.\omss.ps1 -Module "dev.git", "dev.vscode", "dev.nodejs"
 ```
 
 ### 4. Dry Run (미리보기)
 
 ```powershell
 # 실제 설치 없이 설치 계획만 표시
-.\Setup-Windows.ps1 -Preset dotnet-dev -DryRun
+.\omss.ps1 -Preset dotnet-dev -DryRun
 ```
 
 ## 📁 폴더 구조
 
 ```
 windows-setup/
-├── Setup-Windows.ps1          # 메인 진입점
+├── omss/
+│   └── windows-setup.py        # 내부 구현 (직접 실행 비권장)
+├── ..\omss.ps1                # 메인 진입점 (루트)
 ├── README.md                  # 이 파일
 ├── lib/                       # 공유 라이브러리
 │   ├── core.psm1             # 핵심 함수 (로깅, 권한 관리)
@@ -189,6 +193,8 @@ modules/<category>/<name>/
 └── install.ps1   # 설치 스크립트
 ```
 
+참고: 일반 사용은 `omss.ps1`로만 진행하고, 내부 `windows-setup/omss/windows-setup.py`는 구현 상세로 취급합니다.
+
 ### meta.json 예시
 
 ```json
@@ -291,10 +297,10 @@ dotnet --version
 
 ```powershell
 # 미리보기
-.\Setup-Windows.ps1 -Preset fullstack-dev -DryRun
+.\omss.ps1 -Preset fullstack-dev -DryRun
 
 # 실제 설치
-.\Setup-Windows.ps1 -Preset fullstack-dev
+.\omss.ps1 -Preset fullstack-dev
 ```
 
 ## 🐛 문제 해결

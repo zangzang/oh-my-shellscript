@@ -12,14 +12,6 @@ if ! command -v install_packages &>/dev/null; then
     fi
 fi
 
-# Check OS
-if [ -z "${OS_ID:-}" ]; then
-    detect_os
-fi
-
-# ============================================
-# Check if Java is already installed
-# ============================================
 check_java_installed() {
     local required_ver="$1"
     
@@ -51,61 +43,14 @@ if check_java_installed "$VERSION"; then
     exit 0
 fi
 
-# Package mapping function
-get_java_package() {
-    local ver="$1"
-    local os="${OS_ID:-unknown}"
-    
-    if [[ "$os" == "fedora" ]]; then
-        # Fedora package names (check with: dnf search openjdk)
-        case "$ver" in
-            8) echo "java-1.8.0-openjdk-devel" ;;
-            11) echo "java-11-openjdk-devel" ;;
-            17) echo "java-17-openjdk-devel" ;;
-            21) echo "java-21-openjdk-devel" ;;
-            *) echo "java-latest-openjdk-devel" ;;
-        esac
-    elif [[ "$os" == "ubuntu" || "$os" == "debian" || "$os" == "pop" || "$os" == "linuxmint" ]]; then
-        case "$ver" in
-            8) echo "openjdk-8-jdk" ;;
-            11) echo "openjdk-11-jdk" ;;
-            17) echo "openjdk-17-jdk" ;;
-            21) echo "openjdk-21-jdk" ;;
-            *) echo "default-jdk" ;;
-        esac
-    else
-        echo ""
-    fi
-}
-
-PKG_NAME=$(get_java_package "$VERSION")
-
-# 1. Try System Package Manager
-INSTALLED_NATIVE=false
-if [[ -n "$PKG_NAME" ]]; then
-    echo "📦 Attempting to install Java $VERSION via system package ($PKG_NAME)..."
-    if install_packages "$PKG_NAME"; then
-        echo "✅ Java installation complete (System Package)"
-        INSTALLED_NATIVE=true
-    else
-        echo "⚠️  System package installation failed. Switching to fallback mode."
-    fi
-fi
-
-if [[ "$INSTALLED_NATIVE" == "true" ]]; then
-    exit 0
-fi
-
-# 2. Fallback: SDKMAN
-echo "🔄 Attempting installation via SDKMAN..."
+echo "🔄 Installing Java via SDKMAN dependency..."
 
 export SDKMAN_DIR="$HOME/.sdkman"
 export sdkman_auto_answer=true
 
-# Install SDKMAN if missing
 if [[ ! -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]]; then
-    echo "Downloading and installing SDKMAN..."
-    curl -s "https://get.sdkman.io" | bash
+    echo "❌ SDKMAN is not initialized. Please ensure dependency dev.sdkman is installed first."
+    exit 1
 fi
 
 # Initialize SDKMAN (disable strict mode for SDKMAN compatibility)

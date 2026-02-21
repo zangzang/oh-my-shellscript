@@ -1,7 +1,0 @@
-{
-  "id": "dev.ai-agents.opencode",
-  "name": "Open Code",
-  "description": "Open Code Agent CLI",
-  "category": "ai/agents",
-  "requires": ["dev.node"]
-}

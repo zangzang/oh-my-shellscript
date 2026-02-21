@@ -1,7 +1,0 @@
-{
-  "id": "dev.ai-agents.gemini-cli",
-  "name": "Gemini CLI",
-  "description": "Google Gemini AI CLI Tool",
-  "category": "ai/agents",
-  "requires": ["dev.node"]
-}

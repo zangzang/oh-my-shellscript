@@ -11,13 +11,13 @@ git clone https://github.com/zangzang/my-shell-script.git
 cd my-shell-script
 
 # Run setup
-./setup-linux.sh
+./omss.sh
 
 # With preset
-./setup-linux.sh --preset fullstack-dev --execute
+./omss.sh --preset fullstack-dev --execute
 
-# Or use Python directly
-python3 linux-setup.py --preset java-dev --dry-run
+# Dry run
+./omss.sh --preset java-dev --dry-run
 ```
 
 ### Windows
@@ -27,13 +27,10 @@ git clone https://github.com/zangzang/my-shell-script.git
 cd my-shell-script
 
 # Run setup (PowerShell launcher)
-.\setup-windows.ps1
+.\omss.ps1
 
 # With preset
-.\setup-windows.ps1 -Preset fullstack-dev -Execute
-
-# Or use Python directly
-python windows-setup.py --preset node-dev --dry-run
+.\omss.ps1 -Preset fullstack-dev -Execute
 ```
 
 ## 🐧 Supported Platforms
@@ -51,12 +48,11 @@ python windows-setup.py --preset node-dev --dry-run
 
 ```
 .
-├── setup-linux.sh          # Linux entry point (shell)
-├── setup-windows.ps1       # Windows entry point (PowerShell)
-├── linux-setup.py          # Linux setup launcher
-├── windows-setup.py        # Windows setup launcher
+├── omss.sh                 # Linux entry point (shell)
+├── omss.ps1                # Windows entry point (PowerShell)
+├── windows-setup/omss/windows-setup.py  # Windows setup launcher
 ├── linux-setup/            # Linux setup system
-│   ├── setup.py           # Main TUI application
+│   ├── omss/              # Go setup implementation
 │   ├── modules/           # Installation modules
 │   ├── presets/           # Preset configurations
 │   └── config/            # Settings and categories
@@ -72,28 +68,32 @@ python windows-setup.py --preset node-dev --dry-run
 ### Interactive TUI Mode
 ```bash
 # Linux
-./setup-linux.sh
+./omss.sh
 
 # Windows
-.\setup-windows.ps1
+.\omss.ps1
 ```
 
 ### Preset Installation
 ```bash
 # Linux
-python3 linux-setup.py --preset fullstack-dev --execute
+./omss.sh --preset fullstack-dev --execute
+
+# Linux (Go setup, post-module policy)
+./omss.sh --post-module-mode selected --preset java-dev --dry-run
+OMSS_POST_MODULE_MODE=always ./omss.sh --preset full-dev --dry-run
 
 # Windows
-python windows-setup.py --preset dotnet-dev --execute
+.\omss.ps1 -Preset dotnet-dev -Execute
 ```
 
 ### Module Selection
 ```bash
 # Linux
-python3 linux-setup.py --modules dev.docker,dev.nodejs --execute
+./omss.sh --preset node-dev --execute
 
 # Windows
-python windows-setup.py --modules dev.git,dev.vscode --dry-run
+.\omss.ps1 -Modules dev.git,dev.vscode -DryRun
 ```
 
 ## 🎯 Available Presets

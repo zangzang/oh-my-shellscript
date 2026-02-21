@@ -17,10 +17,6 @@ fi
 
 echo "Installing .NET SDK $VERSION..."
 
-# Check dependencies
-echo "📦 Checking essential dependencies..."
-install_packages curl gawk
-
 # Install .NET
 if ! curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel "$VERSION" --install-dir "$HOME/.dotnet" --no-path; then
     echo "Failed to install .NET"

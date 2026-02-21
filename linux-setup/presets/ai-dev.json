@@ -4,9 +4,8 @@
   "description": "Ollama engine, Models, and Open WebUI (No Python required)",
   "modules": [
     { "id": "dev.docker" },
-    { "id": "dev.ollama" },
-    { "id": "dev.ollama-models-heavy", "params": { "version": "llama3.3" } },
-    { "id": "dev.ollama-models-light", "params": { "version": "phi3:mini", "selected": false } },
+    { "id": "dev.ollama", "params": { "version": "llama3.3", "selected": true } },
+    { "id": "dev.ollama", "params": { "version": "phi3:mini", "selected": false } },
     { "id": "dev.open-webui" },
     { "id": "dev.nvidia-setup", "params": { "selected": false } }
   ]

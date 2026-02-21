@@ -24,7 +24,12 @@ if [[ $nounset_was_on -eq 1 ]]; then
     set -u
 fi
 
+if command -v mvn &>/dev/null; then
+    echo "✅ Maven already installed"
+    exit 0
+fi
+
 echo "Installing Maven..."
-sdk install maven
+sdk install maven <<<"y"
 
 echo "✅ Maven installation complete"

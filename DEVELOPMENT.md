@@ -13,12 +13,92 @@ This project is a **modular setup management system** designed to automate repet
 - **Approach**: Modular installation scripts + Python Textual-based TUI (Text User Interface).
 - **Key Technologies**: Python, Bash, JSON.
 
+## 🆕 Recent Architecture Notes (2026-02)
+
+This section summarizes important behavior changes for the Go setup flow (`omss.sh`) so future module work stays consistent.
+
+### 1) Java/SDKMAN Dependency Policy
+
+- `dev.java` now depends on `dev.sdkman` directly.
+- `dev.java/install.sh` no longer attempts apt/dnf first, and no longer bootstraps SDKMAN as fallback.
+- If SDKMAN is missing, Java install fails fast with a clear dependency message.
+
+Why:
+- Prevents mixed install paths (system package + SDKMAN fallback).
+- Keeps dependency resolution in metadata, not inside script branching.
+
+### 2) SDKMAN Side Effects Removed
+
+- `dev.sdkman/install.sh` now installs SDKMAN only.
+- Maven/Gradle installation was moved out of SDKMAN script.
+- `dev.maven` and `dev.gradle` are now distinct modules and idempotent (skip if command already exists).
+
+Why:
+- Avoids duplicate work when Maven/Gradle are selected explicitly.
+- Makes install plan and summary easier to reason about.
+
+### 3) `post_modules` Support Added
+
+`meta.json` now supports:
+
+```json
+{
+   "post_modules": ["dev.maven", "dev.gradle"]
+}
+```
+
+Execution policy is configurable:
+
+- `selected` (default): run post modules only when module is explicitly selected
+- `always`: run post modules even if module came from dependency
+- `preset`: run post modules only when explicitly selected by preset
+
+Control methods:
+
+- CLI flag: `--post-module-mode always|selected|preset`
+- Env var: `OMSS_POST_MODULE_MODE=always|selected|preset`
+
+### 4) Install Summary Improved
+
+Go installer summary now includes:
+
+- total success/fail counts
+- succeeded module names list
+- failed module names list + reason
+
+This makes triage easier when one module fails near the end.
+
+### 5) AI CLI Variant Fix
+
+- `dev.ai-agents.ai-cli` variant `opencode` uses npm package `opencode-ai`.
+- Old package `opencode-agent` was invalid (`404 Not Found`).
+
+### 6) Rules for New Modules (Recommended)
+
+When adding/updating modules, follow this order:
+
+1. Put orchestration in `meta.json` (`requires`, `post_modules`).
+2. Keep `install.sh` focused on one module responsibility.
+3. Make scripts idempotent (`command -v ...` checks).
+4. Rebuild Go binary after resolver changes:
+   - `cd linux-setup/omss && go build -o bin/setup ./cmd/setup`
+5. Validate with dry-run before execute.
+
+### 7) Key Files for This Behavior
+
+- Go resolver: `linux-setup/omss/internal/module/manager.go`
+- Module schema: `linux-setup/omss/internal/module/types.go`
+- CLI options: `linux-setup/omss/cmd/setup/main.go`
+- Installer summary: `linux-setup/omss/internal/module/installer.go`
+- SDKMAN module: `linux-setup/modules/dev/sdkman/meta.json`
+- SDKMAN script: `linux-setup/modules/dev/sdkman/install.sh`
+
 ## 📁 Project Structure
 
 ```
 oh-my-shellscript/
 ├── install.sh         # Entry point for one-line installation
-├── omss.sh            # Main CLI launcher (wrapper for setup.py)
+├── omss.sh            # Main CLI launcher (Go setup wrapper)
 ├── linux-setup/                # Linux Automation System ⭐
 │   ├── setup.py                # Main Entry Point (Python TUI)
 │   ├── bootstrap.sh            # Python Environment Bootstrap

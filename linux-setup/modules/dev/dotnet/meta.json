@@ -3,6 +3,10 @@
   "name": ".NET SDK",
   "description": ".NET SDK (Microsoft)",
   "category": "dev/runtime",
-  "requires": ["system.update", "system.build-tools"],
-  "variants": ["8", "9", "10"]
+  "requires": ["system.update", "system.build-tools", "system.fetch-tools"],
+  "variants": [
+    { "value": "8", "selected": false },
+    { "value": "9", "selected": false },
+    { "value": "10", "selected": true }
+  ]
 }

@@ -12,7 +12,7 @@ from pathlib import Path
 
 # Add windows-setup to path for imports
 SCRIPT_DIR = Path(__file__).parent.resolve()
-WINDOWS_SETUP_DIR = SCRIPT_DIR / "windows-setup"
+WINDOWS_SETUP_DIR = SCRIPT_DIR.parent
 sys.path.insert(0, str(WINDOWS_SETUP_DIR))
 
 from core import logger, module
@@ -64,21 +64,22 @@ def run_installation(manager: module.ModuleManager, modules_list: list, dry_run:
 
 def main():
     parser = argparse.ArgumentParser(
+        prog="omss.ps1",
         description="Windows Development Environment Setup",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
   # Interactive TUI mode (default)
-  python windows-setup.py
+        .\\omss.ps1
 
   # Install with preset
-  python windows-setup.py --preset fullstack-dev --execute
+        .\\omss.ps1 -Preset fullstack-dev -Execute
 
   # Dry run with preset
-  python windows-setup.py --preset node-dev --dry-run
+        .\\omss.ps1 -Preset node-dev -DryRun
 
   # Install specific modules
-  python windows-setup.py --modules dev.git,dev.nodejs --execute
+        .\\omss.ps1 -Modules dev.git,dev.nodejs -Execute
         """
     )
     

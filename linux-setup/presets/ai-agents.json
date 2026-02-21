@@ -1,10 +1,10 @@
 {
   "name": "AI Agents",
   "category": "AI & Agents",
-  "description": "Gemini CLI, Claude Code, and Open Code",
+  "description": "Unified AI CLI tools",
   "modules": [
-    { "id": "dev.ai-agents.gemini-cli" },
-    { "id": "dev.ai-agents.claude-code" },
-    { "id": "dev.ai-agents.opencode" }
+    { "id": "dev.ai-agents.ai-cli", "params": { "version": "gemini-cli", "selected": true } },
+    { "id": "dev.ai-agents.ai-cli", "params": { "version": "claude-code", "selected": true } },
+    { "id": "dev.ai-agents.ai-cli", "params": { "version": "opencode", "selected": true } }
   ]
 }

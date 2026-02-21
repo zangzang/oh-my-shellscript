@@ -24,7 +24,12 @@ if [[ $nounset_was_on -eq 1 ]]; then
     set -u
 fi
 
+if command -v gradle &>/dev/null; then
+    echo "✅ Gradle already installed"
+    exit 0
+fi
+
 echo "Installing Gradle..."
-sdk install gradle
+sdk install gradle <<<"y"
 
 echo "✅ Gradle installation complete"

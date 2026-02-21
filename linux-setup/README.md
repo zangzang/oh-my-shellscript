@@ -66,20 +66,20 @@ The `bootstrap.sh` script automatically:
 
 ```bash
 # Load a preset and launch TUI
-python3 linux-setup.py --preset java-dev
+./omss.sh --preset java-dev
 
 # Install a preset directly (skip TUI)
-python3 linux-setup.py --preset base --execute
+./omss.sh --preset base --execute
 
 # Simulation only
-python3 linux-setup.py --preset full-dev --dry-run
+./omss.sh --preset full-dev --dry-run
 ```
 
 ## 📂 Project Structure
 
 ```
 linux-setup/
-├── setup.py            # Main TUI script (use ../linux-setup.py from root)
+├── setup.py            # (Legacy Python TUI entry; removed in Go migration)
 ├── bootstrap.sh        # Pre-installation bootstrap script
 ├── config/             # Configuration files
 │   └── categories.json # Category tree definition

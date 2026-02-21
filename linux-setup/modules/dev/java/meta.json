@@ -1,8 +1,8 @@
 {
   "id": "dev.java",
   "name": "Java (JDK)",
-  "description": "Java Development Kit (System Pkg or SDKMAN)",
+  "description": "Java Development Kit (SDKMAN)",
   "category": "dev/runtime",
-  "requires": ["system.update"],
+  "requires": ["dev.sdkman"],
   "variants": ["8", "17", "21", "25"]
 }

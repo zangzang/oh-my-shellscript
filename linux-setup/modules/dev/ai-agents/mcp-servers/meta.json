@@ -1,0 +1,18 @@
+{
+  "id": "dev.ai-agents.mcp-servers",
+  "name": "MCP Servers",
+  "description": "Model Context Protocol server packages",
+  "category": "ai/agents",
+  "requires": ["dev.node"],
+  "variants": [
+    { "value": "filesystem", "selected": true },
+    { "value": "github", "selected": false },
+    { "value": "postgres", "selected": false },
+    { "value": "sqlite", "selected": false },
+    { "value": "brave-search", "selected": false },
+    { "value": "memory", "selected": false },
+    { "value": "playwright", "selected": false },
+    { "value": "puppeteer", "selected": false },
+    { "value": "n8n", "selected": false }
+  ]
+}
