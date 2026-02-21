@@ -40,9 +40,6 @@ jobs:
           cp -r linux-setup/modules dist/linux-setup/
           cp -r linux-setup/presets dist/linux-setup/
           cp -r linux-setup/lib dist/linux-setup/
-          
-          # 3. 래퍼 스크립트 복사 (선택 사항)
-          cp linux-setup/omss/omss.sh dist/linux-setup/
 
       - name: Create Archive
         run: |
