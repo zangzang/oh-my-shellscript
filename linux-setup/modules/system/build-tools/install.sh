@@ -8,6 +8,31 @@ source "$SCRIPT_DIR/../../../lib/distro.sh"
 
 detect_os
 
+# =============================================================================
+# Check if build-tools were installed in the last 24 hours
+# =============================================================================
+
+BUILD_TIMESTAMP_FILE="$HOME/.build_timestamp"
+CURRENT_TIME=$(date +%s)
+SKIP_BUILD=false
+
+if [[ -f "$BUILD_TIMESTAMP_FILE" ]]; then
+    LAST_BUILD_TIME=$(cat "$BUILD_TIMESTAMP_FILE")
+    TIME_DIFF=$((CURRENT_TIME - LAST_BUILD_TIME))
+    ONE_DAY_SECONDS=86400
+    
+    if [[ $TIME_DIFF -lt $ONE_DAY_SECONDS ]]; then
+        HOURS=$((TIME_DIFF / 3600))
+        MINUTES=$(((TIME_DIFF % 3600) / 60))
+        echo "⏭️  Build tools were already installed ${HOURS}h ${MINUTES}m ago. Skipping (24h interval)"
+        SKIP_BUILD=true
+    fi
+fi
+
+if [[ "$SKIP_BUILD" == "true" ]]; then
+    exit 0
+fi
+
 echo "Installing build tools..."
 
 if [[ "$OS_ID" == "ubuntu" || "$OS_ID" == "debian" || "$OS_ID" == "pop" || "$OS_ID" == "linuxmint" ]]; then
@@ -43,3 +68,5 @@ else
 fi
 
 echo "✅ Build tools installation complete"
+# Save timestamp for 24-hour caching
+date +%s > "$BUILD_TIMESTAMP_FILE"
